@@ -1,22 +1,16 @@
 package diet.model.database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class Datasource {
     public static final String DB_NAME = "diet.db";
     public static final String CONNECTION = "jdbc:sqlite:"+DB_NAME;
 
-    //public static final String
-
     private Connection connect;
-
 
     private static Datasource singletonDs = new Datasource();
 
     private Datasource(){
-
     }
 
     public static Datasource getInstance(){
@@ -43,5 +37,7 @@ public class Datasource {
         }
     }
 
-
+    protected Connection getConnect(){
+        return connect;
+    }
 }

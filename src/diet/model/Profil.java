@@ -12,14 +12,28 @@ public class Profil {
     private ProfilSex sex;
     private ProfilGoal goal;
 
-    public Profil(int idPerson, String name, int age, int weight, int growth, ProfilSex sex, ProfilGoal goal) {
+    public Profil(){
+
+    }
+    public Profil(int idPerson, String name, int age,  int growth,int weight, String sex, String goal) {
         this.idPerson = idPerson;
         this.name = name;
         this.age = age;
-        this.weight = weight;
         this.growth = growth;
-        this.sex = sex;
-        this.goal = goal;
+        this.weight = weight;
+        if(sex.equalsIgnoreCase(ProfilSex.male.toString())){
+            this.sex = ProfilSex.male;
+        }else {
+            this.sex = ProfilSex.female;
+        }
+
+        if(goal.equals(ProfilGoal.loss.toString())){
+            this.goal = ProfilGoal.loss;
+        }else if(goal.equals(ProfilGoal.gain.toString())) {
+            this.goal = ProfilGoal.gain;
+        }else{
+            this.goal = ProfilGoal.keep;
+        }
     }
 
     public int getIdPerson() {
@@ -62,20 +76,30 @@ public class Profil {
         this.growth = growth;
     }
 
-    public ProfilSex getSex() {
-        return sex;
+    public String getSex() {
+        return sex.toString();
     }
 
-    public void setSex(ProfilSex sex) {
-        this.sex = sex;
+    public void setSex(String sex) {
+        if(sex.equals(ProfilSex.male.toString())){
+            this.sex = ProfilSex.male;
+        }else {
+            this.sex = ProfilSex.female;
+        };
     }
 
     public ProfilGoal getGoal() {
         return goal;
     }
 
-    public void setGoal(ProfilGoal goal) {
-        this.goal = goal;
+    public void setGoal(String goal) {
+        if(goal.equals(ProfilGoal.loss.toString())){
+            this.goal = ProfilGoal.loss;
+        }else if(goal.equals(ProfilGoal.gain.toString())) {
+            this.goal = ProfilGoal.gain;
+        }else{
+            this.goal = ProfilGoal.keep;
+        }
     }
 
     public double countBalans(){
@@ -99,6 +123,11 @@ public class Profil {
         }
     }
 
+    @Override
+    public String toString() {
+        //return this.idPerson+" , "+this.name+" , "+this.age+" , "+this.growth+" , "+this.weight+" , "+this.sex+" , "+this.goal;
+        return this.name;
+    }
 }
 
 
