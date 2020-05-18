@@ -1,6 +1,8 @@
 package diet;
 
+import diet.model.database.Datasource;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,6 +19,20 @@ public class Main extends Application {
         primaryStage.show();
     }
 
+    @Override
+    public void init() throws Exception {
+        super.init();
+        if(!Datasource.getInstance().openConnection()){
+            System.out.println("ERROR during connecting to database, application won't run ");
+            Platform.exit();
+        }
+    }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+        Datasource.getInstance().closeConnectio();
+    }
 
     public static void main(String[] args) {
 

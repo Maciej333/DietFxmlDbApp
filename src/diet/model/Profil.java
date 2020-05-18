@@ -1,7 +1,7 @@
 package diet.model;
 
-import diet.model.ProfilEnums.ProfilGoal;
-import diet.model.ProfilEnums.ProfilSex;
+import diet.model.profilEnums.ProfilGoal;
+import diet.model.profilEnums.ProfilSex;
 
 public class Profil {
     private int idPerson;
