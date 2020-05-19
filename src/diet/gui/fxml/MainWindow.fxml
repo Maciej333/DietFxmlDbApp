@@ -8,20 +8,19 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane fx:id="borderPaneMainWindow" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="440.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="diet.gui.controlers.MainWindowController">
     <left>
         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" BorderPane.alignment="CENTER">
             <children>
-                <Button minWidth="80.0" mnemonicParsing="false" text="Profil">
+                <Button fx:id="buttonProfil" minWidth="80.0" mnemonicParsing="false" text="Profil" onAction="#setButtonProfil">
                     <VBox.margin>
                         <Insets left="10.0" right="10.0" />
                     </VBox.margin>
                 </Button>
-                <Button minWidth="80.0" mnemonicParsing="false" text="Products" />
-                <Button minWidth="80.0" mnemonicParsing="false" text="Meals" />
-                <Button minWidth="80.0" mnemonicParsing="false" text="Diet" />
-                <Button minWidth="80.0" mnemonicParsing="false" text="Stats" />
+                <Button fx:id="buttonProducts" minWidth="80.0" mnemonicParsing="false" text="Products" onAction="#setButtonProducts"/>
+                <Button fx:id="buttonMeals" minWidth="80.0" mnemonicParsing="false" text="Meals" onAction="#setButtonMeals"/>
+                <Button fx:id="buttonDiet" minWidth="80.0" mnemonicParsing="false" text="Diet" onAction="#setButtonDiet"/>
+                <Button fx:id="buttonStats" minWidth="80.0" mnemonicParsing="false" text="Stats" onAction="#setButtonStats"/>
             </children>
             <padding>
                 <Insets top="20.0" />

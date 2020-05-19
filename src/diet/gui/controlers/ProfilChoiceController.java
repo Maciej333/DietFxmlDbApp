@@ -45,7 +45,6 @@ public class ProfilChoiceController {
             URL u = p.toUri().toURL();
             FXMLLoader loader = new FXMLLoader(u);
             try {
-                loader.setController(new ProfilCreateController());
                 Parent root = loader.load();
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
@@ -66,7 +65,6 @@ public class ProfilChoiceController {
             URL u = p.toUri().toURL();
             FXMLLoader loader = new FXMLLoader(u);
             try {
-                loader.setController(new ProfilCreateController());
                 Parent root = loader.load();
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));

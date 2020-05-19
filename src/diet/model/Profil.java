@@ -125,7 +125,6 @@ public class Profil {
 
     @Override
     public String toString() {
-        //return this.idPerson+" , "+this.name+" , "+this.age+" , "+this.growth+" , "+this.weight+" , "+this.sex+" , "+this.goal;
         return this.name;
     }
 }

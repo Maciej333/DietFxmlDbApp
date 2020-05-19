@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="diet.gui.controlers.MainWindowDietController">
     <right>
         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="220.0" spacing="10.0" BorderPane.alignment="CENTER">
             <children>
@@ -80,7 +80,7 @@
                 </TableView>
                 <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="380.0">
                     <children>
-                        <Button mnemonicParsing="false" text="Add product/meal" />
+                        <Button fx:id="buttonAddProductMeal" mnemonicParsing="false" text="Add product/meal" onAction="#setButtonAddProductMeal"/>
                     </children>
                 </HBox>
             </children>
