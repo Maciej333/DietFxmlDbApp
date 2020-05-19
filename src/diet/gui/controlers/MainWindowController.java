@@ -72,7 +72,7 @@ public class MainWindowController {
             try {
                 this.borderPaneMainWindow.setCenter(loader.load());
             }catch (IOException e){
-                System.out.println("Cannot load MainWindowStats "+e.getMessage());
+                System.out.println("Cannot load MainWindow "+e.getMessage());
             }
         } catch (MalformedURLException m) {
             System.out.println("Incorect URL "+m.getMessage());

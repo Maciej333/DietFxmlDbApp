@@ -9,19 +9,23 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="diet.gui.controlers.MainWindowProductController">
     <center>
-        <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <TableView fx:id="tableViewProduct" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+            <TableColumn fx:id="productName" prefWidth="75.0" text="name" />
+            <TableColumn fx:id="productKcal" prefWidth="75.0" text="kcal" />
+            <TableColumn fx:id="productProtein" prefWidth="75.0" text="protein" />
+            <TableColumn fx:id="productFat" prefWidth="75.0" text="fat" />
+            <TableColumn fx:id="productCarbs" prefWidth="75.0" text="carbs" />
+            <TableColumn fx:id="productFiber" prefWidth="75.0" text="fiber" />
             </columns>
         </TableView>
     </center>
     <right>
         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="150.0" spacing="10.0" BorderPane.alignment="CENTER">
             <children>
-                <Button mnemonicParsing="false" prefWidth="120.0" text="+ Add new product">
+                <Button fx:id="buttonAddNewProduct" mnemonicParsing="false" onAction="#setButtonAddNewProduct" prefWidth="120.0" text="+ Add new product">
                     <VBox.margin>
                         <Insets bottom="20.0" top="20.0" />
                     </VBox.margin>

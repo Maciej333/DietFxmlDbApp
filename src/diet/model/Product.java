@@ -9,6 +9,9 @@ public class Product {
     private double fat;
     private double fiber;
 
+    public Product(){
+    }
+
     public Product(int idProduct, String name, double kcal, double protein, double carbs, double fat, double fiber) {
         this.idProduct = idProduct;
         this.name = name;
