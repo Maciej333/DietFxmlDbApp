@@ -1,6 +1,5 @@
 package diet;
 
-import diet.gui.controlers.ProfilChoiceController;
 import diet.model.database.Datasource;
 import javafx.application.Application;
 import javafx.application.Platform;

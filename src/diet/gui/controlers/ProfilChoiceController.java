@@ -9,7 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -22,7 +22,7 @@ import java.nio.file.Paths;
 public class ProfilChoiceController {
 
     @FXML
-    ChoiceBox<Profil> choiceBoxProfil;
+    ComboBox<Profil> comboBoxProfil;
 
     @FXML
     Button buttonAddProfil;
@@ -35,7 +35,9 @@ public class ProfilChoiceController {
 
 
     public void initialize() {
-        choiceBoxProfil.setItems(ProfilData.readAllProfils());
+        ProfilData.getInstance().readAllProfils();
+        comboBoxProfil.itemsProperty().setValue(ProfilData.getProfilsList());
+
     }
 
     @FXML

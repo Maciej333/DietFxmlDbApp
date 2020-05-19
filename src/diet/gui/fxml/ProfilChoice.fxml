@@ -8,11 +8,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.ComboBox?>
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="220.0" minWidth="200.0" prefHeight="220.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="diet.gui.controlers.ProfilChoiceController">
     <bottom>
         <HBox alignment="CENTER_RIGHT" prefHeight="20.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="buttonCancel" mnemonicParsing="false" text="Cancel" onAction="#setButtonCancel">
+                <Button fx:id="buttonCancel" mnemonicParsing="false" onAction="#setButtonCancel" text="Cancel">
                     <HBox.margin>
                         <Insets />
                     </HBox.margin>
@@ -31,13 +32,13 @@
                         <Insets />
                     </VBox.margin>
                 </Label>
-                <ChoiceBox fx:id="choiceBoxProfil" prefWidth="120.0" >
+                <ComboBox fx:id="comboBoxProfil" prefWidth="120.0">
                     <VBox.margin>
                         <Insets />
                     </VBox.margin>
-                </ChoiceBox>
-                <Button fx:id="buttonAddProfil" mnemonicParsing="false" prefWidth="100.0" text="Add new profil" onAction="#setButtonAddProfil"/>
-                <Button fx:id="buttonLoadProfil" mnemonicParsing="false" prefWidth="100.0" text="Load profil" onAction="#setButtonLoadProfil">
+                </ComboBox>
+                <Button fx:id="buttonAddProfil" mnemonicParsing="false" onAction="#setButtonAddProfil" prefWidth="100.0" text="Add new profil" />
+                <Button fx:id="buttonLoadProfil" mnemonicParsing="false" onAction="#setButtonLoadProfil" prefWidth="100.0" text="Load profil">
                     <VBox.margin>
                         <Insets top="25.0" />
                     </VBox.margin>

@@ -9,13 +9,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane fx:id="borderPaneProfilCreate" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="diet.gui.controlers.ProfilCreateController">
+<BorderPane fx:id="borderPaneProfilCreate" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="diet.gui.controlers.ProfilCreateController">
     <bottom>
         <HBox alignment="CENTER" prefHeight="40.0" prefWidth="200.0" spacing="20.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="buttonAddProfil" mnemonicParsing="false" prefWidth="80.0" text="Add Profil" onAction="#setButtonAddProfil"/>
-                <Button fx:id="buttonCancelAddProfil" mnemonicParsing="false" prefWidth="80.0" text="Cancel" onAction="#setButtonCancelAddProfil"/>
+                <Button fx:id="buttonAddProfil" mnemonicParsing="false" onAction="#setButtonAddProfil" prefWidth="80.0" text="Add Profil" />
+                <Button fx:id="buttonCancelAddProfil" mnemonicParsing="false" onAction="#setButtonCancelAddProfil" prefWidth="80.0" text="Cancel" />
             </children>
             <padding>
                 <Insets bottom="20.0" top="10.0" />
@@ -28,8 +27,8 @@
                 <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                     <children>
                         <Label prefWidth="50.0" text="Name" />
-                        <TextField />
-                        <Label prefWidth="100.0" />
+                        <TextField fx:id="textFieldProfilName" />
+                        <Label fx:id="invalidProfilName" prefWidth="100.0" />
                     </children>
                     <VBox.margin>
                         <Insets bottom="5.0" left="20.0" right="20.0" top="20.0" />
@@ -41,8 +40,8 @@
                 <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                     <children>
                         <Label prefWidth="50.0" text="Age" />
-                        <TextField />
-                        <Label prefWidth="100.0" />
+                        <TextField fx:id="textFieldProfilAge" />
+                        <Label fx:id="invalidProfilAge" prefWidth="100.0" />
                     </children>
                     <padding>
                         <Insets right="-50.0" />
@@ -51,8 +50,8 @@
                 <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                     <children>
                         <Label prefWidth="50.0" text="Weight" />
-                        <TextField />
-                        <Label prefWidth="100.0" />
+                        <TextField fx:id="textFieldProfilWeight" />
+                        <Label fx:id="invalidProfilWeight" prefWidth="100.0" />
                     </children>
                     <padding>
                         <Insets right="-50.0" />
@@ -61,8 +60,8 @@
                 <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                     <children>
                         <Label prefWidth="50.0" text="Growth" />
-                        <TextField />
-                        <Label prefWidth="100.0" />
+                        <TextField fx:id="textFieldProfilGrowth" />
+                        <Label fx:id="invalidProfilGrowth" prefWidth="100.0" />
                     </children>
                     <padding>
                         <Insets right="-50.0" />
@@ -71,8 +70,8 @@
                 <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                     <children>
                         <Label prefWidth="50.0" text="Sex" />
-                        <ChoiceBox prefWidth="150.0" />
-                        <Label prefWidth="100.0" />
+                        <ChoiceBox fx:id="choiceBoxProfilSex" prefWidth="150.0" />
+                        <Label fx:id="invalidProfilSex" prefWidth="100.0" />
                     </children>
                     <padding>
                         <Insets right="-50.0" />
@@ -81,8 +80,8 @@
                 <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                     <children>
                         <Label prefWidth="50.0" text="Goal" />
-                        <ChoiceBox prefWidth="150.0" />
-                        <Label prefWidth="100.0" />
+                        <ChoiceBox fx:id="choiceBoxProfilGoal" prefWidth="150.0" />
+                        <Label fx:id="invalidProfilGoal" prefWidth="100.0" />
                     </children>
                     <padding>
                         <Insets right="-50.0" />
