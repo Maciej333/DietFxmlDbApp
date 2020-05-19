@@ -15,7 +15,7 @@ public class ProfilData {
     private static ObservableList<Profil> profilsList;
 
     private static final String TABLE = "profil";
-    public static final String PROFIL_ID = "ID_PROFIL";
+    private static final String PROFIL_ID = "ID_PROFIL";
     private static final String PROFIL_NAME = "NAME";
     private static final String PROFIL_AGE = "AGE";
     private static final String PROFIL_GROWTH = "GROWTH";
