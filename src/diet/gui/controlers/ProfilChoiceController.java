@@ -8,8 +8,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DialogPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -37,6 +39,9 @@ public class ProfilChoiceController {
     public void initialize() {
         ProfilData.getInstance().readAllProfils();
         comboBoxProfil.itemsProperty().setValue(ProfilData.getProfilsList());
+        if(ProfilData.getProfilsList().size() > 0){
+            comboBoxProfil.getSelectionModel().select(0);
+        }
 
     }
 
@@ -62,27 +67,38 @@ public class ProfilChoiceController {
 
     @FXML
     public void setButtonLoadProfil(){
-        Path p = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindow.fxml");
-        try {
-            URL u = p.toUri().toURL();
-            FXMLLoader loader = new FXMLLoader(u);
+        if(getSelectedProfil() != null) {
+            Path p = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindow.fxml");
             try {
-                Parent root = loader.load();
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.show();
-                Stage primaryStage = Main.getPrimaryStage();
-                primaryStage.close();
-            }catch (IOException e){
-                System.out.println("Cannot load MainWindow "+e.getMessage());
+                URL u = p.toUri().toURL();
+                FXMLLoader loader = new FXMLLoader(u);
+                try {
+                    Parent root = loader.load();
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root));
+                    stage.show();
+                    Stage primaryStage = Main.getPrimaryStage();
+                    primaryStage.close();
+                } catch (IOException e) {
+                    System.out.println("Cannot load MainWindow " + e.getMessage());
+                }
+            } catch (MalformedURLException m) {
+                System.out.println("Incorect URL " + m.getMessage());
             }
-        } catch (MalformedURLException m) {
-            System.out.println("Incorect URL "+m.getMessage());
+        }else{
+            Alert alterProfilNoChoice = new Alert(Alert.AlertType.WARNING);
+            alterProfilNoChoice.setContentText("befor moving on, choose profil You would like to load");
+            alterProfilNoChoice.setTitle("choose profil");
+            alterProfilNoChoice.show();
         }
     }
 
     @FXML
     public void setButtonCancel(){
         Platform.exit();
+    }
+
+    public Profil getSelectedProfil(){
+        return comboBoxProfil.getSelectionModel().getSelectedItem();
     }
 }
