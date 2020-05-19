@@ -41,50 +41,20 @@ public class ProfilChoiceController {
         if(ProfilData.getProfilsList().size() > 0){
             comboBoxProfil.getSelectionModel().select(0);
         }
-
     }
 
     @FXML
     public void setButtonAddProfil(){
-        Path p = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProfilCreate.fxml");
-        try {
-            URL u = p.toUri().toURL();
-            FXMLLoader loader = new FXMLLoader(u);
-            try {
-                Parent root = loader.load();
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.show();
-            }catch (IOException e){
-                System.out.println("Cannot load ProfilChange "+e.getMessage());
-            }
-        } catch (MalformedURLException m) {
-            System.out.println("Incorect URL "+m.getMessage());
-        }
+        Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProfilCreate.fxml");
+        loadUrl(path,buttonAddProfil.getText());
     }
 
     @FXML
     public void setButtonLoadProfil(){
         setSelectedProfil();
         if(getSelectedProfil() != null) {
-            Path p = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindow.fxml");
-            try {
-                URL u = p.toUri().toURL();
-                FXMLLoader loader = new FXMLLoader(u);
-                try {
-                    Parent root = loader.load();
-                    Stage stage = new Stage();
-                    stage.setScene(new Scene(root));
-                    stage.show();
-                    Stage primaryStage = Main.getPrimaryStage();
-                    primaryStage.close();
-                } catch (IOException e) {
-                    System.out.println("Cannot load MainWindow " + e.getMessage());
-                }
-            } catch (MalformedURLException m) {
-                System.out.println("Incorect URL " + m.getMessage());
-            }
+            Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindow.fxml");
+            loadUrl(path,buttonLoadProfil.getText());
         }else{
             Alert alterProfilNoChoice = new Alert(Alert.AlertType.WARNING);
             alterProfilNoChoice.setContentText("befor moving on, choose profil You would like to load");
@@ -104,5 +74,28 @@ public class ProfilChoiceController {
 
     public void setSelectedProfil(){
         Profil.setSelectedProfil(getSelectedProfil());
+    }
+
+    private void loadUrl(Path path, String buttonText){
+        try {
+            URL url = path.toUri().toURL();
+            FXMLLoader loader = new FXMLLoader(url);
+            try {
+                Parent root = loader.load();
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                if(buttonText.equals(buttonAddProfil.getText()))
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                stage.show();
+                if(buttonText.equals(buttonLoadProfil.getText())){
+                    Stage primaryStage = Main.getPrimaryStage();
+                    primaryStage.close();
+                }
+            }catch (IOException e){
+                System.out.println("Cannot load fxml file "+e.getMessage());
+            }
+        } catch (MalformedURLException m) {
+            System.out.println("Incorect URL "+m.getMessage());
+        }
     }
 }
