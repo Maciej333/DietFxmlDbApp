@@ -13,108 +13,62 @@ import java.nio.file.Paths;
 public class MainWindowController {
 
     @FXML
-    BorderPane borderPaneMainWindow;
+    private BorderPane borderPaneMainWindow;
 
     @FXML
-    Button buttonProfil;
+    private Button buttonProfil;
 
     @FXML
-    Button buttonProducts;
+    private Button buttonProducts;
 
     @FXML
-    Button buttonMeals;
+    private Button buttonMeals;
 
     @FXML
-    Button buttonDiet;
+    private Button buttonDiet;
 
     @FXML
-    Button buttonStats;
+    private Button buttonStats;
 
     public void initialize() {
-        Path p = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowDiet.fxml");
-        try {
-            URL u = p.toUri().toURL();
-            FXMLLoader loader = new FXMLLoader(u);
-            try {
-                this.borderPaneMainWindow.setCenter(loader.load());
-            }catch (IOException e){
-                System.out.println("Cannot load MainWindowDiet "+e.getMessage());
-            }
-        } catch (MalformedURLException m) {
-            System.out.println("Incorect URL "+m.getMessage());
-        }
+        Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowDiet.fxml");
+        loadUrl(path);
     }
 
     @FXML
     public void setButtonProfil(){
-        Path p = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowProfilInfo.fxml");
-        try {
-            URL u = p.toUri().toURL();
-            FXMLLoader loader = new FXMLLoader(u);
-            try {
-                this.borderPaneMainWindow.setCenter(loader.load());
-            }catch (IOException e){
-                System.out.println("Cannot load MainWindowProfil "+e.getMessage());
-            }
-        } catch (MalformedURLException m) {
-            System.out.println("Incorect URL "+m.getMessage());
-        }
+        Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowProfilInfo.fxml");
+        loadUrl(path);
     }
 
     @FXML
     public void setButtonProducts(){
-        Path p = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowProduct.fxml");
-        try {
-            URL u = p.toUri().toURL();
-            FXMLLoader loader = new FXMLLoader(u);
-            try {
-                this.borderPaneMainWindow.setCenter(loader.load());
-            }catch (IOException e){
-                System.out.println("Cannot load MainWindowProduct "+e.getMessage());
-            }
-        } catch (MalformedURLException m) {
-            System.out.println("Incorect URL "+m.getMessage());
-        }
+        Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowProduct.fxml");
+        loadUrl(path);
     }
 
     @FXML
     public void setButtonMeals(){
-        Path p = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowMeal.fxml");
-        try {
-            URL u = p.toUri().toURL();
-            FXMLLoader loader = new FXMLLoader(u);
-            try {
-                this.borderPaneMainWindow.setCenter(loader.load());
-            }catch (IOException e){
-                System.out.println("Cannot load MainWindowMeal "+e.getMessage());
-            }
-        } catch (MalformedURLException m) {
-            System.out.println("Incorect URL "+m.getMessage());
-        }
+        Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowMeal.fxml");
+        loadUrl(path);
     }
 
     @FXML
     public void setButtonDiet(){
-        Path p = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowDiet.fxml");
-        try {
-            URL u = p.toUri().toURL();
-            FXMLLoader loader = new FXMLLoader(u);
-            try {
-                this.borderPaneMainWindow.setCenter(loader.load());
-            }catch (IOException e){
-                System.out.println("Cannot load MainWindowDiet "+e.getMessage());
-            }
-        } catch (MalformedURLException m) {
-            System.out.println("Incorect URL "+m.getMessage());
-        }
+        Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowDiet.fxml");
+        loadUrl(path);
     }
 
     @FXML
     public void setButtonStats(){
-        Path p = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowStats.fxml");
+        Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowStats.fxml");
+        loadUrl(path);
+    }
+
+    private void loadUrl(Path path){
         try {
-            URL u = p.toUri().toURL();
-            FXMLLoader loader = new FXMLLoader(u);
+            URL url = path.toUri().toURL();
+            FXMLLoader loader = new FXMLLoader(url);
             try {
                 this.borderPaneMainWindow.setCenter(loader.load());
             }catch (IOException e){
