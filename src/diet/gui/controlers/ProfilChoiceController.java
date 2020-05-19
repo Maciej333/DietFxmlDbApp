@@ -83,6 +83,7 @@ public class ProfilChoiceController {
             try {
                 Parent root = loader.load();
                 Stage stage = new Stage();
+                stage.setTitle("Diet");
                 stage.setScene(new Scene(root));
                 if(buttonText.equals(buttonAddProfil.getText()))
                     stage.initModality(Modality.APPLICATION_MODAL);

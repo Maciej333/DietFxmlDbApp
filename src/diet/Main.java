@@ -17,7 +17,7 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("gui/fxml/ProfilChoice.fxml"));
         Parent root = loader.load();
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("Diet");
         primaryStage.setScene(new Scene(root, 200, 220));
         primaryStage.show();
     }
