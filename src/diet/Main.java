@@ -1,5 +1,6 @@
 package diet;
 
+import diet.gui.controlers.ProfilChoiceController;
 import diet.model.database.Datasource;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -10,10 +11,13 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
+    private static Stage primaryStage;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("gui/fxml/ProfilChoice.fxml"));
-
+        this.primaryStage = primaryStage;
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("gui/fxml/ProfilChoice.fxml"));
+        Parent root = loader.load();
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root, 200, 220));
         primaryStage.show();
@@ -35,7 +39,10 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-
         launch(args);
+    }
+
+    public static Stage getPrimaryStage(){
+        return primaryStage;
     }
 }
