@@ -23,16 +23,16 @@ import java.nio.file.Paths;
 public class ProfilChoiceController {
 
     @FXML
-    ComboBox<Profil> comboBoxProfil;
+    private ComboBox<Profil> comboBoxProfil;
 
     @FXML
-    Button buttonAddProfil;
+    private Button buttonAddProfil;
 
     @FXML
-    Button buttonLoadProfil;
+    private Button buttonLoadProfil;
 
     @FXML
-    Button buttonCancel;
+    private Button buttonCancel;
 
 
     public void initialize() {

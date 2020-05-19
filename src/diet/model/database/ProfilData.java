@@ -58,8 +58,6 @@ public class ProfilData {
 
     public void insetNewProfil(String name, int age, int growth, int weight, String sex, String goal){
         try(PreparedStatement statement = conn.prepareStatement(INSERT_NEW_PROFIL) ){
-
-                        System.out.println("weszlismy wgl");
             conn.setAutoCommit(false);
 
             int profilId = getMaxProfilId()+1;
@@ -98,11 +96,9 @@ public class ProfilData {
             while(resultSet.next()){
                 maxProfilId = resultSet.getInt(1);
             }
-
         } catch(SQLException e){
             System.out.println("Query failed "+e.getMessage());
         }
-                    System.out.println("MAX ID PROFIL "+maxProfilId);
         return maxProfilId;
     }
 

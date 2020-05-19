@@ -14,35 +14,35 @@ import java.util.Arrays;
 public class ProfilCreateController {
 
     @FXML
-    BorderPane borderPaneProfilCreate;
+    private BorderPane borderPaneProfilCreate;
 
     @FXML
-    Button buttonAddProfil;
+    private Button buttonAddProfil;
     @FXML
-    Button buttonCancelAddProfil;
+    private Button buttonCancelAddProfil;
 
     @FXML
-    TextField textFieldProfilName;
+    private TextField textFieldProfilName;
     @FXML
-    TextField textFieldProfilAge;
+    private TextField textFieldProfilAge;
     @FXML
-    TextField textFieldProfilWeight;
+    private TextField textFieldProfilWeight;
     @FXML
-    TextField textFieldProfilGrowth;
+    private TextField textFieldProfilGrowth;
 
     @FXML
-    Label invalidProfilName;
+    private Label invalidProfilName;
     @FXML
-    Label invalidProfilAge;
+    private Label invalidProfilAge;
     @FXML
-    Label invalidProfilWeight;
+    private Label invalidProfilWeight;
     @FXML
-    Label invalidProfilGrowth;
+    private Label invalidProfilGrowth;
 
     @FXML
-    ChoiceBox<ProfilSex> choiceBoxProfilSex;
+    private ChoiceBox<ProfilSex> choiceBoxProfilSex;
     @FXML
-    ChoiceBox<ProfilGoal> choiceBoxProfilGoal;
+    private ChoiceBox<ProfilGoal> choiceBoxProfilGoal;
 
     public void initialize() {
         choiceBoxProfilSex.setItems(FXCollections.observableList(Arrays.asList(ProfilSex.values())));
