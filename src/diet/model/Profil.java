@@ -4,6 +4,9 @@ import diet.model.profilEnums.ProfilGoal;
 import diet.model.profilEnums.ProfilSex;
 
 public class Profil {
+
+    private static Profil selectedProfil = null;
+
     private int idPerson;
     private String name;
     private int age;
@@ -90,6 +93,14 @@ public class Profil {
 
     public ProfilGoal getGoal() {
         return goal;
+    }
+
+    public static Profil getSelectedProfil() {
+        return selectedProfil;
+    }
+
+    public static void setSelectedProfil(Profil selectedProfil) {
+        Profil.selectedProfil = selectedProfil;
     }
 
     public void setGoal(String goal) {

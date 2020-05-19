@@ -66,6 +66,7 @@ public class ProfilChoiceController {
 
     @FXML
     public void setButtonLoadProfil(){
+        setSelectedProfil();
         if(getSelectedProfil() != null) {
             Path p = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindow.fxml");
             try {
@@ -97,7 +98,11 @@ public class ProfilChoiceController {
         Platform.exit();
     }
 
-    public Profil getSelectedProfil(){
+    private Profil getSelectedProfil(){
         return comboBoxProfil.getSelectionModel().getSelectedItem();
+    }
+
+    public void setSelectedProfil(){
+        Profil.setSelectedProfil(getSelectedProfil());
     }
 }
