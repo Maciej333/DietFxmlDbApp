@@ -69,42 +69,57 @@ public class Meal {
 
     public void countKcalForMeal(){
         double kcalForMeal = 0;
+        double amountOfProducts = 0;
         for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
             kcalForMeal += productAmount.getValue()*productAmount.getKey().getKcal()/100;
+            amountOfProducts +=productAmount.getValue();
         }
-        this.kcal = kcalForMeal;
+        kcalForMeal = kcalForMeal/amountOfProducts*100;
+        this.kcal = Double.parseDouble(roundDouble(kcalForMeal));
     }
 
     public void countProteinForMeal(){
         double proteinForMeal = 0;
+        double amountOfProducts = 0;
         for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
             proteinForMeal += productAmount.getValue()*productAmount.getKey().getProtein()/100;
+            amountOfProducts +=productAmount.getValue();
         }
-        this.protein = proteinForMeal;
+        proteinForMeal = proteinForMeal/amountOfProducts*100;
+        this.protein = Double.parseDouble(roundDouble(proteinForMeal));
     }
 
     public void countFatForMeal(){
         double fatForMeal = 0;
+        double amountOfProducts = 0;
         for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
             fatForMeal += productAmount.getValue()*productAmount.getKey().getFat()/100;
+            amountOfProducts +=productAmount.getValue();
         }
-        this.fat = fatForMeal;
+        fatForMeal = fatForMeal/amountOfProducts*100;
+        this.fat = Double.parseDouble(roundDouble(fatForMeal));
     }
 
     public void countCarbsForMeal(){
         double carbsForMeal = 0;
+        double amountOfProducts = 0;
         for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
             carbsForMeal += productAmount.getValue()*productAmount.getKey().getCarbs()/100;
+            amountOfProducts +=productAmount.getValue();
         }
-        this.carbs = carbsForMeal;
+        carbsForMeal = carbsForMeal/amountOfProducts*100;
+        this.carbs = Double.parseDouble(roundDouble(carbsForMeal));
     }
 
     public void countFiberForMeal(){
         double fiberForMeal = 0;
+        double amountOfProducts = 0;
         for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
             fiberForMeal += productAmount.getValue()*productAmount.getKey().getFiber()/100;
+            amountOfProducts +=productAmount.getValue();
         }
-        this.fiber = fiberForMeal;
+        fiberForMeal = fiberForMeal/amountOfProducts*100;
+        this.fiber = Double.parseDouble(roundDouble(fiberForMeal));
     }
 
     @Override
@@ -116,5 +131,11 @@ public class Meal {
         for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
             System.out.println(productAmount.getKey()+ " ilosc  = "+productAmount.getValue());
         }
+    }
+
+    private String roundDouble(Double doubleToRound){
+        String doubleFormat = String.format("%.2f", doubleToRound);
+        String stringToParse = doubleFormat.replace(",",".");
+        return stringToParse;
     }
 }

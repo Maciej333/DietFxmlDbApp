@@ -9,12 +9,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="diet.gui.controlers.MainWindowMealController">
     <center>
-        <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <TableView fx:id="tableViewMeal" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <columns>
-                <TableColumn prefWidth="75.0" text="C1" />
-                <TableColumn prefWidth="75.0" text="C2" />
+                <TableColumn fx:id="mealName" prefWidth="75.0" text="name" />
+                <TableColumn fx:id="mealKcal" prefWidth="75.0" text="kcal" />
+                <TableColumn fx:id="mealProtein" prefWidth="75.0" text="protein" />
+                <TableColumn fx:id="mealFat" prefWidth="75.0" text="fat" />
+                <TableColumn fx:id="mealCarbs" prefWidth="75.0" text="carbs" />
+                <TableColumn fx:id="mealFiber" prefWidth="75.0" text="fiber" />
             </columns>
         </TableView>
     </center>
