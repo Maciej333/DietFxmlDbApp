@@ -1,6 +1,9 @@
 package diet.model;
 
 public class Product {
+
+    private static Product selectedProduct = null;
+
     private int idProduct;
     private String name;
     private double kcal;
@@ -20,6 +23,14 @@ public class Product {
         this.carbs = carbs;
         this.fat = fat;
         this.fiber = fiber;
+    }
+
+    public static Product getSelectedProduct(){
+        return selectedProduct;
+    }
+
+    public static void setSelectedProduct(Product selectedProduct) {
+        Product.selectedProduct = selectedProduct;
     }
 
     public int getIdProduct() {
@@ -76,5 +87,10 @@ public class Product {
 
     public void setFiber(double fiber) {
         this.fiber = fiber;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

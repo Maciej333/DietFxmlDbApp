@@ -44,6 +44,10 @@ public class Profil {
         return selectedProfil;
     }
 
+    public static void setSelectedProfil(Profil selectedProfil) {
+        Profil.selectedProfil = selectedProfil;
+    }
+
     public int getIdPerson() {
         return idPerson;
     }
@@ -94,15 +98,10 @@ public class Profil {
         } else {
             this.sex = ProfilSex.female;
         }
-        ;
     }
 
     public ProfilGoal getGoal() {
         return goal;
-    }
-
-    public static void setSelectedProfil(Profil selectedProfil) {
-        Profil.selectedProfil = selectedProfil;
     }
 
     public void setGoal(String goal) {
