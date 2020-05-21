@@ -39,7 +39,7 @@
             <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                <children>
                       <Button fx:id="buttonAddProfil" mnemonicParsing="false" onAction="#setButtonAddProfil" prefWidth="80.0" text="Add new" />
-                  <Button fx:id="buttonDeleteProfil" mnemonicParsing="false" prefWidth="80.0" text="Delete" />
+                  <Button fx:id="buttonDeleteProfil" mnemonicParsing="false" prefWidth="80.0" text="Delete" onAction="#setButtonDeleteProfil"/>
                </children>
             </HBox>
                 <Button fx:id="buttonLoadProfil" mnemonicParsing="false" onAction="#setButtonLoadProfil" prefWidth="100.0" text="Load profil">

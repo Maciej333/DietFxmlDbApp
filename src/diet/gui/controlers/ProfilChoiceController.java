@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -19,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 public class ProfilChoiceController {
 
@@ -27,10 +29,10 @@ public class ProfilChoiceController {
 
     @FXML
     private Button buttonAddProfil;
-
     @FXML
     private Button buttonLoadProfil;
-
+    @FXML
+    private Button buttonDeleteProfil;
     @FXML
     private Button buttonCancel;
 
@@ -55,6 +57,29 @@ public class ProfilChoiceController {
         if(getSelectedProfil() != null) {
             Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindow.fxml");
             loadUrl(path,buttonLoadProfil.getText());
+        }else{
+            Alert alterProfilNoChoice = new Alert(Alert.AlertType.WARNING);
+            alterProfilNoChoice.setContentText("befor moving on, choose profil You would like to load");
+            alterProfilNoChoice.setTitle("choose profil");
+            alterProfilNoChoice.show();
+        }
+    }
+
+    @FXML
+    public void setButtonDeleteProfil(){
+        setSelectedProfil();
+        if(getSelectedProfil() != null){
+            Alert alterProfilDelete = new Alert(Alert.AlertType.CONFIRMATION);
+            alterProfilDelete.setContentText("Do you really want to delete profile "+getSelectedProfil().getName()+"?");
+            alterProfilDelete.setTitle("Delete confirmation");
+
+            Optional<ButtonType> result = alterProfilDelete.showAndWait();
+            if (result.get() == ButtonType.OK){
+                ProfilData.getInstance().deleteProfil(getSelectedProfil().getIdPerson());
+                comboBoxProfil.getSelectionModel().select(0);
+            } else {
+            }
+
         }else{
             Alert alterProfilNoChoice = new Alert(Alert.AlertType.WARNING);
             alterProfilNoChoice.setContentText("befor moving on, choose profil You would like to load");

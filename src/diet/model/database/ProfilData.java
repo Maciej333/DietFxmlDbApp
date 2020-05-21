@@ -29,7 +29,7 @@ public class ProfilData {
     private static final String UPDETE_PROFIL = "UPDATE "+TABLE+" SET "+PROFIL_NAME+" =?, "
            +PROFIL_AGE+" =?, "+PROFIL_WEIGHT+" =?, "+PROFIL_GROWTH+" =?, "
             +PROFIL_SEX+" =?, "+PROFIL_GOAL+" =? WHERE "+PROFIL_ID+" = ?";
-
+    private static final String DELETE_PROFIL = "DELETE FROM "+TABLE+" WHERE "+PROFIL_ID+" = ?";
 
     private ProfilData(){
     }
@@ -106,23 +106,8 @@ public class ProfilData {
         return maxProfilId;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void updateProfil(String name,int age, int weight, int growth, String sex, String goal, int profilId ){
         try(PreparedStatement statement = conn.prepareStatement(UPDETE_PROFIL) ){
-                            System.out.println("WESZLISMY");
-
             statement.setString(1,name);
             statement.setInt(2,age);
             statement.setInt(3,weight);
@@ -131,11 +116,7 @@ public class ProfilData {
             statement.setString(6,goal);
             statement.setInt(7,profilId);
 
-                                System.out.println("TUTAJ DOSZLISMY");
-
             statement.executeUpdate();
-
-                              System.out.println("wyszlismy");
             Profil.getSelectedProfil().setName(name);
             Profil.getSelectedProfil().setAge(age);
             Profil.getSelectedProfil().setWeight(weight);
@@ -144,6 +125,16 @@ public class ProfilData {
             Profil.getSelectedProfil().setGoal(goal);
         }catch (SQLException e){
             System.out.println("Update failed "+e.getMessage());
+        }
+    }
+
+    public void deleteProfil(int profilId){
+        try(PreparedStatement statement = conn.prepareStatement(DELETE_PROFIL)){
+            statement.setInt(1,profilId);
+            statement.executeUpdate();
+            profilsList.remove(Profil.getSelectedProfil());
+        }catch (SQLException e){
+            System.out.println("Delete failed "+e.getMessage());
         }
     }
 
