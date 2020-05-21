@@ -1,5 +1,6 @@
 package diet.model;
 
+import diet.model.RoundDouble.RoundDouble;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -116,7 +117,7 @@ public class Diet {
         for(Map.Entry<Meal, Integer> mealAmount: dietMeals.entrySet()){
             kcalForDiet += mealAmount.getValue()*mealAmount.getKey().getKcal()/100;
         }
-        this.kcal = Double.parseDouble(roundDouble(kcalForDiet));
+        this.kcal = Double.parseDouble(RoundDouble.roundDouble(kcalForDiet));
     }
 
     public void countProteinForDiet(){
@@ -127,7 +128,7 @@ public class Diet {
         for(Map.Entry<Meal, Integer> mealAmount: dietMeals.entrySet()){
             proteinForDiet += mealAmount.getValue()*mealAmount.getKey().getProtein()/100;
         }
-        this.protein = Double.parseDouble(roundDouble(proteinForDiet));
+        this.protein = Double.parseDouble(RoundDouble.roundDouble(proteinForDiet));
     }
 
     public void countFatForDiet(){
@@ -138,7 +139,7 @@ public class Diet {
         for(Map.Entry<Meal, Integer> mealAmount: dietMeals.entrySet()){
             fatForDiet += mealAmount.getValue()*mealAmount.getKey().getFat()/100;
         }
-        this.fat = Double.parseDouble(roundDouble(fatForDiet));
+        this.fat = Double.parseDouble(RoundDouble.roundDouble(fatForDiet));
     }
 
     public void countCarbsForDiet(){
@@ -149,7 +150,7 @@ public class Diet {
         for(Map.Entry<Meal, Integer> mealAmount: dietMeals.entrySet()){
             carbsForDiet += mealAmount.getValue()*mealAmount.getKey().getCarbs()/100;
         }
-        this.carbs = Double.parseDouble(roundDouble(carbsForDiet));
+        this.carbs = Double.parseDouble(RoundDouble.roundDouble(carbsForDiet));
     }
 
     public void countFiberForDiet(){
@@ -160,13 +161,7 @@ public class Diet {
         for(Map.Entry<Meal, Integer> mealAmount: dietMeals.entrySet()){
             fiberForDiet += mealAmount.getValue()*mealAmount.getKey().getFiber()/100;
         }
-        this.fiber = Double.parseDouble(roundDouble(fiberForDiet));
-    }
-
-    private String roundDouble(Double doubleToRound){
-        String doubleFormat = String.format("%.2f", doubleToRound);
-        String stringToParse = doubleFormat.replace(",",".");
-        return stringToParse;
+        this.fiber = Double.parseDouble(RoundDouble.roundDouble(fiberForDiet));
     }
 
     public static ObservableList<Diet> getDietsByDate(ObservableList<Diet> dietsListAll,LocalDate localDate){

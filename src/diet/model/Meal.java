@@ -1,5 +1,7 @@
 package diet.model;
 
+import diet.model.RoundDouble.RoundDouble;
+
 import java.util.Map;
 
 public class Meal {
@@ -75,7 +77,7 @@ public class Meal {
             amountOfProducts +=productAmount.getValue();
         }
         kcalForMeal = kcalForMeal/amountOfProducts*100;
-        this.kcal = Double.parseDouble(roundDouble(kcalForMeal));
+        this.kcal = Double.parseDouble(RoundDouble.roundDouble(kcalForMeal));
     }
 
     public void countProteinForMeal(){
@@ -86,7 +88,7 @@ public class Meal {
             amountOfProducts +=productAmount.getValue();
         }
         proteinForMeal = proteinForMeal/amountOfProducts*100;
-        this.protein = Double.parseDouble(roundDouble(proteinForMeal));
+        this.protein = Double.parseDouble(RoundDouble.roundDouble(proteinForMeal));
     }
 
     public void countFatForMeal(){
@@ -97,7 +99,7 @@ public class Meal {
             amountOfProducts +=productAmount.getValue();
         }
         fatForMeal = fatForMeal/amountOfProducts*100;
-        this.fat = Double.parseDouble(roundDouble(fatForMeal));
+        this.fat = Double.parseDouble(RoundDouble.roundDouble(fatForMeal));
     }
 
     public void countCarbsForMeal(){
@@ -108,7 +110,7 @@ public class Meal {
             amountOfProducts +=productAmount.getValue();
         }
         carbsForMeal = carbsForMeal/amountOfProducts*100;
-        this.carbs = Double.parseDouble(roundDouble(carbsForMeal));
+        this.carbs = Double.parseDouble(RoundDouble.roundDouble(carbsForMeal));
     }
 
     public void countFiberForMeal(){
@@ -119,7 +121,7 @@ public class Meal {
             amountOfProducts +=productAmount.getValue();
         }
         fiberForMeal = fiberForMeal/amountOfProducts*100;
-        this.fiber = Double.parseDouble(roundDouble(fiberForMeal));
+        this.fiber = Double.parseDouble(RoundDouble.roundDouble(fiberForMeal));
     }
 
     @Override
@@ -131,11 +133,5 @@ public class Meal {
         for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
             System.out.println(productAmount.getKey()+ " ilosc  = "+productAmount.getValue());
         }
-    }
-
-    private String roundDouble(Double doubleToRound){
-        String doubleFormat = String.format("%.2f", doubleToRound);
-        String stringToParse = doubleFormat.replace(",",".");
-        return stringToParse;
     }
 }
