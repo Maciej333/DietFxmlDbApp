@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -176,5 +177,23 @@ public class Diet {
         }
 
         return FXCollections.observableList(dietsForDate);
+    }
+
+    public static Double[] countStatsForDiets(ObservableList<Diet> dietsToCount){
+        Double[] statsOfDiets = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+        for(Diet diet: dietsToCount){
+            statsOfDiets[0] += diet.getKcal();
+            statsOfDiets[1] += diet.getProtein();
+            statsOfDiets[2] += diet.getFat();
+            statsOfDiets[3] += diet.getCarbs();
+            statsOfDiets[4] += diet.getFiber();
+        }
+        statsOfDiets[0] = Double.parseDouble(RoundDouble.roundDouble(statsOfDiets[0]));
+        statsOfDiets[1] = Double.parseDouble(RoundDouble.roundDouble(statsOfDiets[1]));
+        statsOfDiets[2] = Double.parseDouble(RoundDouble.roundDouble(statsOfDiets[2]));
+        statsOfDiets[3] = Double.parseDouble(RoundDouble.roundDouble(statsOfDiets[3]));
+        statsOfDiets[4] = Double.parseDouble(RoundDouble.roundDouble(statsOfDiets[4]));
+        statsOfDiets[5] = Double.parseDouble(RoundDouble.roundDouble((statsOfDiets[0] - Profil.getSelectedProfil().getKcal())));
+        return statsOfDiets;
     }
 }

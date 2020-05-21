@@ -1,6 +1,7 @@
 package diet.gui.controlers;
 
 import diet.model.Diet;
+import diet.model.Profil;
 import diet.model.database.DietData;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -70,11 +71,40 @@ public class MainWindowDietController {
         dietFiber.setCellValueFactory(new PropertyValueFactory<>("fiber"));
 
         datePickerDiet.setValue(LocalDate.now());
+        ObservableList<Diet> currentDiets = Diet.getDietsByDate(dietsList,datePickerDiet.getValue());
+
         datePickerDiet.valueProperty().addListener((observable, oldDate, newDate )->{
-            tableViewDiet.setItems(Diet.getDietsByDate(dietsList,newDate));
+            ObservableList<Diet>  newCurrentDiets = Diet.getDietsByDate(dietsList,newDate);
+            tableViewDiet.setItems(newCurrentDiets);
+            Double[] newStatsOfDiets = Diet.countStatsForDiets(newCurrentDiets);
+            labelEatenKcal.setText(newStatsOfDiets[0].toString());
+            labelEatenProtein.setText(newStatsOfDiets[1].toString());
+            labelEatenFat.setText(newStatsOfDiets[2].toString());
+            labelEatenCarbs.setText(newStatsOfDiets[3].toString());
+            labelEatenFiber.setText(newStatsOfDiets[4].toString());
+            kcalBilans.setText(newStatsOfDiets[5].toString());
         } );
 
-        tableViewDiet.setItems(Diet.getDietsByDate(dietsList,datePickerDiet.getValue()));
+        tableViewDiet.setItems(currentDiets);
+
+        Profil.getSelectedProfil().countKcal();
+        Profil.getSelectedProfil().countProtein();
+        Profil.getSelectedProfil().countFat();
+        Profil.getSelectedProfil().countCarbs();
+        Profil.getSelectedProfil().countFiber();
+        labelMaxKcal.setText(Profil.getSelectedProfil().getKcal()+"");
+        labelMaxProtein.setText(Profil.getSelectedProfil().getProtein()+"");
+        labelMaxFat.setText(Profil.getSelectedProfil().getFat()+"");
+        labelMaxCarbs.setText(Profil.getSelectedProfil().getCarbs()+"");
+        labelMaxFiber.setText(Profil.getSelectedProfil().getFiber()+"");
+
+        Double[] statsOfDiets = Diet.countStatsForDiets(currentDiets);
+        labelEatenKcal.setText(statsOfDiets[0].toString());
+        labelEatenProtein.setText(statsOfDiets[1].toString());
+        labelEatenFat.setText(statsOfDiets[2].toString());
+        labelEatenCarbs.setText(statsOfDiets[3].toString());
+        labelEatenFiber.setText(statsOfDiets[4].toString());
+        kcalBilans.setText(statsOfDiets[5].toString());
     }
 
     @FXML

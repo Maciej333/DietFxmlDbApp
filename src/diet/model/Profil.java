@@ -1,5 +1,6 @@
 package diet.model;
 
+import diet.model.RoundDouble.RoundDouble;
 import diet.model.profilEnums.ProfilGoal;
 import diet.model.profilEnums.ProfilSex;
 
@@ -14,6 +15,12 @@ public class Profil {
     private int growth;
     private ProfilSex sex;
     private ProfilGoal goal;
+
+    private double kcal;
+    private double protein;
+    private double carbs;
+    private double fat;
+    private double fiber;
 
     public Profil() {
 
@@ -114,25 +121,60 @@ public class Profil {
         }
     }
 
-    public double countBalans() {
-        double bilans = 0;
+    public double getKcal() {
+        return kcal;
+    }
+
+    public double getProtein() {
+        return protein;
+    }
+
+    public double getCarbs() {
+        return carbs;
+    }
+
+    public double getFat() {
+        return fat;
+    }
+
+    public double getFiber() {
+        return fiber;
+    }
+
+    public void countKcal() {
+        double kcal = 0;
         if (sex.equals(ProfilSex.male)) {
-            bilans = (9.99 * this.weight) + (6.25 * this.growth) - (4.92 * this.age) + 5;
+            kcal = (9.99 * this.weight) + (6.25 * this.growth) - (4.92 * this.age) + 5;
             if (goal.equals(ProfilGoal.loss)) {
-                bilans -= 300;
+                kcal -= 300;
             } else if (goal.equals(ProfilGoal.gain)) {
-                bilans += 300;
+                kcal += 300;
             }
-            return bilans;
         } else {
-            bilans = (9.99 * this.weight) + (6.25 * this.growth) - (4.92 * this.age) - 161;
+            kcal = (9.99 * this.weight) + (6.25 * this.growth) - (4.92 * this.age) - 161;
             if (goal.equals(ProfilGoal.loss)) {
-                bilans -= 300;
+                kcal -= 300;
             } else if (goal.equals(ProfilGoal.gain)) {
-                bilans += 300;
+                kcal += 300;
             }
-            return bilans;
         }
+        this.kcal = kcal;
+    }
+
+    public void countProtein(){
+        this.protein = Double.parseDouble(RoundDouble.roundDouble(kcal*0.15/4));
+    }
+
+    public void countFat(){
+        this.fat = Double.parseDouble(RoundDouble.roundDouble(kcal*0.25/9));
+    }
+
+    public void countCarbs(){
+        this.carbs = Double.parseDouble(RoundDouble.roundDouble(kcal*0.52/4));
+    }
+
+    public void countFiber(){
+        this.fiber = Double.parseDouble(RoundDouble.roundDouble(kcal*0.08/4));
     }
 
     @Override
