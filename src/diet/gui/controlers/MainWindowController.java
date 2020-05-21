@@ -1,5 +1,6 @@
 package diet.gui.controlers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -31,6 +32,7 @@ public class MainWindowController {
     private Button buttonStats;
 
     public void initialize() {
+        Platform.runLater(()-> buttonDiet.requestFocus());
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowDiet.fxml");
         loadUrl(path);
     }

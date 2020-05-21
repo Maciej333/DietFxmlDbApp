@@ -88,8 +88,8 @@ public class Profil {
         this.growth = growth;
     }
 
-    public String getSex() {
-        return sex.toString();
+    public ProfilSex getSex() {
+        return sex;
     }
 
     public void setSex(String sex) {
