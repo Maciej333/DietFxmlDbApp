@@ -1,6 +1,7 @@
 package diet.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public class Diet {
@@ -10,6 +11,7 @@ public class Diet {
     private int idDiet;
     private int idOsoba;
     private LocalDateTime date;
+    private String formatDate;
     private Map<Product, Integer> dietProducts;
     private Map<Meal, Integer> dietMeals;
     private double kcal;
@@ -49,7 +51,18 @@ public class Diet {
         return date;
     }
 
+    public void setFormatDate(LocalDateTime dateToFormat){
+        String format= "yyyy-MM-dd HH:mm:ss";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+        formatDate = dateToFormat.format(formatter);
+    }
+
+    public String getFormatDate(){
+        return formatDate;
+    }
+
     public void setDate(LocalDateTime date) {
+        setFormatDate(date);
         this.date = date;
     }
 

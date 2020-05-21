@@ -28,9 +28,7 @@ public class MainWindowMealController {
     private TableColumn<Meal, Double> mealFiber;
 
     public void initialize() {
-        MealData.getInstance().readAllMealForProfil();
         mealsList = MealData.getMealsList();
-
 
         mealName.setCellValueFactory(new PropertyValueFactory<>("name"));
         mealKcal.setCellValueFactory(new PropertyValueFactory<>("kcal"));

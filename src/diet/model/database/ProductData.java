@@ -39,7 +39,8 @@ public class ProductData {
     private static final String FIBER = "FIBER";
 
     private static final String READ_PRODUCTS_FOR_PROFIL = "SELECT * FROM "+TABLE+" WHERE "+PRODUCT_ID+" IN " +
-            "(SELECT "+TABLE_PROFIL_PRODUCT_PRODUCT_ID+" FROM "+TABLE_PROFIL_PRODUCT+" WHERE "+TABLE_PROFIL_PRODUCT_PROFIL_ID+" = "+Profil.getSelectedProfil().getIdPerson()+")";
+            "(SELECT "+TABLE_PROFIL_PRODUCT_PRODUCT_ID+" FROM "+TABLE_PROFIL_PRODUCT+" " +
+            "WHERE "+TABLE_PROFIL_PRODUCT_PROFIL_ID+" = "+Profil.getSelectedProfil().getIdPerson()+")";
 
     private static final String READ_PRODUCTS_FOR_MEAL ="SELECT "+TABLE+"."+PRODUCT_ID+", "
             +TABLE+"."+NAME+", "+TABLE+"."+KCAL+", "+TABLE+"."+PROTEIN+", "

@@ -33,7 +33,6 @@ public class MainWindowProductController {
 
 
     public void initialize() {
-        ProductData.getInstance().readAllProductForProfil();
         productsList = ProductData.getProductsList();
 
         productName.setCellValueFactory(new PropertyValueFactory<>("name"));
