@@ -84,9 +84,10 @@ public class DietData {
 
     private Map<Meal, Integer> readMealsForDied(int diedId){
         Map<Meal, Integer> meals = new HashMap<>();
+        ResultSet resultSet=null;
         try(PreparedStatement preparedStatement = conn.prepareStatement(READ_MEALS_FOR_DIET)){
             preparedStatement.setInt(1, diedId);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
             while(resultSet.next()){
                 int meal_id = resultSet.getInt(TABLE_DIET_MEAL_ID_MEAL);
@@ -104,15 +105,24 @@ public class DietData {
             resultSet.close();
         }catch (SQLException e){
             System.out.println("Query failed "+e.getMessage());
+        }finally {
+            if(resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return meals;
     }
 
     private Map<Product, Integer> readProductsForDied(int diedId){
         Map<Product, Integer> meals = new HashMap<>();
+        ResultSet resultSet = null;
         try(PreparedStatement preparedStatement = conn.prepareStatement(READ_PRODUCTS_FOR_DIET)){
             preparedStatement.setInt(1, diedId);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
 
             while(resultSet.next()){
                 int product_id = resultSet.getInt(TABLE_DIET_PRODUCT_ID_PRODUCT);
@@ -129,6 +139,14 @@ public class DietData {
             resultSet.close();
         }catch (SQLException e){
             System.out.println("Query failed "+e.getMessage());
+        }finally {
+            if(resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return meals;
     }

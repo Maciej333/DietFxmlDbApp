@@ -26,6 +26,10 @@ public class ProfilData {
     private static final String READ_ALL_QUERY = "SELECT * FROM "+TABLE;
     private static final String READ_MAX_ID_PROFIL  ="SELECT MAX("+PROFIL_ID+") FROM "+TABLE;
     private static final String INSERT_NEW_PROFIL = "INSERT INTO "+TABLE+" VALUES (?,?,?,?,?,?,?)";
+    private static final String UPDETE_PROFIL = "UPDATE "+TABLE+" SET "+PROFIL_NAME+" =?, "
+           +PROFIL_AGE+" =?, "+PROFIL_WEIGHT+" =?, "+PROFIL_GROWTH+" =?, "
+            +PROFIL_SEX+" =?, "+PROFIL_GOAL+" =? WHERE "+PROFIL_ID+" = ?";
+
 
     private ProfilData(){
     }
@@ -100,6 +104,47 @@ public class ProfilData {
             System.out.println("Query failed "+e.getMessage());
         }
         return maxProfilId;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void updateProfil(String name,int age, int weight, int growth, String sex, String goal, int profilId ){
+        try(PreparedStatement statement = conn.prepareStatement(UPDETE_PROFIL) ){
+                            System.out.println("WESZLISMY");
+
+            statement.setString(1,name);
+            statement.setInt(2,age);
+            statement.setInt(3,weight);
+            statement.setInt(4,growth);
+            statement.setString(5,sex);
+            statement.setString(6,goal);
+            statement.setInt(7,profilId);
+
+                                System.out.println("TUTAJ DOSZLISMY");
+
+            statement.executeUpdate();
+
+                              System.out.println("wyszlismy");
+            Profil.getSelectedProfil().setName(name);
+            Profil.getSelectedProfil().setAge(age);
+            Profil.getSelectedProfil().setWeight(weight);
+            Profil.getSelectedProfil().setGrowth(growth);
+            Profil.getSelectedProfil().setSex(sex);
+            Profil.getSelectedProfil().setGoal(goal);
+        }catch (SQLException e){
+            System.out.println("Update failed "+e.getMessage());
+        }
     }
 
     public static ObservableList<Profil> getProfilsList() {
