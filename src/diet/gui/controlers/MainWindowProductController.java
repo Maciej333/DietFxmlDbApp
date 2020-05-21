@@ -1,7 +1,6 @@
 package diet.gui.controlers;
 
 import diet.model.Product;
-import diet.model.Profil;
 import diet.model.database.ProductData;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

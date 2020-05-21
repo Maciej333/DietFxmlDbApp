@@ -59,7 +59,7 @@ public class MealData {
         mealsList = FXCollections.observableList(meals);
     }
 
-    public static ObservableList<Meal> getMealsListList(){
+    public static ObservableList<Meal> getMealsList(){
         return mealsList;
     }
 }

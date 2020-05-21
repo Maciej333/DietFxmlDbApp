@@ -29,7 +29,7 @@ public class MainWindowMealController {
 
     public void initialize() {
         MealData.getInstance().readAllMealForProfil();
-        mealsList = MealData.getMealsListList();
+        mealsList = MealData.getMealsList();
 
 
         mealName.setCellValueFactory(new PropertyValueFactory<>("name"));
