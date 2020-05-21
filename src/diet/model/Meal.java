@@ -1,6 +1,6 @@
 package diet.model;
 
-import diet.model.RoundDouble.RoundDouble;
+import diet.model.additionalClasses.ClassOfStaticMethod;
 
 import java.util.Map;
 
@@ -77,7 +77,7 @@ public class Meal {
             amountOfProducts +=productAmount.getValue();
         }
         kcalForMeal = kcalForMeal/amountOfProducts*100;
-        this.kcal = Double.parseDouble(RoundDouble.roundDouble(kcalForMeal));
+        this.kcal = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcalForMeal));
     }
 
     public void countProteinForMeal(){
@@ -88,7 +88,7 @@ public class Meal {
             amountOfProducts +=productAmount.getValue();
         }
         proteinForMeal = proteinForMeal/amountOfProducts*100;
-        this.protein = Double.parseDouble(RoundDouble.roundDouble(proteinForMeal));
+        this.protein = Double.parseDouble(ClassOfStaticMethod.roundDouble(proteinForMeal));
     }
 
     public void countFatForMeal(){
@@ -99,7 +99,7 @@ public class Meal {
             amountOfProducts +=productAmount.getValue();
         }
         fatForMeal = fatForMeal/amountOfProducts*100;
-        this.fat = Double.parseDouble(RoundDouble.roundDouble(fatForMeal));
+        this.fat = Double.parseDouble(ClassOfStaticMethod.roundDouble(fatForMeal));
     }
 
     public void countCarbsForMeal(){
@@ -110,7 +110,7 @@ public class Meal {
             amountOfProducts +=productAmount.getValue();
         }
         carbsForMeal = carbsForMeal/amountOfProducts*100;
-        this.carbs = Double.parseDouble(RoundDouble.roundDouble(carbsForMeal));
+        this.carbs = Double.parseDouble(ClassOfStaticMethod.roundDouble(carbsForMeal));
     }
 
     public void countFiberForMeal(){
@@ -121,7 +121,7 @@ public class Meal {
             amountOfProducts +=productAmount.getValue();
         }
         fiberForMeal = fiberForMeal/amountOfProducts*100;
-        this.fiber = Double.parseDouble(RoundDouble.roundDouble(fiberForMeal));
+        this.fiber = Double.parseDouble(ClassOfStaticMethod.roundDouble(fiberForMeal));
     }
 
     @Override

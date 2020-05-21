@@ -1,6 +1,6 @@
 package diet.model;
 
-import diet.model.RoundDouble.RoundDouble;
+import diet.model.additionalClasses.ClassOfStaticMethod;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -118,7 +117,7 @@ public class Diet {
         for(Map.Entry<Meal, Integer> mealAmount: dietMeals.entrySet()){
             kcalForDiet += mealAmount.getValue()*mealAmount.getKey().getKcal()/100;
         }
-        this.kcal = Double.parseDouble(RoundDouble.roundDouble(kcalForDiet));
+        this.kcal = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcalForDiet));
     }
 
     public void countProteinForDiet(){
@@ -129,7 +128,7 @@ public class Diet {
         for(Map.Entry<Meal, Integer> mealAmount: dietMeals.entrySet()){
             proteinForDiet += mealAmount.getValue()*mealAmount.getKey().getProtein()/100;
         }
-        this.protein = Double.parseDouble(RoundDouble.roundDouble(proteinForDiet));
+        this.protein = Double.parseDouble(ClassOfStaticMethod.roundDouble(proteinForDiet));
     }
 
     public void countFatForDiet(){
@@ -140,7 +139,7 @@ public class Diet {
         for(Map.Entry<Meal, Integer> mealAmount: dietMeals.entrySet()){
             fatForDiet += mealAmount.getValue()*mealAmount.getKey().getFat()/100;
         }
-        this.fat = Double.parseDouble(RoundDouble.roundDouble(fatForDiet));
+        this.fat = Double.parseDouble(ClassOfStaticMethod.roundDouble(fatForDiet));
     }
 
     public void countCarbsForDiet(){
@@ -151,7 +150,7 @@ public class Diet {
         for(Map.Entry<Meal, Integer> mealAmount: dietMeals.entrySet()){
             carbsForDiet += mealAmount.getValue()*mealAmount.getKey().getCarbs()/100;
         }
-        this.carbs = Double.parseDouble(RoundDouble.roundDouble(carbsForDiet));
+        this.carbs = Double.parseDouble(ClassOfStaticMethod.roundDouble(carbsForDiet));
     }
 
     public void countFiberForDiet(){
@@ -162,7 +161,7 @@ public class Diet {
         for(Map.Entry<Meal, Integer> mealAmount: dietMeals.entrySet()){
             fiberForDiet += mealAmount.getValue()*mealAmount.getKey().getFiber()/100;
         }
-        this.fiber = Double.parseDouble(RoundDouble.roundDouble(fiberForDiet));
+        this.fiber = Double.parseDouble(ClassOfStaticMethod.roundDouble(fiberForDiet));
     }
 
     public static ObservableList<Diet> getDietsByDate(ObservableList<Diet> dietsListAll,LocalDate localDate){
@@ -188,12 +187,12 @@ public class Diet {
             statsOfDiets[3] += diet.getCarbs();
             statsOfDiets[4] += diet.getFiber();
         }
-        statsOfDiets[0] = Double.parseDouble(RoundDouble.roundDouble(statsOfDiets[0]));
-        statsOfDiets[1] = Double.parseDouble(RoundDouble.roundDouble(statsOfDiets[1]));
-        statsOfDiets[2] = Double.parseDouble(RoundDouble.roundDouble(statsOfDiets[2]));
-        statsOfDiets[3] = Double.parseDouble(RoundDouble.roundDouble(statsOfDiets[3]));
-        statsOfDiets[4] = Double.parseDouble(RoundDouble.roundDouble(statsOfDiets[4]));
-        statsOfDiets[5] = Double.parseDouble(RoundDouble.roundDouble((statsOfDiets[0] - Profil.getSelectedProfil().getKcal())));
+        statsOfDiets[0] = Double.parseDouble(ClassOfStaticMethod.roundDouble(statsOfDiets[0]));
+        statsOfDiets[1] = Double.parseDouble(ClassOfStaticMethod.roundDouble(statsOfDiets[1]));
+        statsOfDiets[2] = Double.parseDouble(ClassOfStaticMethod.roundDouble(statsOfDiets[2]));
+        statsOfDiets[3] = Double.parseDouble(ClassOfStaticMethod.roundDouble(statsOfDiets[3]));
+        statsOfDiets[4] = Double.parseDouble(ClassOfStaticMethod.roundDouble(statsOfDiets[4]));
+        statsOfDiets[5] = Double.parseDouble(ClassOfStaticMethod.roundDouble((statsOfDiets[0] - Profil.getSelectedProfil().getKcal())));
         return statsOfDiets;
     }
 }

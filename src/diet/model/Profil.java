@@ -1,6 +1,6 @@
 package diet.model;
 
-import diet.model.RoundDouble.RoundDouble;
+import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.profilEnums.ProfilGoal;
 import diet.model.profilEnums.ProfilSex;
 
@@ -162,19 +162,19 @@ public class Profil {
     }
 
     public void countProtein(){
-        this.protein = Double.parseDouble(RoundDouble.roundDouble(kcal*0.15/4));
+        this.protein = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcal*0.15/4));
     }
 
     public void countFat(){
-        this.fat = Double.parseDouble(RoundDouble.roundDouble(kcal*0.25/9));
+        this.fat = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcal*0.25/9));
     }
 
     public void countCarbs(){
-        this.carbs = Double.parseDouble(RoundDouble.roundDouble(kcal*0.52/4));
+        this.carbs = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcal*0.52/4));
     }
 
     public void countFiber(){
-        this.fiber = Double.parseDouble(RoundDouble.roundDouble(kcal*0.08/4));
+        this.fiber = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcal*0.08/4));
     }
 
     @Override
