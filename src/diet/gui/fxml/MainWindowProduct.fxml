@@ -23,13 +23,13 @@
     <right>
         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="150.0" spacing="20.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="buttonAddNewProduct" mnemonicParsing="false" onAction="#setButtonAddNewProduct" prefWidth="120.0" text="+ Add new product">
+                <Button fx:id="buttonAddNewProduct" mnemonicParsing="false" prefWidth="120.0" text="+ Add new product" onAction="#setButtonAddNewProduct">
                     <VBox.margin>
                         <Insets top="40.0" />
                     </VBox.margin>
                 </Button>
-            <Button fx:id="buttonEditProduct" mnemonicParsing="false" prefWidth="120.0" text="Edit Product" />
-            <Button fx:id="buttonDeleteProduct" mnemonicParsing="false" prefWidth="120.0" text="- Delete meal" />
+            <Button fx:id="buttonEditProduct" mnemonicParsing="false" prefWidth="120.0" text="Edit product" onAction="#setButtonEditProduct"/>
+            <Button fx:id="buttonDeleteProduct" mnemonicParsing="false" prefWidth="120.0" text="- Delete product" onAction="#setButtonDeleteProduct"/>
             </children>
             <BorderPane.margin>
                 <Insets />
