@@ -4,10 +4,10 @@ import diet.model.Diet;
 import diet.model.database.DietData;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.time.LocalDate;
 
 public class MainWindowDietController {
 
@@ -29,7 +29,33 @@ public class MainWindowDietController {
     private TableColumn<Diet, Double> dietFiber;
 
     @FXML
-    Button buttonAddProductMeal;
+    private Button buttonAddProductMeal;
+
+    @FXML
+    private DatePicker datePickerDiet;
+
+    @FXML
+    private Label labelEatenKcal;
+    @FXML
+    private Label labelMaxKcal;
+    @FXML
+    private Label labelEatenProtein;
+    @FXML
+    private Label labelMaxProtein;
+    @FXML
+    private Label labelEatenFat;
+    @FXML
+    private Label labelMaxFat;
+    @FXML
+    private Label labelEatenCarbs;
+    @FXML
+    private Label labelMaxCarbs;
+    @FXML
+    private Label labelEatenFiber;
+    @FXML
+    private Label labelMaxFiber;
+    @FXML
+    private Label kcalBilans;
 
 
     public void initialize() {
@@ -42,7 +68,13 @@ public class MainWindowDietController {
         dietFat.setCellValueFactory(new PropertyValueFactory<>("carbs"));
         dietCarbs.setCellValueFactory(new PropertyValueFactory<>("fat"));
         dietFiber.setCellValueFactory(new PropertyValueFactory<>("fiber"));
-        tableViewDiet.setItems(dietsList);
+
+        datePickerDiet.setValue(LocalDate.now());
+        datePickerDiet.valueProperty().addListener((observable, oldDate, newDate )->{
+            tableViewDiet.setItems(Diet.getDietsByDate(dietsList,newDate));
+        } );
+
+        tableViewDiet.setItems(Diet.getDietsByDate(dietsList,datePickerDiet.getValue()));
     }
 
     @FXML

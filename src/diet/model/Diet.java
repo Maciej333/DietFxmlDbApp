@@ -1,7 +1,13 @@
 package diet.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Diet {
@@ -161,5 +167,19 @@ public class Diet {
         String doubleFormat = String.format("%.2f", doubleToRound);
         String stringToParse = doubleFormat.replace(",",".");
         return stringToParse;
+    }
+
+    public static ObservableList<Diet> getDietsByDate(ObservableList<Diet> dietsListAll,LocalDate localDate){
+        List<Diet> dietsForDate = new ArrayList<>();
+
+        for(Diet oneDiet: dietsListAll){
+            if( oneDiet.getDate().getYear() == localDate.getYear() &&
+                oneDiet.getDate().getMonth() == localDate.getMonth() &&
+                oneDiet.getDate().getDayOfMonth() == localDate.getDayOfMonth()){
+                dietsForDate.add(oneDiet);
+            }
+        }
+
+        return FXCollections.observableList(dietsForDate);
     }
 }
