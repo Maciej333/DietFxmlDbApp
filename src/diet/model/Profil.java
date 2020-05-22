@@ -161,20 +161,20 @@ public class Profil {
         this.kcal = kcal;
     }
 
-    public void countProtein(){
-        this.protein = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcal*0.15/4));
+    public void countProtein() {
+        this.protein = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcal * 0.15 / 4));
     }
 
-    public void countFat(){
-        this.fat = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcal*0.25/9));
+    public void countFat() {
+        this.fat = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcal * 0.25 / 9));
     }
 
-    public void countCarbs(){
-        this.carbs = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcal*0.52/4));
+    public void countCarbs() {
+        this.carbs = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcal * 0.52 / 4));
     }
 
-    public void countFiber(){
-        this.fiber = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcal*0.08/4));
+    public void countFiber() {
+        this.fiber = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcal * 0.08 / 4));
     }
 
     @Override

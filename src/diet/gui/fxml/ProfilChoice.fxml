@@ -8,18 +8,20 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="220.0" minWidth="200.0" prefHeight="220.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="diet.gui.controlers.ProfilChoiceController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="220.0" minWidth="200.0" prefHeight="220.0"
+            prefWidth="200.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="diet.gui.controlers.ProfilChoiceController">
     <bottom>
         <HBox alignment="CENTER_RIGHT" prefHeight="20.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
                 <Button fx:id="buttonCancel" mnemonicParsing="false" onAction="#setButtonCancel" text="Cancel">
                     <HBox.margin>
-                        <Insets />
+                        <Insets/>
                     </HBox.margin>
                 </Button>
             </children>
             <BorderPane.margin>
-                <Insets bottom="10.0" left="5.0" right="25.0" top="5.0" />
+                <Insets bottom="10.0" left="5.0" right="25.0" top="5.0"/>
             </BorderPane.margin>
         </HBox>
     </bottom>
@@ -28,28 +30,31 @@
             <children>
                 <Label text="Choose a profil">
                     <VBox.margin>
-                        <Insets />
+                        <Insets/>
                     </VBox.margin>
                 </Label>
                 <ComboBox fx:id="comboBoxProfil" prefWidth="120.0">
                     <VBox.margin>
-                        <Insets />
+                        <Insets/>
                     </VBox.margin>
                 </ComboBox>
-            <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
-               <children>
-                      <Button fx:id="buttonAddProfil" mnemonicParsing="false" onAction="#setButtonAddProfil" prefWidth="80.0" text="Add new" />
-                  <Button fx:id="buttonDeleteProfil" mnemonicParsing="false" prefWidth="80.0" text="Delete" onAction="#setButtonDeleteProfil"/>
-               </children>
-            </HBox>
-                <Button fx:id="buttonLoadProfil" mnemonicParsing="false" onAction="#setButtonLoadProfil" prefWidth="100.0" text="Load profil">
+                <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
+                    <children>
+                        <Button fx:id="buttonAddProfil" mnemonicParsing="false" onAction="#setButtonAddProfil"
+                                prefWidth="80.0" text="Add new"/>
+                        <Button fx:id="buttonDeleteProfil" mnemonicParsing="false" prefWidth="80.0" text="Delete"
+                                onAction="#setButtonDeleteProfil"/>
+                    </children>
+                </HBox>
+                <Button fx:id="buttonLoadProfil" mnemonicParsing="false" onAction="#setButtonLoadProfil"
+                        prefWidth="100.0" text="Load profil">
                     <VBox.margin>
-                        <Insets top="25.0" />
+                        <Insets top="25.0"/>
                     </VBox.margin>
                 </Button>
             </children>
             <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
             </padding>
         </VBox>
     </center>

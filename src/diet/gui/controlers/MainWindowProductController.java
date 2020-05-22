@@ -2,10 +2,7 @@ package diet.gui.controlers;
 
 import diet.model.Product;
 import diet.model.database.ProductData;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,17 +28,17 @@ public class MainWindowProductController {
     @FXML
     private TableView<Product> tableViewProduct;
     @FXML
-    private TableColumn<Product, SimpleStringProperty> productName;
+    private TableColumn<Product, String> productName;
     @FXML
-    private TableColumn<Product, SimpleDoubleProperty> productKcal;
+    private TableColumn<Product, Double> productKcal;
     @FXML
-    private TableColumn<Product, SimpleDoubleProperty> productProtein;
+    private TableColumn<Product, Double> productProtein;
     @FXML
-    private TableColumn<Product, SimpleDoubleProperty> productFat;
+    private TableColumn<Product, Double> productFat;
     @FXML
-    private TableColumn<Product, SimpleDoubleProperty> productCarbs;
+    private TableColumn<Product, Double> productCarbs;
     @FXML
-    private TableColumn<Product, SimpleDoubleProperty> productFiber;
+    private TableColumn<Product, Double> productFiber;
 
     @FXML
     private Button buttonAddNewProduct;
@@ -60,11 +57,28 @@ public class MainWindowProductController {
         productCarbs.setCellValueFactory(new PropertyValueFactory<>("fat"));
         productFiber.setCellValueFactory(new PropertyValueFactory<>("fiber"));
         tableViewProduct.setItems(productsList);
+        tableViewProduct.getSortOrder().add(productName);
 
+        ProductData.getProductsList().addListener(new ListChangeListener<Product>() {
+            @Override
+            public void onChanged(Change<? extends Product> change) {
+                while (change.next()) {
+                    if (change.wasAdded()) {
+                        tableViewProduct.getSortOrder().add(productName);
+                        System.out.println("dodano");
+                    }
+                    if (change.wasRemoved()) {
+                        tableViewProduct.refresh();
+                        tableViewProduct.setItems(ProductData.getProductsList());
+                        tableViewProduct.getSortOrder().add(productName);
+                    }
+                }
+            }
+        });
     }
 
     @FXML
-    public void setButtonAddNewProduct(){
+    public void setButtonAddNewProduct() {
         loadedFxml = "Add";
         Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
         Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductAdd.fxml");
@@ -72,13 +86,13 @@ public class MainWindowProductController {
     }
 
     @FXML
-    public void setButtonEditProduct(){
+    public void setButtonEditProduct() {
         loadedFxml = "Edit";
         Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
-        if(Product.getSelectedProduct() != null ) {
+        if (Product.getSelectedProduct() != null) {
             Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductEdit.fxml");
             loadUrl(pathNewProduct);
-        }else{
+        } else {
             Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
             alertNoChoosen.setTitle("No product selected");
             alertNoChoosen.setContentText("choose product by clicking it in table");
@@ -87,20 +101,20 @@ public class MainWindowProductController {
     }
 
     @FXML
-    public void setButtonDeleteProduct(){
+    public void setButtonDeleteProduct() {
         Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
-        if(Product.getSelectedProduct() != null ) {
+        if (Product.getSelectedProduct() != null) {
             Alert alertNoChoosen = new Alert(Alert.AlertType.WARNING);
-            alertNoChoosen.setContentText("Do you really want to delete profile "+Product.getSelectedProduct().getName()+"?");
+            alertNoChoosen.setContentText("Do you really want to delete profile " + Product.getSelectedProduct().getName() + "?");
             alertNoChoosen.setTitle("Delete confirmation");
 
             Optional<ButtonType> result = alertNoChoosen.showAndWait();
-            if (result.get() == ButtonType.OK){
+            if (result.get() == ButtonType.OK) {
                 ProductData.getInstance().deleteProduct();
             } else {
                 alertNoChoosen.close();
             }
-        }else{
+        } else {
             Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
             alertNoChoosen.setTitle("No product selected");
             alertNoChoosen.setContentText("choose product by clicking it in table");
@@ -116,7 +130,7 @@ public class MainWindowProductController {
         return loadedFxml;
     }
 
-    private void loadUrl(Path path){
+    private void loadUrl(Path path) {
         try {
             URL url = path.toUri().toURL();
             FXMLLoader loader = new FXMLLoader(url);
@@ -127,11 +141,11 @@ public class MainWindowProductController {
                 stage.setScene(new Scene(root));
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
-            }catch (IOException e){
-                System.out.println("Cannot load fxml file "+e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Cannot load fxml file " + e.getMessage());
             }
         } catch (MalformedURLException m) {
-            System.out.println("Incorect URL "+m.getMessage());
+            System.out.println("Incorect URL " + m.getMessage());
         }
     }
 }

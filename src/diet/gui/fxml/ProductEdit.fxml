@@ -8,15 +8,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="diet.gui.controlers.ProductAddController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="330.0"
+            prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="diet.gui.controlers.ProductAddController">
     <bottom>
         <HBox alignment="CENTER" prefHeight="40.0" prefWidth="200.0" spacing="20.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="buttonEditProduct" mnemonicParsing="false" prefWidth="90.0" text="Edit product" onAction="#setButtonEditProduct"/>
-                <Button fx:id="buttonCancelProduct" mnemonicParsing="false" prefWidth="90.0" text="Cancel" onAction="#setButtonCancelProduct"/>
+                <Button fx:id="buttonEditProduct" mnemonicParsing="false" prefWidth="90.0" text="Edit product"
+                        onAction="#setButtonEditProduct"/>
+                <Button fx:id="buttonCancelProduct" mnemonicParsing="false" prefWidth="90.0" text="Cancel"
+                        onAction="#setButtonCancelProduct"/>
             </children>
             <padding>
-                <Insets bottom="20.0" top="10.0" />
+                <Insets bottom="20.0" top="10.0"/>
             </padding>
         </HBox>
     </bottom>
@@ -25,77 +29,77 @@
             <children>
                 <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="50.0" text="Name" />
-                        <TextField fx:id="textFieldProductName" />
-                        <Label fx:id="invalidProductName" prefWidth="100.0" />
+                        <Label prefWidth="50.0" text="Name"/>
+                        <TextField fx:id="textFieldProductName"/>
+                        <Label fx:id="invalidProductName" prefWidth="100.0"/>
                     </children>
                     <VBox.margin>
-                        <Insets bottom="5.0" left="20.0" right="20.0" top="20.0" />
+                        <Insets bottom="5.0" left="20.0" right="20.0" top="20.0"/>
                     </VBox.margin>
                     <padding>
-                        <Insets right="-50.0" />
+                        <Insets right="-50.0"/>
                     </padding>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="50.0" text="kcal" />
-                        <TextField fx:id="textFieldProductKcal" />
-                        <Label fx:id="invalidProductKcal" prefWidth="100.0" />
+                        <Label prefWidth="50.0" text="kcal"/>
+                        <TextField fx:id="textFieldProductKcal"/>
+                        <Label fx:id="invalidProductKcal" prefWidth="100.0"/>
                     </children>
                     <padding>
-                        <Insets right="-50.0" />
+                        <Insets right="-50.0"/>
                     </padding>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="50.0" text="protein" />
-                        <TextField fx:id="textFieldProductProtein" />
-                        <Label fx:id="invalidProductProtein" prefWidth="100.0" />
+                        <Label prefWidth="50.0" text="protein"/>
+                        <TextField fx:id="textFieldProductProtein"/>
+                        <Label fx:id="invalidProductProtein" prefWidth="100.0"/>
                     </children>
                     <padding>
-                        <Insets right="-50.0" />
+                        <Insets right="-50.0"/>
                     </padding>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="50.0" text="fat" />
-                        <TextField fx:id="textFieldProductFat" />
-                        <Label fx:id="invalidProductFat" prefWidth="100.0" />
+                        <Label prefWidth="50.0" text="fat"/>
+                        <TextField fx:id="textFieldProductFat"/>
+                        <Label fx:id="invalidProductFat" prefWidth="100.0"/>
                     </children>
                     <padding>
-                        <Insets right="-50.0" />
+                        <Insets right="-50.0"/>
                     </padding>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="50.0" text="carbs" />
-                        <TextField fx:id="textFieldProductCarbs" />
-                        <Label fx:id="invalidProductCarbs" prefWidth="100.0" />
+                        <Label prefWidth="50.0" text="carbs"/>
+                        <TextField fx:id="textFieldProductCarbs"/>
+                        <Label fx:id="invalidProductCarbs" prefWidth="100.0"/>
                     </children>
                     <padding>
-                        <Insets right="-50.0" />
+                        <Insets right="-50.0"/>
                     </padding>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="50.0" text="fiber" />
-                        <TextField fx:id="textFieldProductFiber" />
-                        <Label fx:id="invalidProductFiber" prefWidth="100.0" />
+                        <Label prefWidth="50.0" text="fiber"/>
+                        <TextField fx:id="textFieldProductFiber"/>
+                        <Label fx:id="invalidProductFiber" prefWidth="100.0"/>
                     </children>
                     <padding>
-                        <Insets right="-50.0" />
+                        <Insets right="-50.0"/>
                     </padding>
                 </HBox>
             </children>
             <BorderPane.margin>
-                <Insets bottom="10.0" />
+                <Insets bottom="10.0"/>
             </BorderPane.margin>
         </VBox>
     </center>
     <top>
         <Label text="Edit product" BorderPane.alignment="CENTER">
             <BorderPane.margin>
-                <Insets top="20.0" />
+                <Insets top="20.0"/>
             </BorderPane.margin>
         </Label>
     </top>

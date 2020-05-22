@@ -35,36 +35,34 @@ public class DietData {
     private static final String TABLE_DIET_PRODUCT_ID_PRODUCT = "ID_PRODUCT";
     private static final String TABLE_DIET_PRODUCT_AMOUNT = "AMOUNT";
 
-    private static final String READ_DIET_FOR_PROFIL = "SELECT "+TABLE_ID_DIET+", "+TABLE_EATDATE+" FROM "+TABLE+
-            " WHERE "+TABLE_ID_PROFIL+" = "+ Profil.getSelectedProfil().getIdPerson();
+    private static final String READ_DIET_FOR_PROFIL = "SELECT " + TABLE_ID_DIET + ", " + TABLE_EATDATE + " FROM " + TABLE +
+            " WHERE " + TABLE_ID_PROFIL + " = " + Profil.getSelectedProfil().getIdPerson();
 
-    private static final String READ_MEALS_FOR_DIET = "SELECT "+TABLE_DIET_MEAL_ID_MEAL+", "+TABLE_DIET_MEAL_AMOUNT
-            +" FROM "+TABLE_DIET_MEAL+" WHERE "+TABLE_DIET_MEAL_ID_DIET+" =?";
+    private static final String READ_MEALS_FOR_DIET = "SELECT " + TABLE_DIET_MEAL_ID_MEAL + ", " + TABLE_DIET_MEAL_AMOUNT
+            + " FROM " + TABLE_DIET_MEAL + " WHERE " + TABLE_DIET_MEAL_ID_DIET + " =?";
 
-    private static final String READ_PRODUCTS_FOR_DIET = "SELECT "+TABLE_DIET_PRODUCT_ID_PRODUCT+", "+TABLE_DIET_PRODUCT_AMOUNT
-            +" FROM "+TABLE_DIET_PRODUCT+" WHERE "+TABLE_DIET_PRODUCT_ID_DIET+" =?";
+    private static final String READ_PRODUCTS_FOR_DIET = "SELECT " + TABLE_DIET_PRODUCT_ID_PRODUCT + ", " + TABLE_DIET_PRODUCT_AMOUNT
+            + " FROM " + TABLE_DIET_PRODUCT + " WHERE " + TABLE_DIET_PRODUCT_ID_DIET + " =?";
 
-    private DietData(){
+    private DietData() {
 
     }
 
-    public static DietData getInstance(){
+    public static DietData getInstance() {
         return singletonDietData;
     }
 
-    public void readDietForProfil(){
+    public void readDietForProfil() {
         List<Diet> diets = new ArrayList<>();
-        try(PreparedStatement preparedStatement = conn.prepareStatement(READ_DIET_FOR_PROFIL);
-            ResultSet resultSet = preparedStatement.executeQuery()){
+        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_DIET_FOR_PROFIL);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 Diet diet = new Diet();
                 diet.setIdDiet(resultSet.getInt(TABLE_ID_DIET));
                 diet.setIdOsoba(Profil.getSelectedProfil().getIdPerson());
-
                 String date = resultSet.getString(TABLE_EATDATE);
                 diet.setDate(parseStringToDate(date));
-
                 diet.setDietMeals(readMealsForDied(diet.getIdDiet()));
                 diet.setDietProducts(readProductsForDied(diet.getIdDiet()));
                 diet.countKcalForDiet();
@@ -75,38 +73,35 @@ public class DietData {
 
                 diets.add(diet);
             }
-
-        }catch (SQLException e){
-            System.out.println("Query failed "+e.getMessage());
+        } catch (SQLException e) {
+            System.out.println("Query failed " + e.getMessage());
         }
         dietsList = FXCollections.observableList(diets);
     }
 
-    private Map<Meal, Integer> readMealsForDied(int diedId){
+    private Map<Meal, Integer> readMealsForDied(int diedId) {
         Map<Meal, Integer> meals = new HashMap<>();
-        ResultSet resultSet=null;
-        try(PreparedStatement preparedStatement = conn.prepareStatement(READ_MEALS_FOR_DIET)){
+        ResultSet resultSet = null;
+        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_MEALS_FOR_DIET)) {
             preparedStatement.setInt(1, diedId);
             resultSet = preparedStatement.executeQuery();
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 int meal_id = resultSet.getInt(TABLE_DIET_MEAL_ID_MEAL);
-
                 MealData.getInstance().readAllMealForProfil();
                 ObservableList<Meal> mealsList = MealData.getMealsList();
-
-                for(int i=0; i<mealsList.size(); i++){
-                    if(meal_id == mealsList.get(i).getIdMeal()) {
-                        meals.put(mealsList.get(i),resultSet.getInt(TABLE_DIET_MEAL_AMOUNT));
+                for (int i = 0; i < mealsList.size(); i++) {
+                    if (meal_id == mealsList.get(i).getIdMeal()) {
+                        meals.put(mealsList.get(i), resultSet.getInt(TABLE_DIET_MEAL_AMOUNT));
                         i = mealsList.size();
                     }
                 }
             }
             resultSet.close();
-        }catch (SQLException e){
-            System.out.println("Query failed "+e.getMessage());
-        }finally {
-            if(resultSet != null) {
+        } catch (SQLException e) {
+            System.out.println("Query failed " + e.getMessage());
+        } finally {
+            if (resultSet != null) {
                 try {
                     resultSet.close();
                 } catch (SQLException e) {
@@ -117,30 +112,29 @@ public class DietData {
         return meals;
     }
 
-    private Map<Product, Integer> readProductsForDied(int diedId){
+    private Map<Product, Integer> readProductsForDied(int diedId) {
         Map<Product, Integer> meals = new HashMap<>();
         ResultSet resultSet = null;
-        try(PreparedStatement preparedStatement = conn.prepareStatement(READ_PRODUCTS_FOR_DIET)){
+        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_PRODUCTS_FOR_DIET)) {
             preparedStatement.setInt(1, diedId);
             resultSet = preparedStatement.executeQuery();
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 int product_id = resultSet.getInt(TABLE_DIET_PRODUCT_ID_PRODUCT);
-
                 ProductData.getInstance().readAllProductForProfil();
                 ObservableList<Product> productsList = ProductData.getProductsList();
-                for(int i=0; i<productsList.size(); i++){
-                    if(product_id == productsList.get(i).getIdProduct()) {
-                        meals.put(productsList.get(i),resultSet.getInt(TABLE_DIET_PRODUCT_AMOUNT));
+                for (int i = 0; i < productsList.size(); i++) {
+                    if (product_id == productsList.get(i).getIdProduct()) {
+                        meals.put(productsList.get(i), resultSet.getInt(TABLE_DIET_PRODUCT_AMOUNT));
                         i = productsList.size();
                     }
                 }
             }
             resultSet.close();
-        }catch (SQLException e){
-            System.out.println("Query failed "+e.getMessage());
-        }finally {
-            if(resultSet != null) {
+        } catch (SQLException e) {
+            System.out.println("Query failed " + e.getMessage());
+        } finally {
+            if (resultSet != null) {
                 try {
                     resultSet.close();
                 } catch (SQLException e) {
@@ -151,13 +145,13 @@ public class DietData {
         return meals;
     }
 
-    private LocalDateTime parseStringToDate(String stringDate){
-        String dateToSet = stringDate.replace(" ","T");
+    private LocalDateTime parseStringToDate(String stringDate) {
+        String dateToSet = stringDate.replace(" ", "T");
         LocalDateTime localDateTime = LocalDateTime.parse(dateToSet);
         return localDateTime;
     }
 
-    public static ObservableList<Diet> getDietsList(){
+    public static ObservableList<Diet> getDietsList() {
         return dietsList;
     }
 }

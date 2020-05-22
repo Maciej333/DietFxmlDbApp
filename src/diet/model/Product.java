@@ -12,7 +12,7 @@ public class Product {
     private Double fat;
     private Double fiber;
 
-    public Product(){
+    public Product() {
     }
 
     public Product(int idProduct, String name, double kcal, double protein, double carbs, double fat, double fiber) {
@@ -25,7 +25,7 @@ public class Product {
         this.fiber = fiber;
     }
 
-    public static Product getSelectedProduct(){
+    public static Product getSelectedProduct() {
         return selectedProduct;
     }
 

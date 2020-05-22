@@ -40,24 +40,24 @@ public class ProfilChoiceController {
     public void initialize() {
         ProfilData.getInstance().readAllProfils();
         comboBoxProfil.itemsProperty().setValue(ProfilData.getProfilsList());
-        if(ProfilData.getProfilsList().size() > 0){
+        if (ProfilData.getProfilsList().size() > 0) {
             comboBoxProfil.getSelectionModel().select(0);
         }
     }
 
     @FXML
-    public void setButtonAddProfil(){
+    public void setButtonAddProfil() {
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProfilCreate.fxml");
-        loadUrl(path,buttonAddProfil.getText());
+        loadUrl(path, buttonAddProfil.getText());
     }
 
     @FXML
-    public void setButtonLoadProfil(){
+    public void setButtonLoadProfil() {
         setSelectedProfil();
-        if(getSelectedProfil() != null) {
+        if (getSelectedProfil() != null) {
             Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindow.fxml");
-            loadUrl(path,buttonLoadProfil.getText());
-        }else{
+            loadUrl(path, buttonLoadProfil.getText());
+        } else {
             Alert alterProfilNoChoice = new Alert(Alert.AlertType.WARNING);
             alterProfilNoChoice.setContentText("befor moving on, choose profil You would like to load");
             alterProfilNoChoice.setTitle("choose profil");
@@ -66,21 +66,20 @@ public class ProfilChoiceController {
     }
 
     @FXML
-    public void setButtonDeleteProfil(){
+    public void setButtonDeleteProfil() {
         setSelectedProfil();
-        if(getSelectedProfil() != null){
+        if (getSelectedProfil() != null) {
             Alert alterProfilDelete = new Alert(Alert.AlertType.CONFIRMATION);
-            alterProfilDelete.setContentText("Do you really want to delete profile "+getSelectedProfil().getName()+"?");
+            alterProfilDelete.setContentText("Do you really want to delete profile " + getSelectedProfil().getName() + "?");
             alterProfilDelete.setTitle("Delete confirmation");
 
             Optional<ButtonType> result = alterProfilDelete.showAndWait();
-            if (result.get() == ButtonType.OK){
+            if (result.get() == ButtonType.OK) {
                 ProfilData.getInstance().deleteProfil(getSelectedProfil().getIdPerson());
                 comboBoxProfil.getSelectionModel().select(0);
             } else {
             }
-
-        }else{
+        } else {
             Alert alterProfilNoChoice = new Alert(Alert.AlertType.WARNING);
             alterProfilNoChoice.setContentText("befor moving on, choose profil You would like to load");
             alterProfilNoChoice.setTitle("choose profil");
@@ -89,19 +88,19 @@ public class ProfilChoiceController {
     }
 
     @FXML
-    public void setButtonCancel(){
+    public void setButtonCancel() {
         Platform.exit();
     }
 
-    private Profil getSelectedProfil(){
+    private Profil getSelectedProfil() {
         return comboBoxProfil.getSelectionModel().getSelectedItem();
     }
 
-    public void setSelectedProfil(){
+    public void setSelectedProfil() {
         Profil.setSelectedProfil(getSelectedProfil());
     }
 
-    private void loadUrl(Path path, String buttonText){
+    private void loadUrl(Path path, String buttonText) {
         try {
             URL url = path.toUri().toURL();
             FXMLLoader loader = new FXMLLoader(url);
@@ -110,18 +109,18 @@ public class ProfilChoiceController {
                 Stage stage = new Stage();
                 stage.setTitle("Diet");
                 stage.setScene(new Scene(root));
-                if(buttonText.equals(buttonAddProfil.getText()))
+                if (buttonText.equals(buttonAddProfil.getText()))
                     stage.initModality(Modality.APPLICATION_MODAL);
                 stage.show();
-                if(buttonText.equals(buttonLoadProfil.getText())){
+                if (buttonText.equals(buttonLoadProfil.getText())) {
                     Stage primaryStage = Main.getPrimaryStage();
                     primaryStage.close();
                 }
-            }catch (IOException e){
-                System.out.println("Cannot load fxml file "+e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Cannot load fxml file " + e.getMessage());
             }
         } catch (MalformedURLException m) {
-            System.out.println("Incorect URL "+m.getMessage());
+            System.out.println("Incorect URL " + m.getMessage());
         }
     }
 }

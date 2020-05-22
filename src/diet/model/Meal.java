@@ -17,11 +17,11 @@ public class Meal {
     private double carbs;
     private double fiber;
 
-    public Meal(){
+    public Meal() {
 
     }
 
-    public static Meal getSelectedMeal(){
+    public static Meal getSelectedMeal() {
         return selectedMeal;
     }
 
@@ -69,69 +69,69 @@ public class Meal {
         return fiber;
     }
 
-    public void countKcalForMeal(){
+    public void countKcalForMeal() {
         double kcalForMeal = 0;
         double amountOfProducts = 0;
-        for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
-            kcalForMeal += productAmount.getValue()*productAmount.getKey().getKcal()/100;
-            amountOfProducts +=productAmount.getValue();
+        for (Map.Entry<Product, Integer> productAmount : productsForMeal.entrySet()) {
+            kcalForMeal += productAmount.getValue() * productAmount.getKey().getKcal() / 100;
+            amountOfProducts += productAmount.getValue();
         }
-        kcalForMeal = kcalForMeal/amountOfProducts*100;
+        kcalForMeal = kcalForMeal / amountOfProducts * 100;
         this.kcal = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcalForMeal));
     }
 
-    public void countProteinForMeal(){
+    public void countProteinForMeal() {
         double proteinForMeal = 0;
         double amountOfProducts = 0;
-        for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
-            proteinForMeal += productAmount.getValue()*productAmount.getKey().getProtein()/100;
-            amountOfProducts +=productAmount.getValue();
+        for (Map.Entry<Product, Integer> productAmount : productsForMeal.entrySet()) {
+            proteinForMeal += productAmount.getValue() * productAmount.getKey().getProtein() / 100;
+            amountOfProducts += productAmount.getValue();
         }
-        proteinForMeal = proteinForMeal/amountOfProducts*100;
+        proteinForMeal = proteinForMeal / amountOfProducts * 100;
         this.protein = Double.parseDouble(ClassOfStaticMethod.roundDouble(proteinForMeal));
     }
 
-    public void countFatForMeal(){
+    public void countFatForMeal() {
         double fatForMeal = 0;
         double amountOfProducts = 0;
-        for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
-            fatForMeal += productAmount.getValue()*productAmount.getKey().getFat()/100;
-            amountOfProducts +=productAmount.getValue();
+        for (Map.Entry<Product, Integer> productAmount : productsForMeal.entrySet()) {
+            fatForMeal += productAmount.getValue() * productAmount.getKey().getFat() / 100;
+            amountOfProducts += productAmount.getValue();
         }
-        fatForMeal = fatForMeal/amountOfProducts*100;
+        fatForMeal = fatForMeal / amountOfProducts * 100;
         this.fat = Double.parseDouble(ClassOfStaticMethod.roundDouble(fatForMeal));
     }
 
-    public void countCarbsForMeal(){
+    public void countCarbsForMeal() {
         double carbsForMeal = 0;
         double amountOfProducts = 0;
-        for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
-            carbsForMeal += productAmount.getValue()*productAmount.getKey().getCarbs()/100;
-            amountOfProducts +=productAmount.getValue();
+        for (Map.Entry<Product, Integer> productAmount : productsForMeal.entrySet()) {
+            carbsForMeal += productAmount.getValue() * productAmount.getKey().getCarbs() / 100;
+            amountOfProducts += productAmount.getValue();
         }
-        carbsForMeal = carbsForMeal/amountOfProducts*100;
+        carbsForMeal = carbsForMeal / amountOfProducts * 100;
         this.carbs = Double.parseDouble(ClassOfStaticMethod.roundDouble(carbsForMeal));
     }
 
-    public void countFiberForMeal(){
+    public void countFiberForMeal() {
         double fiberForMeal = 0;
         double amountOfProducts = 0;
-        for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
-            fiberForMeal += productAmount.getValue()*productAmount.getKey().getFiber()/100;
-            amountOfProducts +=productAmount.getValue();
+        for (Map.Entry<Product, Integer> productAmount : productsForMeal.entrySet()) {
+            fiberForMeal += productAmount.getValue() * productAmount.getKey().getFiber() / 100;
+            amountOfProducts += productAmount.getValue();
         }
-        fiberForMeal = fiberForMeal/amountOfProducts*100;
+        fiberForMeal = fiberForMeal / amountOfProducts * 100;
         this.fiber = Double.parseDouble(ClassOfStaticMethod.roundDouble(fiberForMeal));
     }
 
     @Override
     public String toString() {
-        return idMeal+" name= "+name+" kcal= "+kcal+" protein= "+protein+" fat= "+fat+" carbs= "+carbs+" fiber= "+fiber;
+        return idMeal + " name= " + name + " kcal= " + kcal + " protein= " + protein + " fat= " + fat + " carbs= " + carbs + " fiber= " + fiber;
     }
 
-    public void showProduct(){
-        for(Map.Entry<Product, Integer> productAmount: productsForMeal.entrySet()){
-            System.out.println(productAmount.getKey()+ " ilosc  = "+productAmount.getValue());
+    public void showProduct() {
+        for (Map.Entry<Product, Integer> productAmount : productsForMeal.entrySet()) {
+            System.out.println(productAmount.getKey() + " ilosc  = " + productAmount.getValue());
         }
     }
 }

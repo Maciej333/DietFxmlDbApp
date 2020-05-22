@@ -13,7 +13,7 @@ public class Main extends Application {
     private static Stage primaryStage;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("gui/fxml/ProfilChoice.fxml"));
         Parent root = loader.load();
@@ -25,7 +25,7 @@ public class Main extends Application {
     @Override
     public void init() throws Exception {
         super.init();
-        if(!Datasource.getInstance().openConnection()){
+        if (!Datasource.getInstance().openConnection()) {
             System.out.println("ERROR during connecting to database, application won't run ");
             Platform.exit();
         }
@@ -41,7 +41,7 @@ public class Main extends Application {
         launch(args);
     }
 
-    public static Stage getPrimaryStage(){
+    public static Stage getPrimaryStage() {
         return primaryStage;
     }
 }

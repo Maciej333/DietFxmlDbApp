@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,52 +33,52 @@ public class MainWindowController {
     private Button buttonStats;
 
     public void initialize() {
-        Platform.runLater(()-> buttonDiet.requestFocus());
+        Platform.runLater(() -> buttonDiet.requestFocus());
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowDiet.fxml");
         loadUrl(path);
     }
 
     @FXML
-    public void setButtonProfil(){
+    public void setButtonProfil() {
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowProfilInfo.fxml");
         loadUrl(path);
     }
 
     @FXML
-    public void setButtonProducts(){
+    public void setButtonProducts() {
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowProduct.fxml");
         loadUrl(path);
     }
 
     @FXML
-    public void setButtonMeals(){
+    public void setButtonMeals() {
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowMeal.fxml");
         loadUrl(path);
     }
 
     @FXML
-    public void setButtonDiet(){
+    public void setButtonDiet() {
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowDiet.fxml");
         loadUrl(path);
     }
 
     @FXML
-    public void setButtonStats(){
+    public void setButtonStats() {
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowStats.fxml");
         loadUrl(path);
     }
 
-    private void loadUrl(Path path){
+    private void loadUrl(Path path) {
         try {
             URL url = path.toUri().toURL();
             FXMLLoader loader = new FXMLLoader(url);
             try {
                 this.borderPaneMainWindow.setCenter(loader.load());
-            }catch (IOException e){
-                System.out.println("Cannot load MainWindow "+e.getMessage());
+            } catch (IOException e) {
+                System.out.println("Cannot load MainWindow " + e.getMessage());
             }
         } catch (MalformedURLException m) {
-            System.out.println("Incorect URL "+m.getMessage());
+            System.out.println("Incorect URL " + m.getMessage());
         }
     }
 }

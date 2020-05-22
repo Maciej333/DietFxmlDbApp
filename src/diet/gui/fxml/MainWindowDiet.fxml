@@ -10,59 +10,61 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="diet.gui.controlers.MainWindowDietController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="diet.gui.controlers.MainWindowDietController">
     <right>
         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="180.0" spacing="10.0" BorderPane.alignment="CENTER">
             <children>
                 <DatePicker fx:id="datePickerDiet" prefWidth="130.0">
                     <VBox.margin>
-                        <Insets top="30.0" />
+                        <Insets top="30.0"/>
                     </VBox.margin>
                 </DatePicker>
                 <Label text="Your stats of a day">
                     <VBox.margin>
-                        <Insets top="20.0" />
+                        <Insets top="20.0"/>
                     </VBox.margin>
                 </Label>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="kcal" />
-                        <Label fx:id="labelEatenKcal" prefWidth="45.0" text="Label" />
-                        <Label fx:id="labelMaxKcal" prefWidth="45.0" text="Label" />
+                        <Label prefWidth="40.0" text="kcal"/>
+                        <Label fx:id="labelEatenKcal" prefWidth="45.0" text="Label"/>
+                        <Label fx:id="labelMaxKcal" prefWidth="45.0" text="Label"/>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="protein" />
-                        <Label fx:id="labelEatenProtein" prefWidth="45.0" text="Label" />
-                        <Label fx:id="labelMaxProtein" prefWidth="45.0" text="Label" />
+                        <Label prefWidth="40.0" text="protein"/>
+                        <Label fx:id="labelEatenProtein" prefWidth="45.0" text="Label"/>
+                        <Label fx:id="labelMaxProtein" prefWidth="45.0" text="Label"/>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="fat" />
-                        <Label fx:id="labelEatenFat" prefWidth="45.0" text="Label" />
-                        <Label fx:id="labelMaxFat" prefWidth="45.0" text="Label" />
+                        <Label prefWidth="40.0" text="fat"/>
+                        <Label fx:id="labelEatenFat" prefWidth="45.0" text="Label"/>
+                        <Label fx:id="labelMaxFat" prefWidth="45.0" text="Label"/>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="carbs" />
-                        <Label fx:id="labelEatenCarbs" prefWidth="45.0" text="Label" />
-                        <Label fx:id="labelMaxCarbs" prefWidth="45.0" text="Label" />
+                        <Label prefWidth="40.0" text="carbs"/>
+                        <Label fx:id="labelEatenCarbs" prefWidth="45.0" text="Label"/>
+                        <Label fx:id="labelMaxCarbs" prefWidth="45.0" text="Label"/>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="fiber" />
-                        <Label fx:id="labelEatenFiber" prefWidth="45.0" text="Label" />
-                        <Label fx:id="labelMaxFiber" prefWidth="45.0" text="Label" />
+                        <Label prefWidth="40.0" text="fiber"/>
+                        <Label fx:id="labelEatenFiber" prefWidth="45.0" text="Label"/>
+                        <Label fx:id="labelMaxFiber" prefWidth="45.0" text="Label"/>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="50.0" prefWidth="220.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="65.0" text="Kcal bilans=" />
-                        <Label fx:id="kcalBilans" prefWidth="60.0" text="Label" />
+                        <Label prefWidth="65.0" text="Kcal bilans="/>
+                        <Label fx:id="kcalBilans" prefWidth="60.0" text="Label"/>
                     </children>
                 </HBox>
             </children>
@@ -73,17 +75,18 @@
             <children>
                 <TableView fx:id="tableViewDiet" prefHeight="400.0" prefWidth="400.0">
                     <columns>
-                        <TableColumn fx:id="dietDate" prefWidth="120.0" text="date" />
-                        <TableColumn fx:id="dietKcal" prefWidth="60" text="kcal" />
-                        <TableColumn fx:id="dietProtein" prefWidth="60" text="protein" />
-                        <TableColumn fx:id="dietFat" prefWidth="60" text="fat" />
-                        <TableColumn fx:id="dietCarbs" prefWidth="60" text="carbs" />
-                        <TableColumn fx:id="dietFiber" prefWidth="60" text="fiber" />
+                        <TableColumn fx:id="dietDate" prefWidth="120.0" text="date"/>
+                        <TableColumn fx:id="dietKcal" prefWidth="60" text="kcal"/>
+                        <TableColumn fx:id="dietProtein" prefWidth="60" text="protein"/>
+                        <TableColumn fx:id="dietFat" prefWidth="60" text="fat"/>
+                        <TableColumn fx:id="dietCarbs" prefWidth="60" text="carbs"/>
+                        <TableColumn fx:id="dietFiber" prefWidth="60" text="fiber"/>
                     </columns>
                 </TableView>
                 <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="380.0">
                     <children>
-                        <Button fx:id="buttonAddProductMeal" mnemonicParsing="false" onAction="#setButtonAddProductMeal" text="Add product/meal" />
+                        <Button fx:id="buttonAddProductMeal" mnemonicParsing="false" onAction="#setButtonAddProductMeal"
+                                text="Add product/meal"/>
                     </children>
                 </HBox>
             </children>

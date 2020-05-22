@@ -58,7 +58,6 @@ public class MainWindowDietController {
     @FXML
     private Label kcalBilans;
 
-
     public void initialize() {
         DietData.getInstance().readDietForProfil();
         dietsList = DietData.getDietsList();
@@ -71,10 +70,10 @@ public class MainWindowDietController {
         dietFiber.setCellValueFactory(new PropertyValueFactory<>("fiber"));
 
         datePickerDiet.setValue(LocalDate.now());
-        ObservableList<Diet> currentDiets = Diet.getDietsByDate(dietsList,datePickerDiet.getValue());
+        ObservableList<Diet> currentDiets = Diet.getDietsByDate(dietsList, datePickerDiet.getValue());
 
-        datePickerDiet.valueProperty().addListener((observable, oldDate, newDate )->{
-            ObservableList<Diet>  newCurrentDiets = Diet.getDietsByDate(dietsList,newDate);
+        datePickerDiet.valueProperty().addListener((observable, oldDate, newDate) -> {
+            ObservableList<Diet> newCurrentDiets = Diet.getDietsByDate(dietsList, newDate);
             tableViewDiet.setItems(newCurrentDiets);
             Double[] newStatsOfDiets = Diet.countStatsForDiets(newCurrentDiets);
             labelEatenKcal.setText(newStatsOfDiets[0].toString());
@@ -83,7 +82,7 @@ public class MainWindowDietController {
             labelEatenCarbs.setText(newStatsOfDiets[3].toString());
             labelEatenFiber.setText(newStatsOfDiets[4].toString());
             kcalBilans.setText(newStatsOfDiets[5].toString());
-        } );
+        });
 
         tableViewDiet.setItems(currentDiets);
 
@@ -92,11 +91,11 @@ public class MainWindowDietController {
         Profil.getSelectedProfil().countFat();
         Profil.getSelectedProfil().countCarbs();
         Profil.getSelectedProfil().countFiber();
-        labelMaxKcal.setText(Profil.getSelectedProfil().getKcal()+"");
-        labelMaxProtein.setText(Profil.getSelectedProfil().getProtein()+"");
-        labelMaxFat.setText(Profil.getSelectedProfil().getFat()+"");
-        labelMaxCarbs.setText(Profil.getSelectedProfil().getCarbs()+"");
-        labelMaxFiber.setText(Profil.getSelectedProfil().getFiber()+"");
+        labelMaxKcal.setText(Profil.getSelectedProfil().getKcal() + "");
+        labelMaxProtein.setText(Profil.getSelectedProfil().getProtein() + "");
+        labelMaxFat.setText(Profil.getSelectedProfil().getFat() + "");
+        labelMaxCarbs.setText(Profil.getSelectedProfil().getCarbs() + "");
+        labelMaxFiber.setText(Profil.getSelectedProfil().getFiber() + "");
 
         Double[] statsOfDiets = Diet.countStatsForDiets(currentDiets);
         labelEatenKcal.setText(statsOfDiets[0].toString());
@@ -108,7 +107,7 @@ public class MainWindowDietController {
     }
 
     @FXML
-    public void setButtonAddProductMeal(){
+    public void setButtonAddProductMeal() {
 
     }
 }
