@@ -1,9 +1,11 @@
 package diet.gui.controlers;
 
-import diet.Main;
 import diet.model.Product;
 import diet.model.database.ProductData;
-import diet.model.database.ProfilData;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,22 +25,23 @@ import java.util.Optional;
 
 public class MainWindowProductController {
 
+    private static String loadedFxml = null;
     private ObservableList<Product> productsList;
 
     @FXML
     private TableView<Product> tableViewProduct;
     @FXML
-    private TableColumn<Product, String> productName;
+    private TableColumn<Product, SimpleStringProperty> productName;
     @FXML
-    private TableColumn<Product, Double> productKcal;
+    private TableColumn<Product, SimpleDoubleProperty> productKcal;
     @FXML
-    private TableColumn<Product, Double> productProtein;
+    private TableColumn<Product, SimpleDoubleProperty> productProtein;
     @FXML
-    private TableColumn<Product, Double> productFat;
+    private TableColumn<Product, SimpleDoubleProperty> productFat;
     @FXML
-    private TableColumn<Product, Double> productCarbs;
+    private TableColumn<Product, SimpleDoubleProperty> productCarbs;
     @FXML
-    private TableColumn<Product, Double> productFiber;
+    private TableColumn<Product, SimpleDoubleProperty> productFiber;
 
     @FXML
     private Button buttonAddNewProduct;
@@ -57,16 +60,20 @@ public class MainWindowProductController {
         productCarbs.setCellValueFactory(new PropertyValueFactory<>("fat"));
         productFiber.setCellValueFactory(new PropertyValueFactory<>("fiber"));
         tableViewProduct.setItems(productsList);
+
     }
 
     @FXML
     public void setButtonAddNewProduct(){
+        loadedFxml = "Add";
+        Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
         Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductAdd.fxml");
         loadUrl(pathNewProduct);
     }
 
     @FXML
     public void setButtonEditProduct(){
+        loadedFxml = "Edit";
         Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
         if(Product.getSelectedProduct() != null ) {
             Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductEdit.fxml");
@@ -89,10 +96,9 @@ public class MainWindowProductController {
 
             Optional<ButtonType> result = alertNoChoosen.showAndWait();
             if (result.get() == ButtonType.OK){
-
-                                System.out.println("to co do usuniecia deleta zrobic ");
-
+                ProductData.getInstance().deleteProduct();
             } else {
+                alertNoChoosen.close();
             }
         }else{
             Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
@@ -102,7 +108,13 @@ public class MainWindowProductController {
         }
     }
 
+    public TableView<Product> getTableViewProduct() {
+        return tableViewProduct;
+    }
 
+    public static String getLoadedFxml() {
+        return loadedFxml;
+    }
 
     private void loadUrl(Path path){
         try {

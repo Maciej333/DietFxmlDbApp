@@ -6,11 +6,11 @@ public class Product {
 
     private int idProduct;
     private String name;
-    private double kcal;
-    private double protein;
-    private double carbs;
-    private double fat;
-    private double fiber;
+    private Double kcal;
+    private Double protein;
+    private Double carbs;
+    private Double fat;
+    private Double fiber;
 
     public Product(){
     }
@@ -49,48 +49,48 @@ public class Product {
         this.name = name;
     }
 
-    public double getKcal() {
+    public Double getKcal() {
         return kcal;
     }
 
-    public void setKcal(double kcal) {
+    public void setKcal(Double kcal) {
         this.kcal = kcal;
     }
 
-    public double getProtein() {
+    public Double getProtein() {
         return protein;
     }
 
-    public void setProtein(double protein) {
+    public void setProtein(Double protein) {
         this.protein = protein;
     }
 
-    public double getCarbs() {
+    public Double getCarbs() {
         return carbs;
     }
 
-    public void setCarbs(double carbs) {
+    public void setCarbs(Double carbs) {
         this.carbs = carbs;
     }
 
-    public double getFat() {
+    public Double getFat() {
         return fat;
     }
 
-    public void setFat(double fat) {
+    public void setFat(Double fat) {
         this.fat = fat;
     }
 
-    public double getFiber() {
+    public Double getFiber() {
         return fiber;
     }
 
-    public void setFiber(double fiber) {
+    public void setFiber(Double fiber) {
         this.fiber = fiber;
     }
 
     @Override
     public String toString() {
-        return name;
+        return this.name;
     }
 }

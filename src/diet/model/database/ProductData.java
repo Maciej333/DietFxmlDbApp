@@ -9,10 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ProductData {
 
@@ -50,6 +47,13 @@ public class ProductData {
                                  +" FROM "+TABLE_MEAL_PRODUCT+" WHERE "+TABLE_MEAL_PRODUCT_ID_MEAL+" =?)" +
             " AS '"+TABLE_MEAL_PRODUCT+"' WHERE "+TABLE+"."+PRODUCT_ID
             +" = "+TABLE_MEAL_PRODUCT+"."+TABLE_MEAL_PRODUCT_ID_PRODUCT;
+    private static final String READ_MAX_ID_PRODUCT  ="SELECT MAX("+PRODUCT_ID+") FROM "+TABLE;
+    private static final String INSERT_PRODUCT ="INSERT INTO "+TABLE+" VALUES (?,?,?,?,?,?,?)";
+    private static final String UPDATE_PRODUCT ="UPDATE "+TABLE+" SET "+NAME+" =?, "
+               +KCAL+" =?, "+PROTEIN+" =?, "+FAT+" =?, "
+                +CARBS+" =?, "+FIBER+" =? WHERE "+PRODUCT_ID+" = ?";
+    private static final String DELETE_PRODUCT ="DELETE FROM "+TABLE_PROFIL_PRODUCT+" WHERE "+TABLE_PROFIL_PRODUCT_PRODUCT_ID+" = ?";
+    private static final String INSERT_PRODUCT_PROFIL ="INSERT INTO "+TABLE_PROFIL_PRODUCT+" VALUES (?,?)";
 
     private ProductData(){
     }
@@ -104,6 +108,120 @@ public class ProductData {
             System.out.println("Query failed "+e.getMessage());
         }
         return productForMealMap;
+    }
+
+    public void insertProduct(String name, double kcal, double protein, double fat, double carbs, double fiber){
+        insetNewProduct(name, kcal, protein, fat, carbs, fiber);
+        insertProductToProfil();
+    }
+
+    private void insetNewProduct(String name, double kcal, double protein, double fat, double carbs, double fiber){
+        try(PreparedStatement statement = conn.prepareStatement(INSERT_PRODUCT) ){
+            conn.setAutoCommit(false);
+
+            int productId = getMaxProductId()+1;
+            statement.setInt(1,productId);
+            statement.setString(2,name);
+            statement.setDouble(3,kcal);
+            statement.setDouble(4,protein);
+            statement.setDouble(5,fat);
+            statement.setDouble(6,carbs);
+            statement.setDouble(7,fiber);
+
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 1){
+                conn.commit();
+                Product insertedProduct = new Product(productId,name,kcal,protein,fat,carbs,fiber);
+                productsList.add(insertedProduct);
+                Product.setSelectedProduct(insertedProduct);
+            }else {
+                conn.rollback();
+                throw new SQLException("Insert product error");
+            }
+        } catch(SQLException e){
+            System.out.println("Insert failed "+e.getMessage());
+        }finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private int getMaxProductId(){
+        int maxProductId = 0;
+        try(PreparedStatement statement = conn.prepareStatement(READ_MAX_ID_PRODUCT);
+            ResultSet resultSet = statement.executeQuery()){
+
+            while(resultSet.next()){
+                maxProductId = resultSet.getInt(1);
+            }
+        } catch(SQLException e){
+            System.out.println("Query failed "+e.getMessage());
+        }
+        return maxProductId;
+    }
+
+    private void insertProductToProfil(){
+        try(PreparedStatement statement = conn.prepareStatement(INSERT_PRODUCT_PROFIL) ){
+            conn.setAutoCommit(false);
+
+            statement.setInt(1,Profil.getSelectedProfil().getIdPerson());
+            statement.setInt(2,Product.getSelectedProduct().getIdProduct());
+            int affectedRows = statement.executeUpdate();
+            if(affectedRows == 1){
+                conn.commit();
+            }else {
+                conn.rollback();
+                throw new SQLException("Insert product error");
+            }
+        } catch(SQLException e){
+            System.out.println("Insert failed "+e.getMessage());
+        }
+        finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void updateProduct(String name, double kcal, double protein, double fat, double carbs, double fiber){
+        try(PreparedStatement statement = conn.prepareStatement(UPDATE_PRODUCT) ){
+            statement.setString(1,name);
+            statement.setDouble(2,kcal);
+            statement.setDouble(3,protein);
+            statement.setDouble(4,fat);
+            statement.setDouble(5,carbs);
+            statement.setDouble(6,fiber);
+            statement.setInt(7,Product.getSelectedProduct().getIdProduct());
+
+            statement.executeUpdate();
+
+            productsList.remove(Product.getSelectedProduct());
+            Product.getSelectedProduct().setName(name);
+            Product.getSelectedProduct().setKcal(kcal);
+            Product.getSelectedProduct().setProtein(protein);
+            Product.getSelectedProduct().setFat(fat);
+            Product.getSelectedProduct().setCarbs(carbs);
+            Product.getSelectedProduct().setFiber(fiber);
+            productsList.add(Product.getSelectedProduct());
+
+        }catch (SQLException e){
+            System.out.println("Update failed "+e.getMessage());
+        }
+    }
+
+    public void deleteProduct(){
+        try(PreparedStatement statement = conn.prepareStatement(DELETE_PRODUCT)){
+            statement.setInt(1,Product.getSelectedProduct().getIdProduct());
+            statement.executeUpdate();
+            productsList.remove(Product.getSelectedProduct());
+        }catch (SQLException e){
+            System.out.println("Delete failed "+e.getMessage());
+        }
     }
 
     public static ObservableList<Product> getProductsList(){
