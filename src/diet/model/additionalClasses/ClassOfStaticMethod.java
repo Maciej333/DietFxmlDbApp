@@ -1,7 +1,17 @@
 package diet.model.additionalClasses;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Path;
 
 public class ClassOfStaticMethod {
 
@@ -28,5 +38,24 @@ public class ClassOfStaticMethod {
         if (check.matches(regex))
             valid = true;
         return valid;
+    }
+
+    public static void loadUrl(Path path, String name) {
+        try {
+            URL url = path.toUri().toURL();
+            FXMLLoader loader = new FXMLLoader(url);
+            try {
+                Parent root = loader.load();
+                Stage stage = new Stage();
+                stage.setTitle(name);
+                stage.setScene(new Scene(root));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.show();
+            } catch (IOException e) {
+                System.out.println("Cannot load fxml file " + e.getMessage());
+            }
+        } catch (MalformedURLException m) {
+            System.out.println("Incorect URL " + m.getMessage());
+        }
     }
 }

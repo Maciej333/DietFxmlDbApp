@@ -10,7 +10,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class ProductAddController {
+public class ProductAddEditController {
+
+    @FXML
+    private Label labelProductActionInfo;
+
     @FXML
     private TextField textFieldProductName;
     @FXML
@@ -38,11 +42,9 @@ public class ProductAddController {
     private Label invalidProductFiber;
 
     @FXML
-    private Button buttonAddNewProduct;
+    private Button buttonDoProduct;
     @FXML
     private Button buttonCancelProduct;
-    @FXML
-    private Button buttonEditProduct;
 
     public void initialize() {
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldProductName, invalidProductName, "(\\S)+(\\s.+)*", "invalid name", "e.q. Egg");
@@ -52,18 +54,20 @@ public class ProductAddController {
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldProductCarbs, invalidProductCarbs, "\\d{1,4}([\\.,]\\d{1,2})?", "invalid carbs", "e.g. 50.4");
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldProductFiber, invalidProductFiber, "\\d{1,4}([\\.,]\\d{1,2})?", "invalid fiber", "e.g. 5.1");
 
-        if (MainWindowProductController.getLoadedFxml().equals("Edit")) {
+        if (MainWindowProductController.getLoadedProductFxml().equals("Edit")) {
+            labelProductActionInfo.setText("Edit product");
             textFieldProductName.setText(Product.getSelectedProduct().getName());
             textFieldProductKcal.setText(Product.getSelectedProduct().getKcal() + "");
             textFieldProductProtein.setText(Product.getSelectedProduct().getProtein() + "");
             textFieldProductFat.setText(Product.getSelectedProduct().getFat() + "");
             textFieldProductCarbs.setText(Product.getSelectedProduct().getCarbs() + "");
             textFieldProductFiber.setText(Product.getSelectedProduct().getFiber() + "");
+            buttonDoProduct.setText("Edit");
         }
     }
 
     @FXML
-    public void setButtonAddNewProduct() {
+    public void setButtonDoProduct() {
         String name = null;
         double kcal = -1;
         double protein = -1;
@@ -96,54 +100,12 @@ public class ProductAddController {
                 carbs != -1 &&
                 fiber != -1
         ) {
-            ProductData.getInstance().insertProduct(name, kcal, protein, fat, carbs, fiber);
-            Stage stage = (Stage) buttonAddNewProduct.getScene().getWindow();
-            stage.close();
-        } else {
-            Alert alertIncorrectValues = new Alert(Alert.AlertType.WARNING);
-            alertIncorrectValues.setTitle("Incorect values");
-            alertIncorrectValues.setContentText("enter complete valid data");
-            alertIncorrectValues.show();
-        }
-    }
-
-    @FXML
-    public void setButtonEditProduct() {
-        String name = null;
-        double kcal = -1;
-        double protein = -1;
-        double fat = -1;
-        double carbs = -1;
-        double fiber = -1;
-
-        if (ClassOfStaticMethod.checkTextFieldValid(textFieldProductName.getText(), "(\\S)+(\\s.+)*")) {
-            name = textFieldProductName.getText();
-        }
-        if (ClassOfStaticMethod.checkTextFieldValid(textFieldProductKcal.getText(), "\\d{1,5}([\\.,]\\d{1,2})?")) {
-            kcal = Double.parseDouble(textFieldProductKcal.getText());
-        }
-        if (ClassOfStaticMethod.checkTextFieldValid(textFieldProductProtein.getText(), "\\d{1,4}([\\.,]\\d{1,2})?")) {
-            protein = Double.parseDouble(textFieldProductProtein.getText());
-        }
-        if (ClassOfStaticMethod.checkTextFieldValid(textFieldProductFat.getText(), "\\d{1,4}([\\.,]\\d{1,2})?")) {
-            fat = Double.parseDouble(textFieldProductFat.getText());
-        }
-        if (ClassOfStaticMethod.checkTextFieldValid(textFieldProductCarbs.getText(), "\\d{1,4}([\\.,]\\d{1,2})?")) {
-            carbs = Double.parseDouble(textFieldProductCarbs.getText());
-        }
-        if (ClassOfStaticMethod.checkTextFieldValid(textFieldProductFiber.getText(), "\\d{1,4}([\\.,]\\d{1,2})?")) {
-            fiber = Double.parseDouble(textFieldProductFiber.getText());
-        }
-
-        if (name != null &&
-                kcal != -1 &&
-                protein != -1 &&
-                fat != -1 &&
-                carbs != -1 &&
-                fiber != -1
-        ) {
-            ProductData.getInstance().updateProduct(name, kcal, protein, fat, carbs, fiber);
-            Stage stage = (Stage) buttonEditProduct.getScene().getWindow();
+            if (MainWindowProductController.getLoadedProductFxml().equals("Edit")) {
+                ProductData.getInstance().updateProduct(name, kcal, protein, fat, carbs, fiber);
+            }else{
+                ProductData.getInstance().insertProduct(name, kcal, protein, fat, carbs, fiber);
+            }
+            Stage stage = (Stage) buttonDoProduct.getScene().getWindow();
             stage.close();
         } else {
             Alert alertIncorrectValues = new Alert(Alert.AlertType.WARNING);

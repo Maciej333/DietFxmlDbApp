@@ -1,22 +1,15 @@
 package diet.gui.controlers;
 
 import diet.model.Product;
+import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.database.ProductData;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -25,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class MainWindowProductController {
 
-    private static String loadedFxml = null;
+    private static String loadedProductFxml = null;
     private ObservableList<Product> productsList;
 
     @FXML
@@ -77,6 +70,7 @@ public class MainWindowProductController {
                 tableViewProduct.setItems(productsList);
                 while (change.next()) {
                     if (change.wasAdded()) {
+                        tableViewProduct.refresh();
                         tableViewProduct.getSortOrder().add(productName);
                     }
                     if (change.wasRemoved()) {
@@ -89,19 +83,19 @@ public class MainWindowProductController {
 
     @FXML
     public void setButtonAddNewProduct() {
-        loadedFxml = "Add";
+        loadedProductFxml = "Add";
         Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
         Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductAdd.fxml");
-        loadUrl(pathNewProduct);
+        ClassOfStaticMethod.loadUrl(pathNewProduct,"Product");
     }
 
     @FXML
     public void setButtonEditProduct() {
-        loadedFxml = "Edit";
+        loadedProductFxml = "Edit";
         Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
         if (Product.getSelectedProduct() != null) {
-            Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductEdit.fxml");
-            loadUrl(pathNewProduct);
+            Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductAdd.fxml");
+            ClassOfStaticMethod.loadUrl(pathNewProduct,"Product");
         } else {
             Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
             alertNoChoosen.setTitle("No product selected");
@@ -115,7 +109,7 @@ public class MainWindowProductController {
         Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
         if (Product.getSelectedProduct() != null) {
             Alert alertNoChoosen = new Alert(Alert.AlertType.WARNING);
-            alertNoChoosen.setContentText("Do you really want to delete profile " + Product.getSelectedProduct().getName() + "?");
+            alertNoChoosen.setContentText("Do you really want to delete product " + Product.getSelectedProduct().getName() + "?");
             alertNoChoosen.setTitle("Delete confirmation");
 
             Optional<ButtonType> result = alertNoChoosen.showAndWait();
@@ -132,30 +126,7 @@ public class MainWindowProductController {
         }
     }
 
-    public TableView<Product> getTableViewProduct() {
-        return tableViewProduct;
-    }
-
-    public static String getLoadedFxml() {
-        return loadedFxml;
-    }
-
-    private void loadUrl(Path path) {
-        try {
-            URL url = path.toUri().toURL();
-            FXMLLoader loader = new FXMLLoader(url);
-            try {
-                Parent root = loader.load();
-                Stage stage = new Stage();
-                stage.setTitle("Product");
-                stage.setScene(new Scene(root));
-                stage.initModality(Modality.APPLICATION_MODAL);
-                stage.show();
-            } catch (IOException e) {
-                System.out.println("Cannot load fxml file " + e.getMessage());
-            }
-        } catch (MalformedURLException m) {
-            System.out.println("Incorect URL " + m.getMessage());
-        }
+    public static String getLoadedProductFxml() {
+        return loadedProductFxml;
     }
 }
