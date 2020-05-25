@@ -25,6 +25,10 @@ public class Meal {
         return selectedMeal;
     }
 
+    public static void setSelectedMeal(Meal selectedMeal) {
+        Meal.selectedMeal = selectedMeal;
+    }
+
     public int getIdMeal() {
         return idMeal;
     }
