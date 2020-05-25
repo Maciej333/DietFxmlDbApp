@@ -51,8 +51,8 @@ public class MainWindowProductController {
         productName.setCellValueFactory(new PropertyValueFactory<>("name"));
         productKcal.setCellValueFactory(new PropertyValueFactory<>("kcal"));
         productProtein.setCellValueFactory(new PropertyValueFactory<>("protein"));
-        productFat.setCellValueFactory(new PropertyValueFactory<>("carbs"));
-        productCarbs.setCellValueFactory(new PropertyValueFactory<>("fat"));
+        productFat.setCellValueFactory(new PropertyValueFactory<>("fat"));
+        productCarbs.setCellValueFactory(new PropertyValueFactory<>("carbs"));
         productFiber.setCellValueFactory(new PropertyValueFactory<>("fiber"));
         tableViewProduct.setItems(productsList);
         tableViewProduct.getSortOrder().add(productName);
@@ -84,7 +84,6 @@ public class MainWindowProductController {
     @FXML
     public void setButtonAddNewProduct() {
         loadedProductFxml = "Add";
-        Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
         Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductAdd.fxml");
         ClassOfStaticMethod.loadUrl(pathNewProduct,"Product");
     }
