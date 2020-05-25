@@ -112,7 +112,8 @@ public class MainWindowMealController {
 
             Optional<ButtonType> result = alertNoChoosen.showAndWait();
             if (result.get() == ButtonType.OK) {
-
+                MealData.getMealsList().remove(Meal.getSelectedMeal());
+                //add MealData
             } else {
                 alertNoChoosen.close();
             }
