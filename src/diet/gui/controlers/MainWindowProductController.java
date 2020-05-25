@@ -2,6 +2,7 @@ package diet.gui.controlers;
 
 import diet.model.Product;
 import diet.model.database.ProductData;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -18,7 +19,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class MainWindowProductController {
 
@@ -41,6 +44,8 @@ public class MainWindowProductController {
     private TableColumn<Product, Double> productFiber;
 
     @FXML
+    private TextField textFieldProductSearch;
+    @FXML
     private Button buttonAddNewProduct;
     @FXML
     private Button buttonEditProduct;
@@ -59,17 +64,22 @@ public class MainWindowProductController {
         tableViewProduct.setItems(productsList);
         tableViewProduct.getSortOrder().add(productName);
 
+        textFieldProductSearch.setOnKeyTyped((change)->{
+            List<Product> sortedProductList = productsList.stream().filter((product)->
+                product.getName().toLowerCase().matches(".*("+textFieldProductSearch.getText().toLowerCase()+").*"))
+                    .collect( Collectors.toList());
+        tableViewProduct.setItems(FXCollections.observableList(sortedProductList));
+        });
+
         ProductData.getProductsList().addListener(new ListChangeListener<Product>() {
             @Override
             public void onChanged(Change<? extends Product> change) {
+                tableViewProduct.setItems(productsList);
                 while (change.next()) {
                     if (change.wasAdded()) {
                         tableViewProduct.getSortOrder().add(productName);
-                        System.out.println("dodano");
                     }
                     if (change.wasRemoved()) {
-                        tableViewProduct.refresh();
-                        tableViewProduct.setItems(ProductData.getProductsList());
                         tableViewProduct.getSortOrder().add(productName);
                     }
                 }
