@@ -1,6 +1,7 @@
 package diet.model.database;
 
 import diet.model.Meal;
+import diet.model.Product;
 import diet.model.Profil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,6 +9,7 @@ import javafx.collections.ObservableList;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MealData {
     private Connection conn = Datasource.getInstance().getConnect();
@@ -25,8 +27,16 @@ public class MealData {
     private static final String READ_MEAL_FOR_PROFIL = "SELECT " + MEAL_ID + ", " + NAME + " FROM " + TABLE + " WHERE "
             + MEAL_ID + " IN (SELECT " + TABLE_PROFIL_MEAL_MEAL_ID + " FROM " + TABLE_PROFIL_MEAL +
             " WHERE " + TABLE_PROFIL_MEAL_PROFIL_ID + " = " + Profil.getSelectedProfil().getIdPerson() + ")";
-    private  static final String READ_MEAL_MAX_ID = "SELECT MAX("+MEAL_ID+") FROM "+TABLE;
+    private static final String READ_MEAL_MAX_ID = "SELECT MAX(" + MEAL_ID + ") FROM " + TABLE;
 
+    private static final String INSERT_NEW_MEAL = "INSERT INTO " + TABLE + " VALUES (?,?)";
+    private static final String INSERT_NEW_MEAL_FOR_PROFIL = "INSERT INTO " + TABLE_PROFIL_MEAL + " VALUES (?,?)";
+
+    private static final String UPDATE_MEAL = "UPDATE " + TABLE + " SET " + NAME + " =? WHERE " + MEAL_ID + " =?";
+
+    private static final String DELETE_MEAL = "DELETE FROM " + TABLE + " WHERE " + MEAL_ID + " = ?";
+    private static final String DELETE_MEAL_FOR_PROFIL = "DELETE FROM " + TABLE_PROFIL_MEAL + " WHERE " +
+            TABLE_PROFIL_MEAL_PROFIL_ID + " = ? AND " + TABLE_PROFIL_MEAL_MEAL_ID + " = ?";
 
     private MealData() {
     }
@@ -59,7 +69,7 @@ public class MealData {
         mealsList = FXCollections.observableList(meals);
     }
 
-    public int readMaxMealId(){
+    public int readMaxMealId() {
         int maxMealId = 1;
         try (PreparedStatement preparedStatement = conn.prepareStatement(READ_MEAL_MAX_ID);
              ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -72,14 +82,124 @@ public class MealData {
         return maxMealId;
     }
 
-                                                public void writeMeal(){
+    public void insertNewMeal(String name, Map<Product, Integer> productsMap) {
+        insertMeal(name, productsMap);
+        insertMealForProfil();
+    }
 
-                                                }
+    private void insertMeal(String name, Map<Product, Integer> productsMap) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(INSERT_NEW_MEAL)) {
+            conn.setAutoCommit(false);
 
-                                                private void writeMealForProfil(){
+            int mealId = readMaxMealId() + 1;
+            preparedStatement.setInt(1, mealId);
+            preparedStatement.setString(2, name);
 
-                                                }
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 1) {
+                conn.commit();
 
+                for (Map.Entry<Product, Integer> mapEntry : productsMap.entrySet()) {
+                    ProductData.getInstance().insertAllProductForMeal(mealId, mapEntry.getKey().getIdProduct(), mapEntry.getValue());
+                }
+
+                Meal insertedMeal = new Meal(mealId, name, productsMap);
+                mealsList.add(insertedMeal);
+            } else {
+                conn.rollback();
+                System.out.println("ERROR 1 IN insertMeal");
+                throw new SQLException("Insert product error");
+            }
+        } catch (SQLException e) {
+            System.out.println("Insert failed " + e.getMessage());
+            System.out.println("ERROR IN insertMeal");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void insertMealForProfil() {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(INSERT_NEW_MEAL_FOR_PROFIL)) {
+            conn.setAutoCommit(false);
+
+            int mealId = readMaxMealId();
+            preparedStatement.setInt(1, Profil.getSelectedProfil().getIdPerson());
+            preparedStatement.setInt(2, mealId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 1) {
+                conn.commit();
+            } else {
+                conn.rollback();
+                System.out.println("ERROR 1 IN insertMealForProfil");
+                throw new SQLException("Insert product error");
+
+            }
+        } catch (SQLException e) {
+            System.out.println("Insert failed " + e.getMessage());
+            System.out.println("ERROR IN insertMealForProfil");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void updateMeal(String name, int mealId, Map<Product, Integer> productsMap) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_MEAL)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, mealId);
+
+            preparedStatement.executeUpdate();
+
+            Map<Product, Integer> productToRemove = ProductData.getInstance().readAllProductForMeal(Meal.getSelectedMeal().getIdMeal());
+            for (Map.Entry<Product, Integer> mapEntry : productToRemove.entrySet()) {
+                ProductData.getInstance().deleteProductForMeal(Meal.getSelectedMeal().getIdMeal(), mapEntry.getKey().getIdProduct());
+            }
+            for (Map.Entry<Product, Integer> mapEntry : productsMap.entrySet()) {
+                ProductData.getInstance().insertAllProductForMeal(Meal.getSelectedMeal().getIdMeal(), mapEntry.getKey().getIdProduct(), mapEntry.getValue());
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Update failed " + e.getMessage());
+            System.out.println("ERROR IN updateMeal");
+        }
+    }
+
+    public void deleteMeal(int mealId) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(DELETE_MEAL)) {
+            preparedStatement.setInt(1, mealId);
+
+            preparedStatement.executeUpdate();
+
+            for (Map.Entry<Product, Integer> productMap : Meal.getSelectedMeal().getProductsForMeal().entrySet())
+                ProductData.getInstance().deleteProductForMeal(mealId, productMap.getKey().getIdProduct());
+
+            deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(), mealId);
+
+            mealsList.remove(Meal.getSelectedMeal());
+
+        } catch (SQLException e) {
+            System.out.println("Update failed " + e.getMessage());
+        }
+    }
+
+    private void deleteMealForProfil(int profilId, int mealId) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(DELETE_MEAL_FOR_PROFIL)) {
+            preparedStatement.setInt(1, profilId);
+            preparedStatement.setInt(2, mealId);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Update failed " + e.getMessage());
+        }
+    }
 
     public static ObservableList<Meal> getMealsList() {
         return mealsList;

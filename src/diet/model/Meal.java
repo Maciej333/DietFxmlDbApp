@@ -21,6 +21,17 @@ public class Meal {
 
     }
 
+    public Meal(int idMeal, String name, Map<Product, Integer> productsForMeal) {
+        this.idMeal = idMeal;
+        this.name = name;
+        this.productsForMeal = productsForMeal;
+        countKcalForMeal();
+        countProteinForMeal();
+        countFatForMeal();
+        countCarbsForMeal();
+        countFiberForMeal();
+    }
+
     public static Meal getSelectedMeal() {
         return selectedMeal;
     }
@@ -131,11 +142,5 @@ public class Meal {
     @Override
     public String toString() {
         return idMeal + " name= " + name + " kcal= " + kcal + " protein= " + protein + " fat= " + fat + " carbs= " + carbs + " fiber= " + fiber;
-    }
-
-    public void showProduct() {
-        for (Map.Entry<Product, Integer> productAmount : productsForMeal.entrySet()) {
-            System.out.println(productAmount.getKey() + " ilosc  = " + productAmount.getValue());
-        }
     }
 }

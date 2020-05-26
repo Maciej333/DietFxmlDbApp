@@ -56,10 +56,10 @@ public class MainWindowMealController {
         mealFiber.setCellValueFactory(new PropertyValueFactory<>("fiber"));
         tableViewMeal.setItems(mealsList);
 
-        textFieldMealSearch.setOnKeyTyped((change)->{
-            List<Meal> sortedMealList = mealsList.stream().filter((meal)->
-                    meal.getName().toLowerCase().matches(".*("+textFieldMealSearch.getText().toLowerCase()+").*"))
-                    .collect( Collectors.toList());
+        textFieldMealSearch.setOnKeyTyped((change) -> {
+            List<Meal> sortedMealList = mealsList.stream().filter((meal) ->
+                    meal.getName().toLowerCase().matches(".*(" + textFieldMealSearch.getText().toLowerCase() + ").*"))
+                    .collect(Collectors.toList());
             tableViewMeal.setItems(FXCollections.observableList(sortedMealList));
         });
 
@@ -84,7 +84,7 @@ public class MainWindowMealController {
     public void setButtonAddNewMeal() {
         loadedMealFxml = "Add";
         Path pathNewMeal = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MealAdd.fxml");
-        ClassOfStaticMethod.loadUrl(pathNewMeal,"Meal");
+        ClassOfStaticMethod.loadUrl(pathNewMeal, "Meal");
     }
 
     @FXML
@@ -93,7 +93,7 @@ public class MainWindowMealController {
         Meal.setSelectedMeal(tableViewMeal.getSelectionModel().getSelectedItem());
         if (Meal.getSelectedMeal() != null) {
             Path pathNewMeal = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MealAdd.fxml");
-            ClassOfStaticMethod.loadUrl(pathNewMeal,"Meal");
+            ClassOfStaticMethod.loadUrl(pathNewMeal, "Meal");
         } else {
             Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
             alertNoChoosen.setTitle("No meal selected");
@@ -112,8 +112,9 @@ public class MainWindowMealController {
 
             Optional<ButtonType> result = alertNoChoosen.showAndWait();
             if (result.get() == ButtonType.OK) {
+                MealData.getInstance().deleteMeal(Meal.getSelectedMeal().getIdMeal());
                 MealData.getMealsList().remove(Meal.getSelectedMeal());
-                //add MealData
+
             } else {
                 alertNoChoosen.close();
             }
@@ -128,5 +129,4 @@ public class MainWindowMealController {
     public static String getLoadedMealFxml() {
         return loadedMealFxml;
     }
-
 }

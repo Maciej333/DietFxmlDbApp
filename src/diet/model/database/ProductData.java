@@ -35,9 +35,17 @@ public class ProductData {
     private static final String CARBS = "CARBS";
     private static final String FIBER = "FIBER";
 
+    private static final String READ_MAX_ID_PRODUCT = "SELECT MAX(" + PRODUCT_ID + ") FROM " + TABLE;
+    private static final String INSERT_PRODUCT = "INSERT INTO " + TABLE + " VALUES (?,?,?,?,?,?,?)";
+    private static final String UPDATE_PRODUCT = "UPDATE " + TABLE + " SET " + NAME + " =?, "
+            + KCAL + " =?, " + PROTEIN + " =?, " + FAT + " =?, "
+            + CARBS + " =?, " + FIBER + " =? WHERE " + PRODUCT_ID + " = ?";
+    private static final String DELETE_PRODUCT = "DELETE FROM " + TABLE_PROFIL_PRODUCT + " WHERE " + TABLE_PROFIL_PRODUCT_PRODUCT_ID + " = ?";
+
     private static final String READ_PRODUCTS_FOR_PROFIL = "SELECT * FROM " + TABLE + " WHERE " + PRODUCT_ID + " IN " +
             "(SELECT " + TABLE_PROFIL_PRODUCT_PRODUCT_ID + " FROM " + TABLE_PROFIL_PRODUCT + " " +
             "WHERE " + TABLE_PROFIL_PRODUCT_PROFIL_ID + " = " + Profil.getSelectedProfil().getIdPerson() + ")";
+    private static final String INSERT_PRODUCT_PROFIL = "INSERT INTO " + TABLE_PROFIL_PRODUCT + " VALUES (?,?)";
 
     private static final String READ_PRODUCTS_FOR_MEAL = "SELECT " + TABLE + "." + PRODUCT_ID + ", "
             + TABLE + "." + NAME + ", " + TABLE + "." + KCAL + ", " + TABLE + "." + PROTEIN + ", "
@@ -47,13 +55,8 @@ public class ProductData {
             + " FROM " + TABLE_MEAL_PRODUCT + " WHERE " + TABLE_MEAL_PRODUCT_ID_MEAL + " =?)" +
             " AS '" + TABLE_MEAL_PRODUCT + "' WHERE " + TABLE + "." + PRODUCT_ID
             + " = " + TABLE_MEAL_PRODUCT + "." + TABLE_MEAL_PRODUCT_ID_PRODUCT;
-    private static final String READ_MAX_ID_PRODUCT = "SELECT MAX(" + PRODUCT_ID + ") FROM " + TABLE;
-    private static final String INSERT_PRODUCT = "INSERT INTO " + TABLE + " VALUES (?,?,?,?,?,?,?)";
-    private static final String UPDATE_PRODUCT = "UPDATE " + TABLE + " SET " + NAME + " =?, "
-            + KCAL + " =?, " + PROTEIN + " =?, " + FAT + " =?, "
-            + CARBS + " =?, " + FIBER + " =? WHERE " + PRODUCT_ID + " = ?";
-    private static final String DELETE_PRODUCT = "DELETE FROM " + TABLE_PROFIL_PRODUCT + " WHERE " + TABLE_PROFIL_PRODUCT_PRODUCT_ID + " = ?";
-    private static final String INSERT_PRODUCT_PROFIL = "INSERT INTO " + TABLE_PROFIL_PRODUCT + " VALUES (?,?)";
+    private static final String INSERT_PRODUCTS_FOR_MEAL = "INSERT INTO " + TABLE_MEAL_PRODUCT + " VALUES (?,?,?)";
+    private static final String DELETE_PRODUCTS_FOR_MEAL = "DELETE FROM " + TABLE_MEAL_PRODUCT + " WHERE " + TABLE_MEAL_PRODUCT_ID_MEAL + " =? AND " + TABLE_MEAL_PRODUCT_ID_PRODUCT + " =? ";
 
     private ProductData() {
     }
@@ -83,31 +86,6 @@ public class ProductData {
             System.out.println("Query failed " + e.getMessage());
         }
         productsList = FXCollections.observableList(products);
-    }
-
-    public Map<Product, Integer> readAllProductForMeal(int mealId) {
-        Map<Product, Integer> productForMealMap = new HashMap<>();
-        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_PRODUCTS_FOR_MEAL)) {
-            preparedStatement.setInt(1, mealId);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                Product product = new Product();
-                product.setIdProduct(resultSet.getInt(PRODUCT_ID));
-                product.setName(resultSet.getString(NAME));
-                product.setKcal(resultSet.getDouble(KCAL));
-                product.setProtein(resultSet.getDouble(PROTEIN));
-                product.setFat(resultSet.getDouble(FAT));
-                product.setCarbs(resultSet.getDouble(CARBS));
-                product.setFiber(resultSet.getDouble(FIBER));
-
-                productForMealMap.put(product, resultSet.getInt(TABLE_MEAL_PRODUCT_AMOUNT));
-            }
-            resultSet.close();
-        } catch (SQLException e) {
-            System.out.println("Query failed " + e.getMessage());
-        }
-        return productForMealMap;
     }
 
     public void insertProduct(String name, double kcal, double protein, double fat, double carbs, double fiber) {
@@ -220,6 +198,84 @@ public class ProductData {
             productsList.remove(Product.getSelectedProduct());
         } catch (SQLException e) {
             System.out.println("Delete failed " + e.getMessage());
+        }
+    }
+
+    public Map<Product, Integer> readAllProductForMeal(int mealId) {
+        Map<Product, Integer> productForMealMap = new HashMap<>();
+        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_PRODUCTS_FOR_MEAL)) {
+            preparedStatement.setInt(1, mealId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Product product = new Product();
+                product.setIdProduct(resultSet.getInt(PRODUCT_ID));
+                product.setName(resultSet.getString(NAME));
+                product.setKcal(resultSet.getDouble(KCAL));
+                product.setProtein(resultSet.getDouble(PROTEIN));
+                product.setFat(resultSet.getDouble(FAT));
+                product.setCarbs(resultSet.getDouble(CARBS));
+                product.setFiber(resultSet.getDouble(FIBER));
+
+                productForMealMap.put(product, resultSet.getInt(TABLE_MEAL_PRODUCT_AMOUNT));
+            }
+            resultSet.close();
+        } catch (SQLException e) {
+            System.out.println("Query failed " + e.getMessage());
+        }
+        return productForMealMap;
+    }
+
+    public void insertAllProductForMeal(int mealId, int productId, int amount) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(INSERT_PRODUCTS_FOR_MEAL)) {
+            conn.setAutoCommit(false);
+
+            preparedStatement.setInt(1, mealId);
+            preparedStatement.setInt(2, productId);
+            preparedStatement.setInt(3, amount);
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 1) {
+                conn.commit();
+            } else {
+                conn.rollback();
+                System.out.println("=======error1 in Product insertAllProductForMeal");
+                throw new SQLException("Insert product error");
+            }
+        } catch (SQLException e) {
+            System.out.println("Insert failed " + e.getMessage());
+            System.out.println("=======error in Product insertAllProductForMeal");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteProductForMeal(int mealId, int productId) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(DELETE_PRODUCTS_FOR_MEAL)) {
+            conn.setAutoCommit(false);
+
+            preparedStatement.setInt(1, mealId);
+            preparedStatement.setInt(2, productId);
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 1) {
+                conn.commit();
+            } else {
+                conn.rollback();
+                System.out.println("=======error1 in Product deleteAllProductForMeal");
+                throw new SQLException("Insert product error");
+            }
+        } catch (SQLException e) {
+            System.out.println("Insert failed " + e.getMessage());
+            System.out.println("=======error in Product deleteAllProductForMeal");
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 

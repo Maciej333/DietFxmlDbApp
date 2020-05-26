@@ -151,9 +151,9 @@ public class MealAddEditController {
                 Meal.getSelectedMeal().countFatForMeal();
                 Meal.getSelectedMeal().countCarbsForMeal();
                 Meal.getSelectedMeal().countFiberForMeal();
-                MealData.getMealsList().add(Meal.getSelectedMeal());
 
-                //MealData update
+                MealData.getMealsList().add(Meal.getSelectedMeal());
+                MealData.getInstance().updateMeal(mealName, Meal.getSelectedMeal().getIdMeal(), productMap);
             } else {
                 newMeal.setIdMeal(MealData.getInstance().readMaxMealId() + 1);
                 newMeal.setName(mealName);
@@ -164,8 +164,7 @@ public class MealAddEditController {
                 newMeal.countCarbsForMeal();
                 newMeal.countFiberForMeal();
 
-                MealData.getMealsList().add(newMeal);
-                //MealData insert
+                MealData.getInstance().insertNewMeal(mealName, productMap);
             }
             productMap = FXCollections.observableMap(new HashMap<>());
             Stage stage = (Stage) textFieldMealAddSearch.getScene().getWindow();
