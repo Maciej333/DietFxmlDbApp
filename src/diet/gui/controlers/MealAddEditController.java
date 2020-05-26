@@ -55,17 +55,16 @@ public class MealAddEditController {
         tableColumnAmountMealAdd.setEditable(true);
         tableColumnAmountMealAdd.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         tableColumnAmountMealAdd.setOnEditCommit(event -> {
-            int editAmount = event.getOldValue() > 0 ? event.getNewValue() : event.getOldValue();
+            int editAmount = event.getNewValue() > 0 ? event.getNewValue() : event.getOldValue();
             event.getTableView().getItems().get(event.getTablePosition().getRow()).setValue(editAmount);
+            tableViewMealAdd.refresh();
         });
-
         tableColumnProductMealAdd.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<Product, Integer>, String>, ObservableValue<String>>() {
             @Override
             public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<Product, Integer>, String> p) {
                 return new SimpleStringProperty(p.getValue().getKey().getName());
             }
         });
-
         tableColumnAmountMealAdd.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<Product, Integer>, Integer>, ObservableValue<Integer>>() {
             @Override
             public ObservableValue<Integer> call(TableColumn.CellDataFeatures<Map.Entry<Product, Integer>, Integer> p) {
@@ -84,21 +83,8 @@ public class MealAddEditController {
             }
         });
 
-        ClassOfStaticMethod.checkCorrectOfTextField(textFieldMealAddName, labelMealNameInvalid, "\\S+", "Invalid", "");
+        ClassOfStaticMethod.checkCorrectOfTextField(textFieldMealAddName, labelMealNameInvalid, "(\\S)+(\\s.+)*", "Invalid", "");
 
-        productMap.addListener(new MapChangeListener<Product, Integer>() {
-            @Override
-            public void onChanged(Change<? extends Product, ? extends Integer> change) {
-                if (change.wasAdded()) {
-                    tableViewMealAdd.setItems(FXCollections.observableArrayList(productMap.entrySet()));
-                    tableViewMealAdd.getSortOrder().add(tableColumnProductMealAdd);
-                }
-                if (change.wasRemoved()) {
-                    tableViewMealAdd.setItems(FXCollections.observableArrayList(productMap.entrySet()));
-                    tableViewMealAdd.getSortOrder().add(tableColumnProductMealAdd);
-                }
-            }
-        });
         if (MainWindowMealController.getLoadedMealFxml().equals("Edit")) {
             productMap = FXCollections.observableMap(Meal.getSelectedMeal().getProductsForMeal());
             textFieldMealAddName.setText(Meal.getSelectedMeal().getName());
@@ -106,6 +92,15 @@ public class MealAddEditController {
         } else {
             newMeal = new Meal();
         }
+
+        productMap.addListener(new MapChangeListener<Product, Integer>() {
+            @Override
+            public void onChanged(Change<? extends Product, ? extends Integer> change) {
+                tableViewMealAdd.setItems(FXCollections.observableArrayList(productMap.entrySet()));
+                tableViewMealAdd.getSortOrder().add(tableColumnProductMealAdd);
+            }
+        });
+
         tableViewMealAdd.setItems(FXCollections.observableArrayList(productMap.entrySet()));
     }
 
@@ -138,10 +133,14 @@ public class MealAddEditController {
 
     @FXML
     public void setButtonDoMeal() {
-        String mealName = textFieldMealAddName.getText();
+        String mealName = null;
+
+        if (ClassOfStaticMethod.checkTextFieldValid(textFieldMealAddName.getText(), "(\\S)+(\\s.+)*")) {
+            mealName = textFieldMealAddName.getText();
+        }
         if (productMap != null &&
-            productMap.size() > 0 &&
-            mealName != null) {
+                productMap.size() > 0 &&
+                mealName != null) {
 
             if (buttonDoMeal.getText().equals("Edit")) {
                 MealData.getMealsList().remove(Meal.getSelectedMeal());
@@ -154,9 +153,8 @@ public class MealAddEditController {
                 Meal.getSelectedMeal().countFiberForMeal();
                 MealData.getMealsList().add(Meal.getSelectedMeal());
 
-
                 //MealData update
-            }else {
+            } else {
                 newMeal.setIdMeal(MealData.getInstance().readMaxMealId() + 1);
                 newMeal.setName(mealName);
                 newMeal.setProductsForMeal(new HashMap<>(productMap));
@@ -187,7 +185,7 @@ public class MealAddEditController {
         stage.close();
     }
 
-    public static ObservableMap<Product, Integer> getProductMap() {
-        return productMap;
+    public static void putNewProductAmount(Product newEditProduct, Integer amount) {
+        productMap.put(newEditProduct, amount);
     }
 }
