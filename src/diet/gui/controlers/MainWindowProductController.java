@@ -111,7 +111,7 @@ public class MainWindowProductController {
 
                         Optional<ButtonType> result = alertNoChoosen.showAndWait();
                         if (result.get() == ButtonType.OK) {
-                            ProductData.getInstance().deleteProduct();
+                            ProductData.getInstance().deleteProductProfil();
                         } else {
                             alertNoChoosen.close();
                         }
@@ -158,7 +158,7 @@ public class MainWindowProductController {
 
             Optional<ButtonType> result = alertNoChoosen.showAndWait();
             if (result.get() == ButtonType.OK) {
-                ProductData.getInstance().deleteProduct();
+                ProductData.getInstance().deleteProductProfil();
             } else {
                 alertNoChoosen.close();
             }

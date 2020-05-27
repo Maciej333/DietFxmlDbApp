@@ -40,12 +40,13 @@ public class ProductData {
     private static final String UPDATE_PRODUCT = "UPDATE " + TABLE + " SET " + NAME + " =?, "
             + KCAL + " =?, " + PROTEIN + " =?, " + FAT + " =?, "
             + CARBS + " =?, " + FIBER + " =? WHERE " + PRODUCT_ID + " = ?";
-    private static final String DELETE_PRODUCT = "DELETE FROM " + TABLE_PROFIL_PRODUCT + " WHERE " + TABLE_PROFIL_PRODUCT_PRODUCT_ID + " = ?";
+    private static final String DELETE_PRODUCT = "DELETE FROM " + TABLE + " WHERE " + PRODUCT_ID + " = ?";
 
     private static final String READ_PRODUCTS_FOR_PROFIL = "SELECT * FROM " + TABLE + " WHERE " + PRODUCT_ID + " IN " +
             "(SELECT " + TABLE_PROFIL_PRODUCT_PRODUCT_ID + " FROM " + TABLE_PROFIL_PRODUCT + " " +
             "WHERE " + TABLE_PROFIL_PRODUCT_PROFIL_ID + " = ?)";
     private static final String INSERT_PRODUCT_PROFIL = "INSERT INTO " + TABLE_PROFIL_PRODUCT + " VALUES (?,?)";
+    private static final String DELETE_PRODUCT_PROFIL = "DELETE FROM " + TABLE_PROFIL_PRODUCT + " WHERE " + TABLE_PROFIL_PRODUCT_PRODUCT_ID + " = ?";
 
     private static final String READ_PRODUCTS_FOR_MEAL = "SELECT " + TABLE + "." + PRODUCT_ID + ", "
             + TABLE + "." + NAME + ", " + TABLE + "." + KCAL + ", " + TABLE + "." + PROTEIN + ", "
@@ -55,6 +56,7 @@ public class ProductData {
             + " FROM " + TABLE_MEAL_PRODUCT + " WHERE " + TABLE_MEAL_PRODUCT_ID_MEAL + " =?)" +
             " AS '" + TABLE_MEAL_PRODUCT + "' WHERE " + TABLE + "." + PRODUCT_ID
             + " = " + TABLE_MEAL_PRODUCT + "." + TABLE_MEAL_PRODUCT_ID_PRODUCT;
+    private static final String CHECK_EXIST_OF_PRODUCT_IN_MEAL_PRODUCT = "SELECT (1) FROM "+TABLE_MEAL_PRODUCT+" WHERE "+TABLE_MEAL_PRODUCT_ID_PRODUCT+" = ?";
     private static final String INSERT_PRODUCTS_FOR_MEAL = "INSERT INTO " + TABLE_MEAL_PRODUCT + " VALUES (?,?,?)";
     private static final String DELETE_PRODUCTS_FOR_MEAL = "DELETE FROM " + TABLE_MEAL_PRODUCT + " WHERE " + TABLE_MEAL_PRODUCT_ID_MEAL + " =? AND " + TABLE_MEAL_PRODUCT_ID_PRODUCT + " =? ";
 
@@ -192,11 +194,23 @@ public class ProductData {
         }
     }
 
-    public void deleteProduct() {
+    private void deleteProduct(){
         try (PreparedStatement statement = conn.prepareStatement(DELETE_PRODUCT)) {
             statement.setInt(1, Product.getSelectedProduct().getIdProduct());
             statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Delete failed " + e.getMessage());
+        }
+    }
+
+    public void deleteProductProfil() {
+        try (PreparedStatement statement = conn.prepareStatement(DELETE_PRODUCT_PROFIL)) {
+            statement.setInt(1, Product.getSelectedProduct().getIdProduct());
+            statement.executeUpdate();
             productsList.remove(Product.getSelectedProduct());
+            if(checkExistOfProductInMealProduct() == 0 && DietData.getInstance().checkExistOfProductInDietProduct() == 0){
+                deleteProduct();
+            }
         } catch (SQLException e) {
             System.out.println("Delete failed " + e.getMessage());
         }
@@ -225,6 +239,23 @@ public class ProductData {
             System.out.println("Query failed " + e.getMessage());
         }
         return productForMealMap;
+    }
+
+    private int checkExistOfProductInMealProduct(){
+        int countExist = 0;
+        try (PreparedStatement statement = conn.prepareStatement(CHECK_EXIST_OF_PRODUCT_IN_MEAL_PRODUCT)) {
+            statement.setInt(1, Product.getSelectedProduct().getIdProduct());
+
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                countExist++;
+            }
+        } catch (SQLException e) {
+            System.out.println("Check exist failed " + e.getMessage());
+        }finally {
+
+        }
+        return countExist;
     }
 
     public void insertAllProductForMeal(int mealId, int productId, int amount) {
