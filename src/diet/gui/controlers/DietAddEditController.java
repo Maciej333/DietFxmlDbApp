@@ -57,6 +57,7 @@ public class DietAddEditController {
     private Button buttonCancelDietAdd;
 
     public void initialize() {
+        productMealMap = FXCollections.observableMap(new HashMap<>());
 
         tableViewDietAdd.setEditable(true);
         tableViewDietAdd.getSelectionModel().setCellSelectionEnabled(true);
@@ -177,7 +178,6 @@ public class DietAddEditController {
 
                     DietData.getInstance().insertDiet(newDiet);
                 }
-                productMealMap = FXCollections.observableMap(new HashMap<>());
                 Stage stage = (Stage) textFieldDietAddSearch.getScene().getWindow();
                 stage.close();
             }else {
@@ -196,7 +196,6 @@ public class DietAddEditController {
 
     @FXML
     public void setButtonCancelDietAdd() {
-        productMealMap = FXCollections.observableMap(new HashMap<>());
         Stage stage = (Stage) textFieldDietAddSearch.getScene().getWindow();
         stage.close();
     }

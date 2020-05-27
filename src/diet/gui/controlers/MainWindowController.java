@@ -1,10 +1,13 @@
 package diet.gui.controlers;
 
+import diet.model.additionalClasses.ClassOfStaticMethod;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -14,6 +17,12 @@ import java.nio.file.Paths;
 
 public class MainWindowController {
 
+    @FXML
+    private MenuItem menuItemChangeProfil;
+    @FXML
+    private MenuItem menuItemClose;
+    @FXML
+    private MenuItem menuItemAutor;
     @FXML
     private BorderPane borderPaneMainWindow;
 
@@ -66,6 +75,25 @@ public class MainWindowController {
     public void setButtonStats() {
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindowStats.fxml");
         loadUrl(path);
+    }
+
+    @FXML
+    public void setMenuItemChangeProfil(){
+        Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProfilChoice.fxml");
+        ClassOfStaticMethod.loadUrl(path,"Change profil");
+        Stage mainStage = (Stage)borderPaneMainWindow.getScene().getWindow();
+        mainStage.close();
+    }
+
+    @FXML
+    public void setMenuItemClose(){
+        Stage mainStage = (Stage)borderPaneMainWindow.getScene().getWindow();
+        mainStage.close();
+    }
+
+    @FXML
+    public void setMenuItemAutor(){
+
     }
 
     private void loadUrl(Path path) {

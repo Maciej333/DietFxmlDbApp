@@ -26,7 +26,7 @@ public class MealData {
 
     private static final String READ_MEAL_FOR_PROFIL = "SELECT " + MEAL_ID + ", " + NAME + " FROM " + TABLE + " WHERE "
             + MEAL_ID + " IN (SELECT " + TABLE_PROFIL_MEAL_MEAL_ID + " FROM " + TABLE_PROFIL_MEAL +
-            " WHERE " + TABLE_PROFIL_MEAL_PROFIL_ID + " = " + Profil.getSelectedProfil().getIdPerson() + ")";
+            " WHERE " + TABLE_PROFIL_MEAL_PROFIL_ID + " = ?)";
     private static final String READ_MEAL_MAX_ID = "SELECT MAX(" + MEAL_ID + ") FROM " + TABLE;
 
     private static final String INSERT_NEW_MEAL = "INSERT INTO " + TABLE + " VALUES (?,?)";
@@ -47,9 +47,10 @@ public class MealData {
 
     public void readAllMealForProfil() {
         List<Meal> meals = new ArrayList<>();
-        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_MEAL_FOR_PROFIL);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_MEAL_FOR_PROFIL)) {
+            preparedStatement.setInt(1,Profil.getSelectedProfil().getIdPerson());
 
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Meal meal = new Meal();
                 meal.setIdMeal(resultSet.getInt(MEAL_ID));

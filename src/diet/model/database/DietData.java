@@ -30,7 +30,7 @@ public class DietData {
     private static final String TABLE_DIET_PRODUCT_AMOUNT = "AMOUNT";
 
     private static final String READ_DIET_FOR_PROFIL = "SELECT " + TABLE_ID_DIET + ", " + TABLE_EATDATE + " FROM " + TABLE +
-            " WHERE " + TABLE_ID_PROFIL + " = " + Profil.getSelectedProfil().getIdPerson();
+            " WHERE " + TABLE_ID_PROFIL + " = ?";
 
     private static final String READ_MEALS_FOR_DIET = "SELECT " + TABLE_DIET_MEAL_ID_MEAL + ", " + TABLE_DIET_MEAL_AMOUNT
             + " FROM " + TABLE_DIET_MEAL + " WHERE " + TABLE_DIET_MEAL_ID_DIET + " =?";
@@ -59,9 +59,10 @@ public class DietData {
 
     public void readDietForProfil() {
         List<Diet> diets = new ArrayList<>();
-        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_DIET_FOR_PROFIL);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_DIET_FOR_PROFIL)) {
+            preparedStatement.setInt(1,Profil.getSelectedProfil().getIdPerson());
 
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Diet diet = new Diet();
                 diet.setIdDiet(resultSet.getInt(TABLE_ID_DIET));

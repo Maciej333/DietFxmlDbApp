@@ -61,6 +61,8 @@ public class ProfilChoiceController {
             ProductData.getInstance().readAllProductForProfil();
             Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindow.fxml");
             loadUrl(path, buttonLoadProfil.getText());
+            ((Stage)buttonLoadProfil.getScene().getWindow()).close();
+
         } else {
             Alert alterProfilNoChoice = new Alert(Alert.AlertType.WARNING);
             alterProfilNoChoice.setContentText("befor moving on, choose profil You would like to load");

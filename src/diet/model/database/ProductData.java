@@ -44,7 +44,7 @@ public class ProductData {
 
     private static final String READ_PRODUCTS_FOR_PROFIL = "SELECT * FROM " + TABLE + " WHERE " + PRODUCT_ID + " IN " +
             "(SELECT " + TABLE_PROFIL_PRODUCT_PRODUCT_ID + " FROM " + TABLE_PROFIL_PRODUCT + " " +
-            "WHERE " + TABLE_PROFIL_PRODUCT_PROFIL_ID + " = " + Profil.getSelectedProfil().getIdPerson() + ")";
+            "WHERE " + TABLE_PROFIL_PRODUCT_PROFIL_ID + " = ?)";
     private static final String INSERT_PRODUCT_PROFIL = "INSERT INTO " + TABLE_PROFIL_PRODUCT + " VALUES (?,?)";
 
     private static final String READ_PRODUCTS_FOR_MEAL = "SELECT " + TABLE + "." + PRODUCT_ID + ", "
@@ -67,9 +67,10 @@ public class ProductData {
 
     public void readAllProductForProfil() {
         List<Product> products = new ArrayList<>();
-        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_PRODUCTS_FOR_PROFIL);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_PRODUCTS_FOR_PROFIL);) {
+            preparedStatement.setInt(1, Profil.getSelectedProfil().getIdPerson());
 
+            ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Product product = new Product();
                 product.setIdProduct(resultSet.getInt(PRODUCT_ID));
