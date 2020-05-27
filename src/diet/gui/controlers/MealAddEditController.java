@@ -90,6 +90,7 @@ public class MealAddEditController {
             textFieldMealAddName.setText(Meal.getSelectedMeal().getName());
             buttonDoMeal.setText("Edit");
         } else {
+            productMap = FXCollections.observableMap(new HashMap<>());
             newMeal = new Meal();
         }
 
@@ -166,7 +167,6 @@ public class MealAddEditController {
 
                 MealData.getInstance().insertNewMeal(mealName, productMap);
             }
-            productMap = FXCollections.observableMap(new HashMap<>());
             Stage stage = (Stage) textFieldMealAddSearch.getScene().getWindow();
             stage.close();
         } else {
@@ -179,7 +179,6 @@ public class MealAddEditController {
 
     @FXML
     public void setButtonCancelMealAdd() {
-        productMap = FXCollections.observableMap(new HashMap<>());
         Stage stage = (Stage) textFieldMealAddSearch.getScene().getWindow();
         stage.close();
     }

@@ -3,12 +3,16 @@ package diet.gui.controlers;
 import diet.model.Meal;
 import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.database.MealData;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,7 +67,7 @@ public class MainWindowMealController {
             tableViewMeal.setItems(FXCollections.observableList(sortedMealList));
         });
 
-        MealData.getMealsList().addListener(new ListChangeListener<Meal>() {
+        mealsList.addListener(new ListChangeListener<Meal>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Meal> change) {
                 tableViewMeal.setItems(mealsList);
@@ -76,6 +80,49 @@ public class MainWindowMealController {
                         tableViewMeal.getSortOrder().add(mealName);
                     }
                 }
+            }
+        });
+
+        tableViewMeal.setRowFactory(new Callback<TableView<Meal>, TableRow<Meal>>() {
+            @Override
+            public TableRow<Meal> call(TableView<Meal> dietTableView) {
+                TableRow<Meal> returnTableRow = new TableRow<>();
+
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem edit = new MenuItem("Edit");
+                edit.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Meal.setSelectedMeal(tableViewMeal.getSelectionModel().getSelectedItem());
+                        loadedMealFxml = "Edit";
+                        Path pathNewMeal = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MealAdd.fxml");
+                        ClassOfStaticMethod.loadUrl(pathNewMeal, "Meal");
+                    }
+                });
+                MenuItem delete = new MenuItem("Delete");
+                delete.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Meal.setSelectedMeal(tableViewMeal.getSelectionModel().getSelectedItem());
+                        Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
+                        alertNoChoosen.setContentText("Do you really want to delete meal " + Meal.getSelectedMeal().getName() + "?");
+                        alertNoChoosen.setTitle("Delete confirmation");
+
+                        Optional<ButtonType> result = alertNoChoosen.showAndWait();
+                        if (result.get() == ButtonType.OK) {
+                            MealData.getInstance().deleteMeal(Meal.getSelectedMeal().getIdMeal());
+                            MealData.getMealsList().remove(Meal.getSelectedMeal());
+
+                        } else {
+                            alertNoChoosen.close();
+                        }
+                    }
+                });
+                contextMenu.getItems().addAll(edit, delete);
+
+                returnTableRow.contextMenuProperty().bind(Bindings.when(returnTableRow.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
+
+                return returnTableRow;
             }
         });
     }
