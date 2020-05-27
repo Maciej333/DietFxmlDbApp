@@ -157,28 +157,35 @@ public class DietAddEditController {
             int intHour = Integer.parseInt(hour);
             int intMinute = Integer.parseInt(minute);
 
-            if (buttonDoDiet.getText().equals("Edit")) {
-                DietData.getDietsList().remove(Diet.getSelectedDiet());
+            if(intHour <24 && intMinute < 60) {
+                if (buttonDoDiet.getText().equals("Edit")) {
+                    DietData.getDietsList().remove(Diet.getSelectedDiet());
 
-                Diet.getSelectedDiet().setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour, intMinute)));
-                Diet.getSelectedDiet().addMapToDietMealsProductsMap(productMealMap);
-                Diet.getSelectedDiet().countKcalForDiet();
-                Diet.getSelectedDiet().countProteinForDiet();
-                Diet.getSelectedDiet().countFatForDiet();
-                Diet.getSelectedDiet().countCarbsForDiet();
-                Diet.getSelectedDiet().countFiberForDiet();
+                    Diet.getSelectedDiet().setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour, intMinute)));
+                    Diet.getSelectedDiet().addMapToDietMealsProductsMap(productMealMap);
+                    Diet.getSelectedDiet().countKcalForDiet();
+                    Diet.getSelectedDiet().countProteinForDiet();
+                    Diet.getSelectedDiet().countFatForDiet();
+                    Diet.getSelectedDiet().countCarbsForDiet();
+                    Diet.getSelectedDiet().countFiberForDiet();
 
-                DietData.getInstance().updateDiet(Diet.getSelectedDiet());
-            } else {
-                newDiet.setIdOsoba(Profil.getSelectedProfil().getIdPerson());
-                newDiet.setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour, intMinute)));
-                newDiet.addMapToDietMealsProductsMap(productMealMap);
+                    DietData.getInstance().updateDiet(Diet.getSelectedDiet());
+                } else {
+                    newDiet.setIdOsoba(Profil.getSelectedProfil().getIdPerson());
+                    newDiet.setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour, intMinute)));
+                    newDiet.addMapToDietMealsProductsMap(productMealMap);
 
-                DietData.getInstance().insertDiet(newDiet);
+                    DietData.getInstance().insertDiet(newDiet);
+                }
+                productMealMap = FXCollections.observableMap(new HashMap<>());
+                Stage stage = (Stage) textFieldDietAddSearch.getScene().getWindow();
+                stage.close();
+            }else {
+                Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
+                alertNoChoosen.setTitle("Invalid Hour ");
+                alertNoChoosen.setContentText("Hour should be between 0-23\nMinute should be between 0-59");
+                alertNoChoosen.show();
             }
-            productMealMap = FXCollections.observableMap(new HashMap<>());
-            Stage stage = (Stage) textFieldDietAddSearch.getScene().getWindow();
-            stage.close();
         } else {
             Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
             alertNoChoosen.setTitle("No products/meals to add ");
