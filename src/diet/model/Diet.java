@@ -8,10 +8,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Diet {
+public class Diet extends Food{
 
     private static Diet selectedDiet = null;
 
@@ -19,13 +20,7 @@ public class Diet {
     private int idOsoba;
     private LocalDateTime date;
     private String formatDate;
-    private Map<Product, Integer> dietProducts;
-    private Map<Meal, Integer> dietMeals;
-    private double kcal;
-    private double protein;
-    private double fat;
-    private double carbs;
-    private double fiber;
+    private Map<Food, Integer> dietMealsProductsMap = new HashMap<>();
 
     public Diet() {
     }
@@ -73,95 +68,61 @@ public class Diet {
         this.date = date;
     }
 
-    public Map<Product, Integer> getDietProducts() {
-        return dietProducts;
+    public Map<Food, Integer> getDietMealsProductsMap() {
+        return dietMealsProductsMap;
     }
 
-    public void setDietProducts(Map<Product, Integer> dietProducts) {
-        this.dietProducts = dietProducts;
+    public void addMapToDietMealsProductsMap(Map<Food, Integer> dietMealsProductsMap) {
+        this.dietMealsProductsMap.putAll(dietMealsProductsMap);
     }
 
-    public Map<Meal, Integer> getDietMeals() {
-        return dietMeals;
+    @Override
+    public String getName() {
+        return "";
     }
 
-    public void setDietMeals(Map<Meal, Integer> dietMeals) {
-        this.dietMeals = dietMeals;
-    }
-
-    public double getKcal() {
-        return kcal;
-    }
-
-    public double getProtein() {
-        return protein;
-    }
-
-    public double getFat() {
-        return fat;
-    }
-
-    public double getCarbs() {
-        return carbs;
-    }
-
-    public double getFiber() {
-        return fiber;
+    @Override
+    public void setName(String name) {
     }
 
     public void countKcalForDiet() {
         double kcalForDiet = 0;
-        for (Map.Entry<Product, Integer> productAmount : dietProducts.entrySet()) {
-            kcalForDiet += productAmount.getValue() * productAmount.getKey().getKcal() / 100;
+        for (Map.Entry<Food, Integer> mealProductAmount : dietMealsProductsMap.entrySet()) {
+            kcalForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getKcal() / 100;
         }
-        for (Map.Entry<Meal, Integer> mealAmount : dietMeals.entrySet()) {
-            kcalForDiet += mealAmount.getValue() * mealAmount.getKey().getKcal() / 100;
-        }
-        this.kcal = Double.parseDouble(ClassOfStaticMethod.roundDouble(kcalForDiet));
+        setKcal(Double.parseDouble(ClassOfStaticMethod.roundDouble(kcalForDiet)));
     }
 
     public void countProteinForDiet() {
         double proteinForDiet = 0;
-        for (Map.Entry<Product, Integer> productAmount : dietProducts.entrySet()) {
-            proteinForDiet += productAmount.getValue() * productAmount.getKey().getProtein() / 100;
+        for (Map.Entry<Food, Integer> mealProductAmount : dietMealsProductsMap.entrySet()) {
+            proteinForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getProtein() / 100;
         }
-        for (Map.Entry<Meal, Integer> mealAmount : dietMeals.entrySet()) {
-            proteinForDiet += mealAmount.getValue() * mealAmount.getKey().getProtein() / 100;
-        }
-        this.protein = Double.parseDouble(ClassOfStaticMethod.roundDouble(proteinForDiet));
+        setProtein(Double.parseDouble(ClassOfStaticMethod.roundDouble(proteinForDiet)));
     }
 
     public void countFatForDiet() {
         double fatForDiet = 0;
-        for (Map.Entry<Product, Integer> productAmount : dietProducts.entrySet()) {
-            fatForDiet += productAmount.getValue() * productAmount.getKey().getFat() / 100;
+        for (Map.Entry<Food, Integer> mealProductAmount : dietMealsProductsMap.entrySet()) {
+            fatForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getFat() / 100;
         }
-        for (Map.Entry<Meal, Integer> mealAmount : dietMeals.entrySet()) {
-            fatForDiet += mealAmount.getValue() * mealAmount.getKey().getFat() / 100;
-        }
-        this.fat = Double.parseDouble(ClassOfStaticMethod.roundDouble(fatForDiet));
+        setFat(Double.parseDouble(ClassOfStaticMethod.roundDouble(fatForDiet)));
     }
 
     public void countCarbsForDiet() {
         double carbsForDiet = 0;
-        for (Map.Entry<Product, Integer> productAmount : dietProducts.entrySet()) {
-            carbsForDiet += productAmount.getValue() * productAmount.getKey().getCarbs() / 100;
+        for (Map.Entry<Food, Integer> mealProductAmount : dietMealsProductsMap.entrySet()) {
+            carbsForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getCarbs() / 100;
         }
-        for (Map.Entry<Meal, Integer> mealAmount : dietMeals.entrySet()) {
-            carbsForDiet += mealAmount.getValue() * mealAmount.getKey().getCarbs() / 100;
-        }
-        this.carbs = Double.parseDouble(ClassOfStaticMethod.roundDouble(carbsForDiet));
+        setCarbs(Double.parseDouble(ClassOfStaticMethod.roundDouble(carbsForDiet)));
     }
 
     public void countFiberForDiet() {
         double fiberForDiet = 0;
-        for (Map.Entry<Product, Integer> productAmount : dietProducts.entrySet()) {
-            fiberForDiet += productAmount.getValue() * productAmount.getKey().getFiber() / 100;
+        for (Map.Entry<Food, Integer> mealProductAmount : dietMealsProductsMap.entrySet()) {
+            fiberForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getFiber() / 100;
         }
-        for (Map.Entry<Meal, Integer> mealAmount : dietMeals.entrySet()) {
-            fiberForDiet += mealAmount.getValue() * mealAmount.getKey().getFiber() / 100;
-        }
-        this.fiber = Double.parseDouble(ClassOfStaticMethod.roundDouble(fiberForDiet));
+        setFiber(Double.parseDouble(ClassOfStaticMethod.roundDouble(fiberForDiet)));
     }
 
     public static ObservableList<Diet> getDietsByDate(ObservableList<Diet> dietsListAll, LocalDate localDate) {

@@ -1,9 +1,6 @@
 package diet.model.database;
 
-import diet.model.Diet;
-import diet.model.Meal;
-import diet.model.Product;
-import diet.model.Profil;
+import diet.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -63,8 +60,8 @@ public class DietData {
                 diet.setIdOsoba(Profil.getSelectedProfil().getIdPerson());
                 String date = resultSet.getString(TABLE_EATDATE);
                 diet.setDate(parseStringToDate(date));
-                diet.setDietMeals(readMealsForDied(diet.getIdDiet()));
-                diet.setDietProducts(readProductsForDied(diet.getIdDiet()));
+                diet.addMapToDietMealsProductsMap(readMealsForDied(diet.getIdDiet()));
+                diet.addMapToDietMealsProductsMap(readProductsForDied(diet.getIdDiet()));
                 diet.countKcalForDiet();
                 diet.countProteinForDiet();
                 diet.countFatForDiet();
@@ -79,8 +76,8 @@ public class DietData {
         dietsList = FXCollections.observableList(diets);
     }
 
-    private Map<Meal, Integer> readMealsForDied(int diedId) {
-        Map<Meal, Integer> meals = new HashMap<>();
+    private Map<Food, Integer> readMealsForDied(int diedId) {
+        Map<Food, Integer> meals = new HashMap<>();
         ResultSet resultSet = null;
         try (PreparedStatement preparedStatement = conn.prepareStatement(READ_MEALS_FOR_DIET)) {
             preparedStatement.setInt(1, diedId);
@@ -112,8 +109,8 @@ public class DietData {
         return meals;
     }
 
-    private Map<Product, Integer> readProductsForDied(int diedId) {
-        Map<Product, Integer> meals = new HashMap<>();
+    private Map<Food, Integer> readProductsForDied(int diedId) {
+        Map<Food, Integer> meals = new HashMap<>();
         ResultSet resultSet = null;
         try (PreparedStatement preparedStatement = conn.prepareStatement(READ_PRODUCTS_FOR_DIET)) {
             preparedStatement.setInt(1, diedId);
