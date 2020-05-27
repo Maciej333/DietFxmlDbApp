@@ -4,12 +4,15 @@ import diet.model.Meal;
 import diet.model.Product;
 import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.database.MealData;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -103,6 +106,34 @@ public class MealAddEditController {
         });
 
         tableViewMealAdd.setItems(FXCollections.observableArrayList(productMap.entrySet()));
+
+        tableViewMealAdd.setRowFactory(new Callback<TableView<Map.Entry<Product, Integer>>, TableRow<Map.Entry<Product, Integer>>>() {
+            @Override
+            public TableRow<Map.Entry<Product, Integer>> call(TableView<Map.Entry<Product, Integer>> productTableView) {
+                TableRow<Map.Entry<Product, Integer>> returnTableRow = new TableRow<>();
+
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem delete = new MenuItem("Delete");
+                delete.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
+                        alertNoChoosen.setContentText("Do you really want to delete product " + tableViewMealAdd.getSelectionModel().getSelectedItem().getKey().getName() + "?");
+                        alertNoChoosen.setTitle("Delete confirmation");
+
+                        Optional<ButtonType> result = alertNoChoosen.showAndWait();
+                        if (result.get() == ButtonType.OK) {
+                            productMap.remove(tableViewMealAdd.getSelectionModel().getSelectedItem().getKey());
+                        } else {
+                            alertNoChoosen.close();
+                        }
+                    }
+                });
+                contextMenu.getItems().addAll(delete);
+                returnTableRow.contextMenuProperty().bind(Bindings.when(returnTableRow.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
+                return returnTableRow;
+            }
+        });
     }
 
     @FXML

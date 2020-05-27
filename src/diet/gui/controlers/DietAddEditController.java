@@ -3,12 +3,15 @@ package diet.gui.controlers;
 import diet.model.*;
 import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.database.DietData;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -116,6 +119,34 @@ public class DietAddEditController {
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldTimeHourDietAdd, labelInvalidTime, "\\d{1,2}", "invalid", "hh:MM");
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldTimeMinuteDietAdd, labelInvalidTime, "\\d{1,2}", "invalid", "hh:MM");
         tableViewDietAdd.setItems(FXCollections.observableArrayList(productMealMap.entrySet()));
+
+        tableViewDietAdd.setRowFactory(new Callback<TableView<Map.Entry<Food, Integer>>, TableRow<Map.Entry<Food, Integer>>>() {
+            @Override
+            public TableRow<Map.Entry<Food, Integer>> call(TableView<Map.Entry<Food, Integer>> foodTableView) {
+                TableRow<Map.Entry<Food, Integer>> returnTableRow = new TableRow<>();
+
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem delete = new MenuItem("Delete");
+                delete.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
+                        alertNoChoosen.setContentText("Do you really want to delete product " + tableViewDietAdd.getSelectionModel().getSelectedItem().getKey().getName() + "?");
+                        alertNoChoosen.setTitle("Delete confirmation");
+
+                        Optional<ButtonType> result = alertNoChoosen.showAndWait();
+                        if (result.get() == ButtonType.OK) {
+                            productMealMap.remove(tableViewDietAdd.getSelectionModel().getSelectedItem().getKey());
+                        } else {
+                            alertNoChoosen.close();
+                        }
+                    }
+                });
+                contextMenu.getItems().addAll(delete);
+                returnTableRow.contextMenuProperty().bind(Bindings.when(returnTableRow.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
+                return returnTableRow;
+            }
+    });
     }
 
     @FXML

@@ -86,7 +86,7 @@ public class MainWindowProductController {
 
         tableViewProduct.setRowFactory(new Callback<TableView<Product>, TableRow<Product>>() {
             @Override
-            public TableRow<Product> call(TableView<Product> dietTableView) {
+            public TableRow<Product> call(TableView<Product> productTableView) {
                 TableRow<Product> returnTableRow = new TableRow<>();
 
                 ContextMenu contextMenu = new ContextMenu();
