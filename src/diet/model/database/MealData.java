@@ -107,12 +107,10 @@ public class MealData {
                 mealsList.add(insertedMeal);
             } else {
                 conn.rollback();
-                System.out.println("ERROR 1 IN insertMeal");
                 throw new SQLException("Insert product error");
             }
         } catch (SQLException e) {
             System.out.println("Insert failed " + e.getMessage());
-            System.out.println("ERROR IN insertMeal");
         } finally {
             try {
                 conn.setAutoCommit(true);
@@ -135,13 +133,10 @@ public class MealData {
                 conn.commit();
             } else {
                 conn.rollback();
-                System.out.println("ERROR 1 IN insertMealForProfil");
                 throw new SQLException("Insert product error");
-
             }
         } catch (SQLException e) {
             System.out.println("Insert failed " + e.getMessage());
-            System.out.println("ERROR IN insertMealForProfil");
         } finally {
             try {
                 conn.setAutoCommit(true);
@@ -168,7 +163,6 @@ public class MealData {
 
         } catch (SQLException e) {
             System.out.println("Update failed " + e.getMessage());
-            System.out.println("ERROR IN updateMeal");
         }
     }
 

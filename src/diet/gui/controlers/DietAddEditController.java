@@ -94,14 +94,14 @@ public class DietAddEditController {
         if (MainWindowDietController.getLoadedMealFxml().equals("Edit")) {
             productMealMap = FXCollections.observableMap(Diet.getSelectedDiet().getDietMealsProductsMap());
             datePickerDietDate.setValue(Diet.getSelectedDiet().getDate().toLocalDate());
-            textFieldTimeHourDietAdd.setText(Diet.getSelectedDiet().getDate().getHour()+"");
-            textFieldTimeMinuteDietAdd.setText(Diet.getSelectedDiet().getDate().getMinute()+"");
+            textFieldTimeHourDietAdd.setText(Diet.getSelectedDiet().getDate().getHour() + "");
+            textFieldTimeMinuteDietAdd.setText(Diet.getSelectedDiet().getDate().getMinute() + "");
             buttonDoDiet.setText("Edit");
         } else {
             newDiet = new Diet();
             datePickerDietDate.setValue(MainWindowDietController.getChoosenDate());
-            textFieldTimeHourDietAdd.setText(LocalDateTime.now().getHour()+"");
-            textFieldTimeMinuteDietAdd.setText(LocalDateTime.now().getMinute()+"");
+            textFieldTimeHourDietAdd.setText(LocalDateTime.now().getHour() + "");
+            textFieldTimeMinuteDietAdd.setText(LocalDateTime.now().getMinute() + "");
         }
 
         productMealMap.addListener(new MapChangeListener<Food, Integer>() {
@@ -112,17 +112,10 @@ public class DietAddEditController {
             }
         });
 
-        ClassOfStaticMethod.checkCorrectOfTextField(textFieldTimeHourDietAdd, labelInvalidTime,"\\d{1,2}","invalid", "hh:MM");
-        ClassOfStaticMethod.checkCorrectOfTextField(textFieldTimeMinuteDietAdd, labelInvalidTime,"\\d{1,2}","invalid", "hh:MM");
+        ClassOfStaticMethod.checkCorrectOfTextField(textFieldTimeHourDietAdd, labelInvalidTime, "\\d{1,2}", "invalid", "hh:MM");
+        ClassOfStaticMethod.checkCorrectOfTextField(textFieldTimeMinuteDietAdd, labelInvalidTime, "\\d{1,2}", "invalid", "hh:MM");
         tableViewDietAdd.setItems(FXCollections.observableArrayList(productMealMap.entrySet()));
     }
-
-
-
-
-
-
-
 
     @FXML
     public void setButtonAddProductMealToDiet() {
@@ -167,7 +160,7 @@ public class DietAddEditController {
             if (buttonDoDiet.getText().equals("Edit")) {
                 DietData.getDietsList().remove(Diet.getSelectedDiet());
 
-                Diet.getSelectedDiet().setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour,intMinute)));
+                Diet.getSelectedDiet().setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour, intMinute)));
                 Diet.getSelectedDiet().addMapToDietMealsProductsMap(productMealMap);
                 Diet.getSelectedDiet().countKcalForDiet();
                 Diet.getSelectedDiet().countProteinForDiet();
@@ -175,24 +168,13 @@ public class DietAddEditController {
                 Diet.getSelectedDiet().countCarbsForDiet();
                 Diet.getSelectedDiet().countFiberForDiet();
 
-                DietData.getDietsList().add(Diet.getSelectedDiet());
-                //MealData.getInstance().updateMeal(mealName, Meal.getSelectedMeal().getIdMeal(), productMap);
-
+                DietData.getInstance().updateDiet(Diet.getSelectedDiet());
             } else {
-
                 newDiet.setIdOsoba(Profil.getSelectedProfil().getIdPerson());
-                //newDiet.setIdDiet();                //wyszukac najwieksze id
-                newDiet.setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour,intMinute)));
+                newDiet.setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour, intMinute)));
                 newDiet.addMapToDietMealsProductsMap(productMealMap);
-                newDiet.countKcalForDiet();
-                newDiet.countProteinForDiet();
-                newDiet.countFatForDiet();
-                newDiet.countCarbsForDiet();
-                newDiet.countFiberForDiet();
 
-                                            DietData.getDietsList().add(newDiet);           //ta linia po zaimplementowaniu dolnej jest do usuniecia
-
-                //MealData.getInstance().insertNewMeal(mealName, productMap);
+                DietData.getInstance().insertDiet(newDiet);
             }
             productMealMap = FXCollections.observableMap(new HashMap<>());
             Stage stage = (Stage) textFieldDietAddSearch.getScene().getWindow();

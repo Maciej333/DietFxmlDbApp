@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Diet extends Food{
+public class Diet extends Food {
 
     private static Diet selectedDiet = null;
 
@@ -25,7 +25,7 @@ public class Diet extends Food{
     public Diet() {
     }
 
-    public void setSelectedDiet(Diet diet) {
+    public static void setSelectedDiet(Diet diet) {
         selectedDiet = diet;
     }
 

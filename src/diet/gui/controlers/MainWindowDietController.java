@@ -4,15 +4,20 @@ import diet.model.Diet;
 import diet.model.Profil;
 import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.database.DietData;
+import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class MainWindowDietController {
 
@@ -110,6 +115,48 @@ public class MainWindowDietController {
         labelEatenCarbs.setText(statsOfDiets[3].toString());
         labelEatenFiber.setText(statsOfDiets[4].toString());
         kcalBilans.setText(statsOfDiets[5].toString());
+
+        tableViewDiet.setRowFactory(new Callback<TableView<Diet>, TableRow<Diet>>() {
+            @Override
+            public TableRow<Diet> call(TableView<Diet> dietTableView) {
+                TableRow<Diet> returnTableRow = new TableRow<>();
+
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem edit = new MenuItem("Edit");
+                edit.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Diet.setSelectedDiet(tableViewDiet.getSelectionModel().getSelectedItem());
+                        loadedDietFxml = "Edit";
+                        Path pathNewDiet = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\DietAdd.fxml");
+                        ClassOfStaticMethod.loadUrl(pathNewDiet, "Diet");
+                    }
+                });
+                MenuItem delete = new MenuItem("Delete");
+                delete.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Diet.setSelectedDiet(tableViewDiet.getSelectionModel().getSelectedItem());
+                        Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
+                        alertNoChoosen.setContentText("Do you really want to delete diet " + "?");
+                        alertNoChoosen.setTitle("Delete confirmation");
+
+                        Optional<ButtonType> result = alertNoChoosen.showAndWait();
+                        if (result.get() == ButtonType.OK) {
+                            DietData.getInstance().deleteDiet(Diet.getSelectedDiet());
+                            DietData.getDietsList().remove(Diet.getSelectedDiet());
+                        } else {
+                            alertNoChoosen.close();
+                        }
+                    }
+                });
+                contextMenu.getItems().addAll(edit, delete);
+
+                returnTableRow.contextMenuProperty().bind(Bindings.when(returnTableRow.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
+
+                return returnTableRow;
+            }
+        });
 
         dietsList.addListener(new ListChangeListener<Diet>() {
             @Override

@@ -4,10 +4,7 @@ import diet.model.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -40,6 +37,17 @@ public class DietData {
 
     private static final String READ_PRODUCTS_FOR_DIET = "SELECT " + TABLE_DIET_PRODUCT_ID_PRODUCT + ", " + TABLE_DIET_PRODUCT_AMOUNT
             + " FROM " + TABLE_DIET_PRODUCT + " WHERE " + TABLE_DIET_PRODUCT_ID_DIET + " =?";
+
+    private static final String READ_MAX_DIET_ID = "SELECT MAX(" + TABLE_ID_DIET + ") FROM " + TABLE;
+    private static final String INSERT_DIET = "INSERT INTO " + TABLE + " VALUES (?,?,?)";
+    private static final String INSERT_DIET_MEAL = "INSERT INTO " + TABLE_DIET_MEAL + " VALUES (?,?,?)";
+    private static final String INSERT_DIET_PRODUCT = "INSERT INTO " + TABLE_DIET_PRODUCT + " VALUES (?,?,?)";
+
+    private static final String UPDATE_DIET = "UPDATE " + TABLE + " SET " + TABLE_EATDATE + " =? WHERE " + TABLE_ID_DIET + " =? AND " + TABLE_ID_PROFIL + " =?";
+
+    private static final String DELETE_DIET = "DELETE FROM " + TABLE + " WHERE " + TABLE_ID_DIET + " =? AND " + TABLE_ID_PROFIL + " =?";
+    private static final String DELETE_DIET_MEAL = "DELETE FROM " + TABLE_DIET_MEAL + " WHERE " + TABLE_DIET_MEAL_ID_DIET + " =? AND " + TABLE_DIET_MEAL_ID_MEAL + " =?";
+    private static final String DELETE_DIET_PRODUCT = "DELETE FROM " + TABLE_DIET_PRODUCT + " WHERE " + TABLE_DIET_PRODUCT_ID_DIET + " =? AND " + TABLE_DIET_PRODUCT_ID_PRODUCT + " =?";
 
     private DietData() {
 
@@ -140,6 +148,247 @@ public class DietData {
             }
         }
         return meals;
+    }
+
+    public void insertDiet(Diet diet) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(INSERT_DIET)) {
+            conn.setAutoCommit(false);
+
+            preparedStatement.setInt(1, (getMaxDietId() + 1));
+            preparedStatement.setInt(2, Profil.getSelectedProfil().getIdPerson());
+            preparedStatement.setString(3, diet.getFormatDate());
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 1) {
+                conn.commit();
+
+                diet.setIdDiet(getMaxDietId());
+                for (Map.Entry<Food, Integer> mapEntry : diet.getDietMealsProductsMap().entrySet()) {
+                    if (mapEntry.getKey().getClass().getName().matches(".*Meal")) {
+                        insertDietMeal(diet, (Meal) mapEntry.getKey(), mapEntry.getValue());
+                    } else if (mapEntry.getKey().getClass().getName().matches(".*Product")) {
+                        insertDietProduct(diet, (Product) mapEntry.getKey(), mapEntry.getValue());
+                    }
+                }
+                diet.countKcalForDiet();
+                diet.countProteinForDiet();
+                diet.countFatForDiet();
+                diet.countCarbsForDiet();
+                diet.countFiberForDiet();
+
+                dietsList.add(diet);
+            } else {
+                conn.rollback();
+                throw new SQLException("Insert diet error");
+            }
+        } catch (SQLException e) {
+            System.out.println("Insert diet Failed" + e.getMessage());
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private int getMaxDietId() {
+        int maxId = 0;
+        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_MAX_DIET_ID);
+             ResultSet resultset = preparedStatement.executeQuery()) {
+            while (resultset.next()) {
+                maxId = resultset.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("Query Failed" + e.getMessage());
+        }
+        return maxId;
+    }
+
+    private void insertDietMeal(Diet diet, Meal meal, int amount) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(INSERT_DIET_MEAL)) {
+            conn.setAutoCommit(false);
+
+            preparedStatement.setInt(1, diet.getIdDiet());
+            preparedStatement.setInt(2, meal.getIdMeal());
+            preparedStatement.setInt(3, amount);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 1) {
+                conn.commit();
+            } else {
+                conn.rollback();
+                throw new SQLException("Insert diet meal error");
+            }
+        } catch (SQLException e) {
+            System.out.println("Insert diet meal Failed" + e.getMessage());
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void insertDietProduct(Diet diet, Product product, int amount) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(INSERT_DIET_PRODUCT)) {
+            conn.setAutoCommit(false);
+
+            preparedStatement.setInt(1, diet.getIdDiet());
+            preparedStatement.setInt(2, product.getIdProduct());
+            preparedStatement.setInt(3, amount);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 1) {
+                conn.commit();
+            } else {
+                conn.rollback();
+                throw new SQLException("Insert diet product error");
+            }
+        } catch (SQLException e) {
+            System.out.println("Insert diet product Failed" + e.getMessage());
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void updateDiet(Diet diet) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(UPDATE_DIET)) {
+            conn.setAutoCommit(false);
+
+            preparedStatement.setString(1, diet.getFormatDate());
+            preparedStatement.setInt(2, diet.getIdDiet());
+            preparedStatement.setInt(3, Profil.getSelectedProfil().getIdPerson());
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 1) {
+                conn.commit();
+
+                Map<Food, Integer> mapOfDietFood = new HashMap<>();
+                mapOfDietFood.putAll(readMealsForDied(diet.getIdDiet()));
+                mapOfDietFood.putAll(readProductsForDied(diet.getIdDiet()));
+
+                for (Map.Entry<Food, Integer> mapEntry : mapOfDietFood.entrySet()) {
+                    if (mapEntry.getKey().getClass().getName().matches(".*Meal")) {
+                        deleteDietMeal(diet, ((Meal) mapEntry.getKey()).getIdMeal());
+                    } else if (mapEntry.getKey().getClass().getName().matches(".*Product")) {
+                        deleteDietProduct(diet, ((Product) mapEntry.getKey()).getIdProduct());
+                    }
+                }
+
+                for (Map.Entry<Food, Integer> mapEntry : diet.getDietMealsProductsMap().entrySet()) {
+                    if (mapEntry.getKey().getClass().getName().matches(".*Meal")) {
+                        insertDietMeal(diet, (Meal) mapEntry.getKey(), mapEntry.getValue());
+                    } else if (mapEntry.getKey().getClass().getName().matches(".*Product")) {
+                        insertDietProduct(diet, (Product) mapEntry.getKey(), mapEntry.getValue());
+                    }
+                }
+
+                dietsList.add(diet);
+            } else {
+                conn.rollback();
+                throw new SQLException("Update diet error");
+            }
+        } catch (SQLException e) {
+            System.out.println("Update diet Failed" + e.getMessage());
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteDiet(Diet diet) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(DELETE_DIET)) {
+            conn.setAutoCommit(false);
+
+            preparedStatement.setInt(1, diet.getIdDiet());
+            preparedStatement.setInt(2, Profil.getSelectedProfil().getIdPerson());
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 1) {
+                conn.commit();
+
+                Map<Food, Integer> mapOfDietFood = new HashMap<>();
+                mapOfDietFood.putAll(readMealsForDied(diet.getIdDiet()));
+                mapOfDietFood.putAll(readProductsForDied(diet.getIdDiet()));
+                for (Map.Entry<Food, Integer> mapEntry : mapOfDietFood.entrySet()) {
+                    if (mapEntry.getKey().getClass().getName().matches(".*Meal")) {
+                        deleteDietMeal(diet, ((Meal) mapEntry.getKey()).getIdMeal());
+                    } else if (mapEntry.getKey().getClass().getName().matches(".*Product")) {
+                        deleteDietProduct(diet, ((Product) mapEntry.getKey()).getIdProduct());
+                    }
+                }
+            } else {
+                conn.rollback();
+                throw new SQLException("Delete diet error");
+            }
+        } catch (SQLException e) {
+            System.out.println("Delete diet Failed" + e.getMessage());
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteDietMeal(Diet diet, int mealId) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(DELETE_DIET_MEAL)) {
+            conn.setAutoCommit(false);
+
+            preparedStatement.setInt(1, diet.getIdDiet());
+            preparedStatement.setInt(2, mealId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 1) {
+                conn.commit();
+            } else {
+                conn.rollback();
+                throw new SQLException("Delete diet meal error");
+            }
+        } catch (SQLException e) {
+            System.out.println("Delete diet meal Failed" + e.getMessage());
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteDietProduct(Diet diet, int productId) {
+        try (PreparedStatement preparedStatement = conn.prepareStatement(DELETE_DIET_PRODUCT)) {
+            conn.setAutoCommit(false);
+
+            preparedStatement.setInt(1, diet.getIdDiet());
+            preparedStatement.setInt(2, productId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows == 1) {
+                conn.commit();
+            } else {
+                conn.rollback();
+                throw new SQLException("Delete diet product error");
+            }
+        } catch (SQLException e) {
+            System.out.println("Delete diet product Failed" + e.getMessage());
+        } finally {
+            try {
+                conn.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private LocalDateTime parseStringToDate(String stringDate) {
