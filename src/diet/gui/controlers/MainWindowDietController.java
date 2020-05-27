@@ -2,16 +2,22 @@ package diet.gui.controlers;
 
 import diet.model.Diet;
 import diet.model.Profil;
+import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.database.DietData;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 
 public class MainWindowDietController {
 
+    private static String loadedDietFxml;
+    private static LocalDate choosenDate;
     private ObservableList<Diet> dietsList;
 
     @FXML
@@ -104,10 +110,30 @@ public class MainWindowDietController {
         labelEatenCarbs.setText(statsOfDiets[3].toString());
         labelEatenFiber.setText(statsOfDiets[4].toString());
         kcalBilans.setText(statsOfDiets[5].toString());
+
+        dietsList.addListener(new ListChangeListener<Diet>() {
+            @Override
+            public void onChanged(Change<? extends Diet> change) {
+                ObservableList<Diet> newDietList = Diet.getDietsByDate(dietsList, datePickerDiet.getValue());
+                tableViewDiet.setItems(newDietList);
+                tableViewDiet.getSortOrder().add(dietDate);
+            }
+        });
     }
 
     @FXML
     public void setButtonAddProductMeal() {
+        choosenDate = datePickerDiet.getValue();
+        loadedDietFxml = "Add";
+        Path pathNewDiet = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\DietAdd.fxml");
+        ClassOfStaticMethod.loadUrl(pathNewDiet, "Diet");
+    }
 
+    public static String getLoadedMealFxml() {
+        return loadedDietFxml;
+    }
+
+    public static LocalDate getChoosenDate() {
+        return choosenDate;
     }
 }

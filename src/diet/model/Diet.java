@@ -53,7 +53,7 @@ public class Diet extends Food{
         return date;
     }
 
-    public void setFormatDate(LocalDateTime dateToFormat) {
+    private void setFormatDate(LocalDateTime dateToFormat) {
         String format = "yyyy-MM-dd HH:mm:ss";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
         formatDate = dateToFormat.format(formatter);
