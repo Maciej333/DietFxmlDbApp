@@ -167,32 +167,30 @@ public class MealData {
         }
     }
 
-    public void deleteMeal(int mealId) {
+    private void deleteMeal(int mealId) {
         try (PreparedStatement preparedStatement = conn.prepareStatement(DELETE_MEAL)) {
             preparedStatement.setInt(1, mealId);
-
             preparedStatement.executeUpdate();
 
             for (Map.Entry<Product, Integer> productMap : Meal.getSelectedMeal().getProductsForMeal().entrySet())
                 ProductData.getInstance().deleteProductForMeal(mealId, productMap.getKey().getIdProduct());
-
-            deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(), mealId);
-
-            mealsList.remove(Meal.getSelectedMeal());
-
         } catch (SQLException e) {
-            System.out.println("Update failed " + e.getMessage());
+            System.out.println("Delete failed " + e.getMessage());
         }
     }
 
-    private void deleteMealForProfil(int profilId, int mealId) {
+    public void deleteMealForProfil(int profilId, int mealId) {
         try (PreparedStatement preparedStatement = conn.prepareStatement(DELETE_MEAL_FOR_PROFIL)) {
             preparedStatement.setInt(1, profilId);
             preparedStatement.setInt(2, mealId);
 
+            if(DietData.getInstance().checkExistOfMealInDietMeal() == 0 ){
+                deleteMeal(mealId);
+            }
             preparedStatement.executeUpdate();
+            mealsList.remove(Meal.getSelectedMeal());
         } catch (SQLException e) {
-            System.out.println("Update failed " + e.getMessage());
+            System.out.println("Delete failed " + e.getMessage());
         }
     }
 

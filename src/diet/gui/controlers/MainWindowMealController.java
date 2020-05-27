@@ -1,6 +1,7 @@
 package diet.gui.controlers;
 
 import diet.model.Meal;
+import diet.model.Profil;
 import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.database.MealData;
 import javafx.beans.binding.Bindings;
@@ -110,7 +111,7 @@ public class MainWindowMealController {
 
                         Optional<ButtonType> result = alertNoChoosen.showAndWait();
                         if (result.get() == ButtonType.OK) {
-                            MealData.getInstance().deleteMeal(Meal.getSelectedMeal().getIdMeal());
+                            MealData.getInstance().deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(),Meal.getSelectedMeal().getIdMeal());
                             MealData.getMealsList().remove(Meal.getSelectedMeal());
 
                         } else {
@@ -159,7 +160,7 @@ public class MainWindowMealController {
 
             Optional<ButtonType> result = alertNoChoosen.showAndWait();
             if (result.get() == ButtonType.OK) {
-                MealData.getInstance().deleteMeal(Meal.getSelectedMeal().getIdMeal());
+                MealData.getInstance().deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(),Meal.getSelectedMeal().getIdMeal());
                 MealData.getMealsList().remove(Meal.getSelectedMeal());
 
             } else {

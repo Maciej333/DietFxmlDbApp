@@ -38,6 +38,7 @@ public class DietData {
     private static final String READ_PRODUCTS_FOR_DIET = "SELECT " + TABLE_DIET_PRODUCT_ID_PRODUCT + ", " + TABLE_DIET_PRODUCT_AMOUNT
             + " FROM " + TABLE_DIET_PRODUCT + " WHERE " + TABLE_DIET_PRODUCT_ID_DIET + " =?";
     private static final String CHECK_EXIST_OF_PRODUCT_IN_DIET_PRODUCT="SELECT (1) FROM "+TABLE_DIET_PRODUCT+" WHERE "+TABLE_DIET_PRODUCT_ID_PRODUCT+" = ?";
+    private static final String CHECK_EXIST_OF_MEAL_IN_DIET_MEAL="SELECT (1) FROM "+TABLE_DIET_MEAL+" WHERE "+TABLE_DIET_MEAL_ID_MEAL+" = ?";
 
     private static final String READ_MAX_DIET_ID = "SELECT MAX(" + TABLE_ID_DIET + ") FROM " + TABLE;
     private static final String INSERT_DIET = "INSERT INTO " + TABLE + " VALUES (?,?,?)";
@@ -397,6 +398,22 @@ public class DietData {
         int countExist = 0;
         try (PreparedStatement statement = conn.prepareStatement(CHECK_EXIST_OF_PRODUCT_IN_DIET_PRODUCT)) {
             statement.setInt(1, Product.getSelectedProduct().getIdProduct());
+            ResultSet resultSet = statement.executeQuery();
+            while(resultSet.next()){
+                countExist++;
+            }
+        } catch (SQLException e) {
+            System.out.println("Check exist failed " + e.getMessage());
+        }finally {
+
+        }
+        return countExist;
+    }
+
+    public int checkExistOfMealInDietMeal(){
+        int countExist = 0;
+        try (PreparedStatement statement = conn.prepareStatement(CHECK_EXIST_OF_MEAL_IN_DIET_MEAL)) {
+            statement.setInt(1, Meal.getSelectedMeal().getIdMeal());
             ResultSet resultSet = statement.executeQuery();
             while(resultSet.next()){
                 countExist++;
