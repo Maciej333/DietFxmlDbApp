@@ -3,12 +3,16 @@ package diet.gui.controlers;
 import diet.model.Product;
 import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.database.ProductData;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -77,6 +81,47 @@ public class MainWindowProductController {
                         tableViewProduct.getSortOrder().add(productName);
                     }
                 }
+            }
+        });
+
+        tableViewProduct.setRowFactory(new Callback<TableView<Product>, TableRow<Product>>() {
+            @Override
+            public TableRow<Product> call(TableView<Product> dietTableView) {
+                TableRow<Product> returnTableRow = new TableRow<>();
+
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem edit = new MenuItem("Edit");
+                edit.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
+                        loadedProductFxml = "Edit";
+                        Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductAdd.fxml");
+                        ClassOfStaticMethod.loadUrl(pathNewProduct,"Product");
+                    }
+                });
+                MenuItem delete = new MenuItem("Delete");
+                delete.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
+                        Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
+                        alertNoChoosen.setContentText("Do you really want to delete product " + Product.getSelectedProduct().getName() + "?");
+                        alertNoChoosen.setTitle("Delete confirmation");
+
+                        Optional<ButtonType> result = alertNoChoosen.showAndWait();
+                        if (result.get() == ButtonType.OK) {
+                            ProductData.getInstance().deleteProduct();
+                        } else {
+                            alertNoChoosen.close();
+                        }
+                    }
+                });
+                contextMenu.getItems().addAll(edit, delete);
+
+                returnTableRow.contextMenuProperty().bind(Bindings.when(returnTableRow.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
+
+                return returnTableRow;
             }
         });
     }
