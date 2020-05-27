@@ -107,7 +107,7 @@ public class MainWindowProductController {
     public void setButtonDeleteProduct() {
         Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
         if (Product.getSelectedProduct() != null) {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.WARNING);
+            Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
             alertNoChoosen.setContentText("Do you really want to delete product " + Product.getSelectedProduct().getName() + "?");
             alertNoChoosen.setTitle("Delete confirmation");
 

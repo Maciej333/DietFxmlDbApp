@@ -113,7 +113,7 @@ public class MealAddEditController {
     @FXML
     public void setButtonDeleteProductFromMeal() {
         if (tableViewMealAdd.getSelectionModel().getSelectedItem() != null) {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.WARNING);
+            Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
             alertNoChoosen.setContentText("Do you really want to delete product " + tableViewMealAdd.getSelectionModel().getSelectedItem().getKey().getName() + "?");
             alertNoChoosen.setTitle("Delete confirmation");
 

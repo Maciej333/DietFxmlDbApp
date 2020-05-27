@@ -106,7 +106,7 @@ public class MainWindowMealController {
     public void setButtonDeleteMeal() {
         Meal.setSelectedMeal(tableViewMeal.getSelectionModel().getSelectedItem());
         if (Meal.getSelectedMeal() != null) {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.WARNING);
+            Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
             alertNoChoosen.setContentText("Do you really want to delete meal " + Meal.getSelectedMeal().getName() + "?");
             alertNoChoosen.setTitle("Delete confirmation");
 
