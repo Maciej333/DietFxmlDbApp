@@ -2,6 +2,8 @@ package diet.gui.controlers;
 
 import diet.Main;
 import diet.model.Profil;
+import diet.model.database.MealData;
+import diet.model.database.ProductData;
 import diet.model.database.ProfilData;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -55,6 +57,8 @@ public class ProfilChoiceController {
     public void setButtonLoadProfil() {
         setSelectedProfil();
         if (getSelectedProfil() != null) {
+            MealData.getInstance().readAllMealForProfil();
+            ProductData.getInstance().readAllProductForProfil();
             Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindow.fxml");
             loadUrl(path, buttonLoadProfil.getText());
         } else {

@@ -78,7 +78,6 @@ public class MainWindowProfilInfoController {
             weight != -1 &&
             growth != -1
         ) {
-            System.out.println(name + " " + age + " " + weight + " " + growth + " " + sex + " " + goal);
             ProfilData.getInstance().updateProfil(name, age, weight, growth, sex, goal, Profil.getSelectedProfil().getIdPerson());
         } else {
             Alert alertIncorrectValues = new Alert(Alert.AlertType.WARNING);
