@@ -37,8 +37,8 @@ public class DietData {
 
     private static final String READ_PRODUCTS_FOR_DIET = "SELECT " + TABLE_DIET_PRODUCT_ID_PRODUCT + ", " + TABLE_DIET_PRODUCT_AMOUNT
             + " FROM " + TABLE_DIET_PRODUCT + " WHERE " + TABLE_DIET_PRODUCT_ID_DIET + " =?";
-    private static final String CHECK_EXIST_OF_PRODUCT_IN_DIET_PRODUCT="SELECT (1) FROM "+TABLE_DIET_PRODUCT+" WHERE "+TABLE_DIET_PRODUCT_ID_PRODUCT+" = ?";
-    private static final String CHECK_EXIST_OF_MEAL_IN_DIET_MEAL="SELECT (1) FROM "+TABLE_DIET_MEAL+" WHERE "+TABLE_DIET_MEAL_ID_MEAL+" = ?";
+    private static final String CHECK_EXIST_OF_PRODUCT_IN_DIET_PRODUCT = "SELECT (1) FROM " + TABLE_DIET_PRODUCT + " WHERE " + TABLE_DIET_PRODUCT_ID_PRODUCT + " = ?";
+    private static final String CHECK_EXIST_OF_MEAL_IN_DIET_MEAL = "SELECT (1) FROM " + TABLE_DIET_MEAL + " WHERE " + TABLE_DIET_MEAL_ID_MEAL + " = ?";
 
     private static final String READ_MAX_DIET_ID = "SELECT MAX(" + TABLE_ID_DIET + ") FROM " + TABLE;
     private static final String INSERT_DIET = "INSERT INTO " + TABLE + " VALUES (?,?,?)";
@@ -62,7 +62,7 @@ public class DietData {
     public void readDietForProfil() {
         List<Diet> diets = new ArrayList<>();
         try (PreparedStatement preparedStatement = conn.prepareStatement(READ_DIET_FOR_PROFIL)) {
-            preparedStatement.setInt(1,Profil.getSelectedProfil().getIdPerson());
+            preparedStatement.setInt(1, Profil.getSelectedProfil().getIdPerson());
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -283,7 +283,6 @@ public class DietData {
                         deleteDietProduct(diet, ((Product) mapEntry.getKey()).getIdProduct());
                     }
                 }
-
                 for (Map.Entry<Food, Integer> mapEntry : diet.getDietMealsProductsMap().entrySet()) {
                     if (mapEntry.getKey().getClass().getName().matches(".*Meal")) {
                         insertDietMeal(diet, (Meal) mapEntry.getKey(), mapEntry.getValue());
@@ -394,34 +393,30 @@ public class DietData {
         }
     }
 
-    public int checkExistOfProductInDietProduct(){
+    public int checkExistOfProductInDietProduct() {
         int countExist = 0;
         try (PreparedStatement statement = conn.prepareStatement(CHECK_EXIST_OF_PRODUCT_IN_DIET_PRODUCT)) {
             statement.setInt(1, Product.getSelectedProduct().getIdProduct());
             ResultSet resultSet = statement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 countExist++;
             }
         } catch (SQLException e) {
             System.out.println("Check exist failed " + e.getMessage());
-        }finally {
-
         }
         return countExist;
     }
 
-    public int checkExistOfMealInDietMeal(){
+    public int checkExistOfMealInDietMeal() {
         int countExist = 0;
         try (PreparedStatement statement = conn.prepareStatement(CHECK_EXIST_OF_MEAL_IN_DIET_MEAL)) {
             statement.setInt(1, Meal.getSelectedMeal().getIdMeal());
             ResultSet resultSet = statement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 countExist++;
             }
         } catch (SQLException e) {
             System.out.println("Check exist failed " + e.getMessage());
-        }finally {
-
         }
         return countExist;
     }

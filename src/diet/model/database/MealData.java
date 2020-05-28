@@ -48,7 +48,7 @@ public class MealData {
     public void readAllMealForProfil() {
         List<Meal> meals = new ArrayList<>();
         try (PreparedStatement preparedStatement = conn.prepareStatement(READ_MEAL_FOR_PROFIL)) {
-            preparedStatement.setInt(1,Profil.getSelectedProfil().getIdPerson());
+            preparedStatement.setInt(1, Profil.getSelectedProfil().getIdPerson());
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -167,28 +167,31 @@ public class MealData {
         }
     }
 
-    private void deleteMeal(int mealId) {
+    private void deleteMeal(Meal meal) {
         try (PreparedStatement preparedStatement = conn.prepareStatement(DELETE_MEAL)) {
-            preparedStatement.setInt(1, mealId);
+            preparedStatement.setInt(1, meal.getIdMeal());
             preparedStatement.executeUpdate();
 
-            for (Map.Entry<Product, Integer> productMap : Meal.getSelectedMeal().getProductsForMeal().entrySet())
-                ProductData.getInstance().deleteProductForMeal(mealId, productMap.getKey().getIdProduct());
+            for (Map.Entry<Product, Integer> productMap : meal.getProductsForMeal().entrySet())
+                ProductData.getInstance().deleteProductForMeal(meal.getIdMeal(), productMap.getKey().getIdProduct());
         } catch (SQLException e) {
             System.out.println("Delete failed " + e.getMessage());
         }
     }
 
-    public void deleteMealForProfil(int profilId, int mealId) {
+    public void deleteMealForProfil(int profilId, Meal meal, boolean checkDietData) {
         try (PreparedStatement preparedStatement = conn.prepareStatement(DELETE_MEAL_FOR_PROFIL)) {
             preparedStatement.setInt(1, profilId);
-            preparedStatement.setInt(2, mealId);
+            preparedStatement.setInt(2, meal.getIdMeal());
 
-            if(DietData.getInstance().checkExistOfMealInDietMeal() == 0 ){
-                deleteMeal(mealId);
+            if (checkDietData) {
+                if (DietData.getInstance().checkExistOfMealInDietMeal() == 0) {
+                    deleteMeal(meal);
+                }
+            } else {
+                deleteMeal(meal);
             }
             preparedStatement.executeUpdate();
-            mealsList.remove(Meal.getSelectedMeal());
         } catch (SQLException e) {
             System.out.println("Delete failed " + e.getMessage());
         }

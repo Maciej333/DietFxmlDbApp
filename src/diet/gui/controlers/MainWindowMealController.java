@@ -111,9 +111,8 @@ public class MainWindowMealController {
 
                         Optional<ButtonType> result = alertNoChoosen.showAndWait();
                         if (result.get() == ButtonType.OK) {
-                            MealData.getInstance().deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(),Meal.getSelectedMeal().getIdMeal());
+                            MealData.getInstance().deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(),Meal.getSelectedMeal(),true);
                             MealData.getMealsList().remove(Meal.getSelectedMeal());
-
                         } else {
                             alertNoChoosen.close();
                         }
@@ -160,9 +159,8 @@ public class MainWindowMealController {
 
             Optional<ButtonType> result = alertNoChoosen.showAndWait();
             if (result.get() == ButtonType.OK) {
-                MealData.getInstance().deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(),Meal.getSelectedMeal().getIdMeal());
+                MealData.getInstance().deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(),Meal.getSelectedMeal(),true);
                 MealData.getMealsList().remove(Meal.getSelectedMeal());
-
             } else {
                 alertNoChoosen.close();
             }

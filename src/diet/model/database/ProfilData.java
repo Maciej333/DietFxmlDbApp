@@ -1,5 +1,8 @@
 package diet.model.database;
 
+import diet.model.Diet;
+import diet.model.Meal;
+import diet.model.Product;
 import diet.model.Profil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -131,6 +134,19 @@ public class ProfilData {
     public void deleteProfil(int profilId) {
         try (PreparedStatement statement = conn.prepareStatement(DELETE_PROFIL)) {
             statement.setInt(1, profilId);
+
+            DietData.getInstance().readDietForProfil();
+            MealData.getInstance().readAllMealForProfil();
+            ProductData.getInstance().readAllProductForProfil();
+            for (Diet diet : DietData.getDietsList()) {
+                DietData.getInstance().deleteDiet(diet);
+            }
+            for (Meal meal : MealData.getMealsList()) {
+                MealData.getInstance().deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(), meal, false);
+            }
+            for (Product product : ProductData.getProductsList()) {
+                ProductData.getInstance().deleteProductProfil(product, false);
+            }
             statement.executeUpdate();
             profilsList.remove(Profil.getSelectedProfil());
         } catch (SQLException e) {

@@ -61,11 +61,11 @@ public class MainWindowProductController {
         tableViewProduct.setItems(productsList);
         tableViewProduct.getSortOrder().add(productName);
 
-        textFieldProductSearch.setOnKeyTyped((change)->{
-            List<Product> sortedProductList = productsList.stream().filter((product)->
-                product.getName().toLowerCase().matches(".*("+textFieldProductSearch.getText().toLowerCase()+").*"))
-                    .collect( Collectors.toList());
-        tableViewProduct.setItems(FXCollections.observableList(sortedProductList));
+        textFieldProductSearch.setOnKeyTyped((change) -> {
+            List<Product> sortedProductList = productsList.stream().filter((product) ->
+                    product.getName().toLowerCase().matches(".*(" + textFieldProductSearch.getText().toLowerCase() + ").*"))
+                    .collect(Collectors.toList());
+            tableViewProduct.setItems(FXCollections.observableList(sortedProductList));
         });
 
         ProductData.getProductsList().addListener(new ListChangeListener<Product>() {
@@ -97,7 +97,7 @@ public class MainWindowProductController {
                         Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
                         loadedProductFxml = "Edit";
                         Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductAdd.fxml");
-                        ClassOfStaticMethod.loadUrl(pathNewProduct,"Product");
+                        ClassOfStaticMethod.loadUrl(pathNewProduct, "Product");
                     }
                 });
                 MenuItem delete = new MenuItem("Delete");
@@ -111,7 +111,8 @@ public class MainWindowProductController {
 
                         Optional<ButtonType> result = alertNoChoosen.showAndWait();
                         if (result.get() == ButtonType.OK) {
-                            ProductData.getInstance().deleteProductProfil();
+                            ProductData.getInstance().deleteProductProfil(Product.getSelectedProduct(), true);
+                            ProductData.getProductsList().remove(Product.getSelectedProduct());
                         } else {
                             alertNoChoosen.close();
                         }
@@ -130,7 +131,7 @@ public class MainWindowProductController {
     public void setButtonAddNewProduct() {
         loadedProductFxml = "Add";
         Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductAdd.fxml");
-        ClassOfStaticMethod.loadUrl(pathNewProduct,"Product");
+        ClassOfStaticMethod.loadUrl(pathNewProduct, "Product");
     }
 
     @FXML
@@ -139,7 +140,7 @@ public class MainWindowProductController {
         Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
         if (Product.getSelectedProduct() != null) {
             Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductAdd.fxml");
-            ClassOfStaticMethod.loadUrl(pathNewProduct,"Product");
+            ClassOfStaticMethod.loadUrl(pathNewProduct, "Product");
         } else {
             Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
             alertNoChoosen.setTitle("No product selected");
@@ -158,7 +159,8 @@ public class MainWindowProductController {
 
             Optional<ButtonType> result = alertNoChoosen.showAndWait();
             if (result.get() == ButtonType.OK) {
-                ProductData.getInstance().deleteProductProfil();
+                ProductData.getInstance().deleteProductProfil(Product.getSelectedProduct(), true);
+                ProductData.getProductsList().remove(Product.getSelectedProduct());
             } else {
                 alertNoChoosen.close();
             }

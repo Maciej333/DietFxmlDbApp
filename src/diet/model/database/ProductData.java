@@ -56,7 +56,7 @@ public class ProductData {
             + " FROM " + TABLE_MEAL_PRODUCT + " WHERE " + TABLE_MEAL_PRODUCT_ID_MEAL + " =?)" +
             " AS '" + TABLE_MEAL_PRODUCT + "' WHERE " + TABLE + "." + PRODUCT_ID
             + " = " + TABLE_MEAL_PRODUCT + "." + TABLE_MEAL_PRODUCT_ID_PRODUCT;
-    private static final String CHECK_EXIST_OF_PRODUCT_IN_MEAL_PRODUCT = "SELECT (1) FROM "+TABLE_MEAL_PRODUCT+" WHERE "+TABLE_MEAL_PRODUCT_ID_PRODUCT+" = ?";
+    private static final String CHECK_EXIST_OF_PRODUCT_IN_MEAL_PRODUCT = "SELECT (1) FROM " + TABLE_MEAL_PRODUCT + " WHERE " + TABLE_MEAL_PRODUCT_ID_PRODUCT + " = ?";
     private static final String INSERT_PRODUCTS_FOR_MEAL = "INSERT INTO " + TABLE_MEAL_PRODUCT + " VALUES (?,?,?)";
     private static final String DELETE_PRODUCTS_FOR_MEAL = "DELETE FROM " + TABLE_MEAL_PRODUCT + " WHERE " + TABLE_MEAL_PRODUCT_ID_MEAL + " =? AND " + TABLE_MEAL_PRODUCT_ID_PRODUCT + " =? ";
 
@@ -194,22 +194,25 @@ public class ProductData {
         }
     }
 
-    private void deleteProduct(){
+    private void deleteProduct(Product product) {
         try (PreparedStatement statement = conn.prepareStatement(DELETE_PRODUCT)) {
-            statement.setInt(1, Product.getSelectedProduct().getIdProduct());
+            statement.setInt(1, product.getIdProduct());
             statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Delete failed " + e.getMessage());
         }
     }
 
-    public void deleteProductProfil() {
+    public void deleteProductProfil(Product product, boolean checkDietMealData) {
         try (PreparedStatement statement = conn.prepareStatement(DELETE_PRODUCT_PROFIL)) {
-            statement.setInt(1, Product.getSelectedProduct().getIdProduct());
+            statement.setInt(1, product.getIdProduct());
             statement.executeUpdate();
-            productsList.remove(Product.getSelectedProduct());
-            if(checkExistOfProductInMealProduct() == 0 && DietData.getInstance().checkExistOfProductInDietProduct() == 0){
-                deleteProduct();
+            if (checkDietMealData) {
+                if (checkExistOfProductInMealProduct() == 0 && DietData.getInstance().checkExistOfProductInDietProduct() == 0) {
+                    deleteProduct(product);
+                }
+            } else {
+                deleteProduct(product);
             }
         } catch (SQLException e) {
             System.out.println("Delete failed " + e.getMessage());
@@ -241,18 +244,18 @@ public class ProductData {
         return productForMealMap;
     }
 
-    private int checkExistOfProductInMealProduct(){
+    private int checkExistOfProductInMealProduct() {
         int countExist = 0;
         try (PreparedStatement statement = conn.prepareStatement(CHECK_EXIST_OF_PRODUCT_IN_MEAL_PRODUCT)) {
             statement.setInt(1, Product.getSelectedProduct().getIdProduct());
 
             ResultSet resultSet = statement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 countExist++;
             }
         } catch (SQLException e) {
             System.out.println("Check exist failed " + e.getMessage());
-        }finally {
+        } finally {
 
         }
         return countExist;
@@ -270,12 +273,10 @@ public class ProductData {
                 conn.commit();
             } else {
                 conn.rollback();
-                System.out.println("=======error1 in Product insertAllProductForMeal");
                 throw new SQLException("Insert product error");
             }
         } catch (SQLException e) {
             System.out.println("Insert failed " + e.getMessage());
-            System.out.println("=======error in Product insertAllProductForMeal");
         } finally {
             try {
                 conn.setAutoCommit(true);
@@ -296,12 +297,10 @@ public class ProductData {
                 conn.commit();
             } else {
                 conn.rollback();
-                System.out.println("=======error1 in Product deleteAllProductForMeal");
-                throw new SQLException("Insert product error");
+                throw new SQLException("Delete product error");
             }
         } catch (SQLException e) {
-            System.out.println("Insert failed " + e.getMessage());
-            System.out.println("=======error in Product deleteAllProductForMeal");
+            System.out.println("Delete failed " + e.getMessage());
         } finally {
             try {
                 conn.setAutoCommit(true);
