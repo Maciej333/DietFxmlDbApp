@@ -11,87 +11,109 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@styleStackedBarChart.css" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="diet.gui.controlers.MainWindowStatsController">
     <right>
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <children>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="250.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="from"/>
-                        <DatePicker prefWidth="100.0"/>
+                        <Label prefWidth="40.0" text="from" />
+                        <DatePicker fx:id="datePickerFrom" prefWidth="100.0" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="250.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="to"/>
-                        <DatePicker prefWidth="100.0"/>
+                        <Label prefWidth="40.0" text="to" />
+                        <DatePicker fx:id="datePickerTo" prefWidth="100.0" />
                     </children>
                 </HBox>
+            <HBox alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="250.0" spacing="10.0">
+               <children>
+                  <Button fx:id="buttonSeeSelectDateStats" mnemonicParsing="false" text="See stats" onAction="#setButtonSeeSelectDateStats"/>
+               </children>
+               <VBox.margin>
+                  <Insets right="10.0" />
+               </VBox.margin>
+            </HBox>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="5.0">
                     <VBox.margin>
-                        <Insets top="20.0"/>
+                        <Insets top="20.0" />
                     </VBox.margin>
                     <children>
-                        <Button mnemonicParsing="false" prefWidth="55.0" text="week"/>
-                        <Button mnemonicParsing="false" prefWidth="55.0" text="month"/>
-                        <Button mnemonicParsing="false" prefWidth="55.0" text="year"/>
+                        <Button fx:id="buttonWeekStats" mnemonicParsing="false" onAction="#setButtonWeekStats" prefWidth="55.0" text="week" />
+                        <Button fx:id="buttonMonthStats" mnemonicParsing="false" onAction="#setButtonMonthStats" prefWidth="55.0" text="month" />
+                        <Button fx:id="buttonYearStats" mnemonicParsing="false" onAction="#setButtonYearStats" prefWidth="55.0" text="year" />
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="kcal"/>
-                        <Label prefWidth="40.0" text="Label"/>
-                        <Label prefWidth="40.0" text="Label"/>
+                        <Label prefWidth="40.0" text="kcal" />
+                        <Label fx:id="labelEatenKcal" prefWidth="60.0" text="Label" />
+                        <Label fx:id="labelMaxKcal" prefWidth="60.0" text="Label" />
                     </children>
+               <VBox.margin>
+                  <Insets right="-15.0" />
+               </VBox.margin>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="fat"/>
-                        <Label prefWidth="40.0" text="Label"/>
-                        <Label prefWidth="40.0" text="Label"/>
+                        <Label prefWidth="40.0" text="protein" />
+                        <Label fx:id="labelEatenProtein" prefWidth="60.0" text="Label" />
+                        <Label fx:id="labelMaxProtein" prefWidth="60.0" text="Label" />
                     </children>
+               <VBox.margin>
+                  <Insets right="-15.0" />
+               </VBox.margin>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="carbs"/>
-                        <Label prefWidth="40.0" text="Label"/>
-                        <Label prefWidth="40.0" text="Label"/>
+                        <Label prefWidth="40.0" text="fat" />
+                        <Label fx:id="labelEatenFat" prefWidth="60.0" text="Label" />
+                        <Label fx:id="labelMaxFat" prefWidth="60.0" text="Label" />
                     </children>
+               <VBox.margin>
+                  <Insets right="-15.0" />
+               </VBox.margin>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="protein"/>
-                        <Label prefWidth="40.0" text="Label"/>
-                        <Label prefWidth="40.0" text="Label"/>
+                        <Label prefWidth="40.0" text="carbs" />
+                        <Label fx:id="labelEatenCarbs" prefWidth="60.0" text="Label" />
+                        <Label fx:id="labelMaxCarbs" prefWidth="60.0" text="Label" />
                     </children>
+               <VBox.margin>
+                  <Insets right="-15.0" />
+               </VBox.margin>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="fiber"/>
-                        <Label prefWidth="40.0" text="Label"/>
-                        <Label prefWidth="40.0" text="Label"/>
+                        <Label prefWidth="40.0" text="fiber" />
+                        <Label fx:id="labelEatenFiber" prefWidth="60.0" text="Label" />
+                        <Label fx:id="labelMaxFiber" prefWidth="60.0" text="Label" />
                     </children>
+               <VBox.margin>
+                  <Insets right="-15.0" />
+               </VBox.margin>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="10.0">
                     <children>
-                        <Label prefWidth="40.0" text="bilans"/>
-                        <Label prefWidth="40.0" text="Label"/>
+                        <Label prefWidth="40.0" text="bilans" />
+                        <Label fx:id="labelKcalBilans" prefWidth="80.0" text="Label" />
                     </children>
                     <VBox.margin>
-                        <Insets top="10.0"/>
+                        <Insets right="-20.0" top="10.0" />
                     </VBox.margin>
                 </HBox>
             </children>
         </VBox>
     </right>
     <center>
-        <StackedBarChart BorderPane.alignment="CENTER">
+        <StackedBarChart fx:id="stackedBarChartStats" categoryGap="0.0" BorderPane.alignment="CENTER">
             <xAxis>
-                <CategoryAxis side="BOTTOM"/>
+                <CategoryAxis side="BOTTOM" />
             </xAxis>
             <yAxis>
-                <NumberAxis side="LEFT"/>
+                <NumberAxis side="LEFT" />
             </yAxis>
         </StackedBarChart>
     </center>

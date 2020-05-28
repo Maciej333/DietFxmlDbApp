@@ -23,7 +23,7 @@ public class MainWindowDietController {
 
     private static String loadedDietFxml;
     private static LocalDate choosenDate;
-    private ObservableList<Diet> dietsList;
+    private static ObservableList<Diet> dietsList;
 
     @FXML
     private TableView<Diet> tableViewDiet;
@@ -161,6 +161,7 @@ public class MainWindowDietController {
         dietsList.addListener(new ListChangeListener<Diet>() {
             @Override
             public void onChanged(Change<? extends Diet> change) {
+                tableViewDiet.refresh();
                 ObservableList<Diet> newDietList = Diet.getDietsByDate(dietsList, datePickerDiet.getValue());
                 tableViewDiet.setItems(newDietList);
                 tableViewDiet.getSortOrder().add(dietDate);
