@@ -3,6 +3,7 @@ package diet.gui.controlers;
 import diet.model.Meal;
 import diet.model.Profil;
 import diet.model.additionalClasses.ClassOfStaticMethod;
+import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.MealData;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
@@ -52,7 +53,6 @@ public class MainWindowMealController {
 
     public void initialize() {
         mealsList = MealData.getMealsList();
-
         mealName.setCellValueFactory(new PropertyValueFactory<>("name"));
         mealKcal.setCellValueFactory(new PropertyValueFactory<>("kcal"));
         mealProtein.setCellValueFactory(new PropertyValueFactory<>("protein"));
@@ -60,14 +60,62 @@ public class MainWindowMealController {
         mealCarbs.setCellValueFactory(new PropertyValueFactory<>("fat"));
         mealFiber.setCellValueFactory(new PropertyValueFactory<>("fiber"));
         tableViewMeal.setItems(mealsList);
+        initializeTextFieldSearchForMeal();
+        initializeAddListenerToMealList();
+        initializeAddContextMenuToTableMeal();
+    }
 
+    @FXML
+    public void setButtonAddNewMeal() {
+        loadedMealFxml = "Add";
+        Path pathNewMeal = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MealAdd.fxml");
+        ClassOfStaticMethod.loadUrl(pathNewMeal, "Meal");
+    }
+
+    @FXML
+    public void setButtonEditMeal() {
+        loadedMealFxml = "Edit";
+        Meal.setSelectedMeal(tableViewMeal.getSelectionModel().getSelectedItem());
+        if (Meal.getSelectedMeal() != null) {
+            Path pathNewMeal = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MealAdd.fxml");
+            ClassOfStaticMethod.loadUrl(pathNewMeal, "Meal");
+        } else {
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("No meal selected", "choose meal by clicking it in table");
+        }
+    }
+
+    @FXML
+    public void setButtonDeleteMeal() {
+        Meal.setSelectedMeal(tableViewMeal.getSelectionModel().getSelectedItem());
+        if (Meal.getSelectedMeal() != null) {
+            Alert alertNoChoosen = ClassOfStaticMethodForControllers.createAlertTypeConfirmation("Delete confirmation",
+                    "Do you really want to delete meal " + Meal.getSelectedMeal().getName() + "?");
+            Optional<ButtonType> result = alertNoChoosen.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                MealData.getInstance().deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(), Meal.getSelectedMeal(), true);
+                MealData.getMealsList().remove(Meal.getSelectedMeal());
+            } else {
+                alertNoChoosen.close();
+            }
+        } else {
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("No meal selected", "choose meal by clicking it in table");
+        }
+    }
+
+    public static String getLoadedMealFxml() {
+        return loadedMealFxml;
+    }
+
+    private void initializeTextFieldSearchForMeal() {
         textFieldMealSearch.setOnKeyTyped((change) -> {
             List<Meal> sortedMealList = mealsList.stream().filter((meal) ->
                     meal.getName().toLowerCase().matches(".*(" + textFieldMealSearch.getText().toLowerCase() + ").*"))
                     .collect(Collectors.toList());
             tableViewMeal.setItems(FXCollections.observableList(sortedMealList));
         });
+    }
 
+    private void initializeAddListenerToMealList() {
         mealsList.addListener(new ListChangeListener<Meal>() {
             @Override
             public void onChanged(ListChangeListener.Change<? extends Meal> change) {
@@ -83,7 +131,9 @@ public class MainWindowMealController {
                 }
             }
         });
+    }
 
+    private void initializeAddContextMenuToTableMeal() {
         tableViewMeal.setRowFactory(new Callback<TableView<Meal>, TableRow<Meal>>() {
             @Override
             public TableRow<Meal> call(TableView<Meal> mealTableView) {
@@ -105,13 +155,12 @@ public class MainWindowMealController {
                     @Override
                     public void handle(ActionEvent actionEvent) {
                         Meal.setSelectedMeal(tableViewMeal.getSelectionModel().getSelectedItem());
-                        Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
-                        alertNoChoosen.setContentText("Do you really want to delete meal " + Meal.getSelectedMeal().getName() + "?");
-                        alertNoChoosen.setTitle("Delete confirmation");
-
+                        Alert alertNoChoosen = ClassOfStaticMethodForControllers.createAlertTypeConfirmation("Delete confirmation",
+                                "Do you really want to delete meal " + Meal.getSelectedMeal().getName() + "?");
+                        new Alert(Alert.AlertType.CONFIRMATION);
                         Optional<ButtonType> result = alertNoChoosen.showAndWait();
                         if (result.get() == ButtonType.OK) {
-                            MealData.getInstance().deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(),Meal.getSelectedMeal(),true);
+                            MealData.getInstance().deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(), Meal.getSelectedMeal(), true);
                             MealData.getMealsList().remove(Meal.getSelectedMeal());
                         } else {
                             alertNoChoosen.close();
@@ -119,60 +168,10 @@ public class MainWindowMealController {
                     }
                 });
                 contextMenu.getItems().addAll(edit, delete);
-
                 returnTableRow.contextMenuProperty().bind(Bindings.when(returnTableRow.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
 
                 return returnTableRow;
             }
         });
-    }
-
-    @FXML
-    public void setButtonAddNewMeal() {
-        loadedMealFxml = "Add";
-        Path pathNewMeal = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MealAdd.fxml");
-        ClassOfStaticMethod.loadUrl(pathNewMeal, "Meal");
-    }
-
-    @FXML
-    public void setButtonEditMeal() {
-        loadedMealFxml = "Edit";
-        Meal.setSelectedMeal(tableViewMeal.getSelectionModel().getSelectedItem());
-        if (Meal.getSelectedMeal() != null) {
-            Path pathNewMeal = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MealAdd.fxml");
-            ClassOfStaticMethod.loadUrl(pathNewMeal, "Meal");
-        } else {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
-            alertNoChoosen.setTitle("No meal selected");
-            alertNoChoosen.setContentText("choose meal by clicking it in table");
-            alertNoChoosen.show();
-        }
-    }
-
-    @FXML
-    public void setButtonDeleteMeal() {
-        Meal.setSelectedMeal(tableViewMeal.getSelectionModel().getSelectedItem());
-        if (Meal.getSelectedMeal() != null) {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
-            alertNoChoosen.setContentText("Do you really want to delete meal " + Meal.getSelectedMeal().getName() + "?");
-            alertNoChoosen.setTitle("Delete confirmation");
-
-            Optional<ButtonType> result = alertNoChoosen.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                MealData.getInstance().deleteMealForProfil(Profil.getSelectedProfil().getIdPerson(),Meal.getSelectedMeal(),true);
-                MealData.getMealsList().remove(Meal.getSelectedMeal());
-            } else {
-                alertNoChoosen.close();
-            }
-        } else {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
-            alertNoChoosen.setTitle("No meal selected");
-            alertNoChoosen.setContentText("choose meal by clicking it in table");
-            alertNoChoosen.show();
-        }
-    }
-
-    public static String getLoadedMealFxml() {
-        return loadedMealFxml;
     }
 }

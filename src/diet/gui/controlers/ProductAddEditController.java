@@ -2,9 +2,9 @@ package diet.gui.controlers;
 
 import diet.model.Product;
 import diet.model.additionalClasses.ClassOfStaticMethod;
+import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.ProductData;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -102,16 +102,13 @@ public class ProductAddEditController {
         ) {
             if (MainWindowProductController.getLoadedProductFxml().equals("Edit")) {
                 ProductData.getInstance().updateProduct(name, kcal, protein, fat, carbs, fiber);
-            }else{
+            } else {
                 ProductData.getInstance().insertProduct(name, kcal, protein, fat, carbs, fiber);
             }
             Stage stage = (Stage) buttonDoProduct.getScene().getWindow();
             stage.close();
         } else {
-            Alert alertIncorrectValues = new Alert(Alert.AlertType.WARNING);
-            alertIncorrectValues.setTitle("Incorect values");
-            alertIncorrectValues.setContentText("enter complete valid data");
-            alertIncorrectValues.show();
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("Incorect values", "enter complete valid data");
         }
     }
 

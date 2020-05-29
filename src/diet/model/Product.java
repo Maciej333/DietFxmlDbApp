@@ -1,6 +1,6 @@
 package diet.model;
 
-public class Product extends Food{
+public class Product extends Food {
 
     private static Product selectedProduct = null;
 

@@ -2,6 +2,7 @@ package diet.gui.controlers;
 
 import diet.Main;
 import diet.model.Profil;
+import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.MealData;
 import diet.model.database.ProductData;
 import diet.model.database.ProfilData;
@@ -50,7 +51,7 @@ public class ProfilChoiceController {
     @FXML
     public void setButtonAddProfil() {
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProfilCreate.fxml");
-        loadUrl(path, buttonAddProfil.getText());
+        loadProfilUrl(path, buttonAddProfil.getText());
     }
 
     @FXML
@@ -60,14 +61,11 @@ public class ProfilChoiceController {
             MealData.getInstance().readAllMealForProfil();
             ProductData.getInstance().readAllProductForProfil();
             Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindow.fxml");
-            loadUrl(path, buttonLoadProfil.getText());
-            ((Stage)buttonLoadProfil.getScene().getWindow()).close();
+            loadProfilUrl(path, buttonLoadProfil.getText());
+            ((Stage) buttonLoadProfil.getScene().getWindow()).close();
 
         } else {
-            Alert alterProfilNoChoice = new Alert(Alert.AlertType.WARNING);
-            alterProfilNoChoice.setContentText("befor moving on, choose profil You would like to load");
-            alterProfilNoChoice.setTitle("choose profil");
-            alterProfilNoChoice.show();
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("choose profil", "befor moving on, choose profil You would like to load");
         }
     }
 
@@ -75,21 +73,14 @@ public class ProfilChoiceController {
     public void setButtonDeleteProfil() {
         setSelectedProfil();
         if (getSelectedProfil() != null) {
-            Alert alterProfilDelete = new Alert(Alert.AlertType.CONFIRMATION);
-            alterProfilDelete.setContentText("Do you really want to delete profile " + getSelectedProfil().getName() + "?");
-            alterProfilDelete.setTitle("Delete confirmation");
-
+            Alert alterProfilDelete = ClassOfStaticMethodForControllers.createAlertTypeConfirmation("Delete confirmation", "Do you really want to delete profile " + getSelectedProfil().getName() + "?");
             Optional<ButtonType> result = alterProfilDelete.showAndWait();
             if (result.get() == ButtonType.OK) {
                 ProfilData.getInstance().deleteProfil(getSelectedProfil().getIdPerson());
                 comboBoxProfil.getSelectionModel().select(0);
-            } else {
             }
         } else {
-            Alert alterProfilNoChoice = new Alert(Alert.AlertType.WARNING);
-            alterProfilNoChoice.setContentText("befor moving on, choose profil You would like to load");
-            alterProfilNoChoice.setTitle("choose profil");
-            alterProfilNoChoice.show();
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("choose profil", "befor moving on, choose profil You would like to delete");
         }
     }
 
@@ -106,7 +97,7 @@ public class ProfilChoiceController {
         Profil.setSelectedProfil(getSelectedProfil());
     }
 
-    private void loadUrl(Path path, String buttonText) {
+    private void loadProfilUrl(Path path, String buttonText) {
         try {
             URL url = path.toUri().toURL();
             FXMLLoader loader = new FXMLLoader(url);

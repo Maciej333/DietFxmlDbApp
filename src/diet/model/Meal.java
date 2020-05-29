@@ -4,7 +4,7 @@ import diet.model.additionalClasses.ClassOfStaticMethod;
 
 import java.util.Map;
 
-public class Meal extends Food{
+public class Meal extends Food {
 
     private static Meal selectedMeal = null;
 
@@ -51,62 +51,52 @@ public class Meal extends Food{
     }
 
     public void countKcalForMeal() {
-        double kcalForMeal = 0;
-        double amountOfProducts = 0;
-        for (Map.Entry<Product, Integer> productAmount : productsForMeal.entrySet()) {
-            kcalForMeal += productAmount.getValue() * productAmount.getKey().getKcal() / 100;
-            amountOfProducts += productAmount.getValue();
-        }
-        kcalForMeal = kcalForMeal / amountOfProducts * 100;
-        setKcal(Double.parseDouble(ClassOfStaticMethod.roundDouble(kcalForMeal)));
+        setKcal(Double.parseDouble(ClassOfStaticMethod.roundDouble(countSelectedMacro("kcal"))));
     }
 
     public void countProteinForMeal() {
-        double proteinForMeal = 0;
-        double amountOfProducts = 0;
-        for (Map.Entry<Product, Integer> productAmount : productsForMeal.entrySet()) {
-            proteinForMeal += productAmount.getValue() * productAmount.getKey().getProtein() / 100;
-            amountOfProducts += productAmount.getValue();
-        }
-        proteinForMeal = proteinForMeal / amountOfProducts * 100;
-        setProtein(Double.parseDouble(ClassOfStaticMethod.roundDouble(proteinForMeal)));
+        setProtein(Double.parseDouble(ClassOfStaticMethod.roundDouble(countSelectedMacro("protein"))));
     }
 
     public void countFatForMeal() {
-        double fatForMeal = 0;
-        double amountOfProducts = 0;
-        for (Map.Entry<Product, Integer> productAmount : productsForMeal.entrySet()) {
-            fatForMeal += productAmount.getValue() * productAmount.getKey().getFat() / 100;
-            amountOfProducts += productAmount.getValue();
-        }
-        fatForMeal = fatForMeal / amountOfProducts * 100;
-        setFat(Double.parseDouble(ClassOfStaticMethod.roundDouble(fatForMeal)));
+        setFat(Double.parseDouble(ClassOfStaticMethod.roundDouble(countSelectedMacro("fat"))));
     }
 
     public void countCarbsForMeal() {
-        double carbsForMeal = 0;
-        double amountOfProducts = 0;
-        for (Map.Entry<Product, Integer> productAmount : productsForMeal.entrySet()) {
-            carbsForMeal += productAmount.getValue() * productAmount.getKey().getCarbs() / 100;
-            amountOfProducts += productAmount.getValue();
-        }
-        carbsForMeal = carbsForMeal / amountOfProducts * 100;
-        setCarbs(Double.parseDouble(ClassOfStaticMethod.roundDouble(carbsForMeal)));
+        setCarbs(Double.parseDouble(ClassOfStaticMethod.roundDouble(countSelectedMacro("carbs"))));
     }
 
     public void countFiberForMeal() {
-        double fiberForMeal = 0;
+        setFiber(Double.parseDouble(ClassOfStaticMethod.roundDouble(countSelectedMacro("fiber"))));
+    }
+
+    private double countSelectedMacro(String macro) {
+        double makroForMeal = 0;
         double amountOfProducts = 0;
         for (Map.Entry<Product, Integer> productAmount : productsForMeal.entrySet()) {
-            fiberForMeal += productAmount.getValue() * productAmount.getKey().getFiber() / 100;
+            if (macro.equals("kcal")) {
+                makroForMeal += productAmount.getValue() * productAmount.getKey().getKcal() / 100;
+            }
+            if (macro.equals("protein")) {
+                makroForMeal += productAmount.getValue() * productAmount.getKey().getProtein() / 100;
+            }
+            if (macro.equals("fat")) {
+                makroForMeal += productAmount.getValue() * productAmount.getKey().getFat() / 100;
+            }
+            if (macro.equals("carbs")) {
+                makroForMeal += productAmount.getValue() * productAmount.getKey().getCarbs() / 100;
+            }
+            if (macro.equals("fiber")) {
+                makroForMeal += productAmount.getValue() * productAmount.getKey().getFiber() / 100;
+            }
             amountOfProducts += productAmount.getValue();
         }
-        fiberForMeal = fiberForMeal / amountOfProducts * 100;
-        setFiber(Double.parseDouble(ClassOfStaticMethod.roundDouble(fiberForMeal)));
+        makroForMeal = makroForMeal / amountOfProducts * 100;
+        return makroForMeal;
     }
 
     @Override
     public String toString() {
-        return idMeal + " name= "+getName();
+        return idMeal + " name= " + getName();
     }
 }

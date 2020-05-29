@@ -2,6 +2,7 @@ package diet.gui.controlers;
 
 import diet.model.Profil;
 import diet.model.additionalClasses.ClassOfStaticMethod;
+import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.ProfilData;
 import diet.model.profilEnums.ProfilGoal;
 import diet.model.profilEnums.ProfilSex;
@@ -72,7 +73,6 @@ public class MainWindowProfilInfoController {
         }
         String sex = choiceBoxProfilSex.getSelectionModel().getSelectedItem().toString();
         String goal = choiceBoxProfilGoal.getSelectionModel().getSelectedItem().toString();
-
         if (name != null &&
             age != -1 &&
             weight != -1 &&
@@ -80,10 +80,7 @@ public class MainWindowProfilInfoController {
         ) {
             ProfilData.getInstance().updateProfil(name, age, weight, growth, sex, goal, Profil.getSelectedProfil().getIdPerson());
         } else {
-            Alert alertIncorrectValues = new Alert(Alert.AlertType.WARNING);
-            alertIncorrectValues.setTitle("Incorect values");
-            alertIncorrectValues.setContentText("enter complete valid data");
-            alertIncorrectValues.show();
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("Incorect values","enter complete valid data");
         }
     }
 }

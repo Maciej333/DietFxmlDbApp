@@ -7,5 +7,6 @@ module DietFxmlDbApp {
     opens diet.gui.controlers;
     opens diet.gui.fxml;
     opens diet.model;
+    opens diet.model.additionalClasses;
     opens diet.model.database;
 }

@@ -2,6 +2,7 @@ package diet.gui.controlers;
 
 import diet.model.*;
 import diet.model.additionalClasses.ClassOfStaticMethod;
+import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.DietData;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
 public class DietAddEditController {
 
     private static Diet newDiet;
-    private static ObservableMap<Food, Integer> productMealMap = FXCollections.observableMap(new HashMap<>());
+    private static ObservableMap<Food, Integer> productFoodMap = FXCollections.observableMap(new HashMap<>());
 
     @FXML
     private DatePicker datePickerDietDate;
@@ -60,8 +61,104 @@ public class DietAddEditController {
     private Button buttonCancelDietAdd;
 
     public void initialize() {
-        productMealMap = FXCollections.observableMap(new HashMap<>());
+        productFoodMap = FXCollections.observableMap(new HashMap<>());
+        initializeTableForDiet();
+        initializeTextFieldSearchForDiet();
+        if (MainWindowDietController.getLoadedMealFxml().equals("Edit")) {
+            productFoodMap = FXCollections.observableMap(Diet.getSelectedDiet().getDietMealsProductsMap());
+            datePickerDietDate.setValue(Diet.getSelectedDiet().getDate().toLocalDate());
+            textFieldTimeHourDietAdd.setText(Diet.getSelectedDiet().getDate().getHour() + "");
+            textFieldTimeMinuteDietAdd.setText(Diet.getSelectedDiet().getDate().getMinute() + "");
+            buttonDoDiet.setText("Edit");
+        } else {
+            newDiet = new Diet();
+            datePickerDietDate.setValue(MainWindowDietController.getChoosenDate());
+            textFieldTimeHourDietAdd.setText(LocalDateTime.now().getHour() + "");
+            textFieldTimeMinuteDietAdd.setText(LocalDateTime.now().getMinute() + "");
+        }
+        initializeAddListenerToFoodMap();
+        ClassOfStaticMethod.checkCorrectOfTextField(textFieldTimeHourDietAdd, labelInvalidTime, "\\d{1,2}", "invalid", "hh:MM");
+        ClassOfStaticMethod.checkCorrectOfTextField(textFieldTimeMinuteDietAdd, labelInvalidTime, "\\d{1,2}", "invalid", "hh:MM");
+        tableViewDietAdd.setItems(FXCollections.observableArrayList(productFoodMap.entrySet()));
+        initializeAddContextMenuToTableDiet();
+    }
 
+    @FXML
+    public void setButtonAddProductMealToDiet() {
+        Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\DietAddMealProduct.fxml");
+        ClassOfStaticMethod.loadUrl(pathNewProduct, "Add product");
+    }
+
+    @FXML
+    public void setButtonDeleteProductMealFromDiet() {
+        if (tableViewDietAdd.getSelectionModel().getSelectedItem() != null) {
+            Alert alertNoChoosen = ClassOfStaticMethodForControllers.createAlertTypeConfirmation("Delete confirmation",
+                    "Do you really want to delete product " + tableViewDietAdd.getSelectionModel().getSelectedItem().getKey().getName() + "?");
+            Optional<ButtonType> result = alertNoChoosen.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                productFoodMap.remove(tableViewDietAdd.getSelectionModel().getSelectedItem().getKey());
+            } else {
+                alertNoChoosen.close();
+            }
+        } else {
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("No product selected", "choose product by clicking it in table");
+        }
+    }
+
+    @FXML
+    public void setButtonDoDiet() {
+
+        String hour = textFieldTimeHourDietAdd.getText();
+        String minute = textFieldTimeMinuteDietAdd.getText();
+        if (productFoodMap != null &&
+                productFoodMap.size() > 0 &&
+                hour.matches("\\d{1,2}") &&
+                minute.matches("\\d{1,2}")
+        ) {
+            int intHour = Integer.parseInt(hour);
+            int intMinute = Integer.parseInt(minute);
+
+            if (intHour < 24 && intMinute < 60) {
+                if (buttonDoDiet.getText().equals("Edit")) {
+                    DietData.getDietsList().remove(Diet.getSelectedDiet());
+
+                    Diet.getSelectedDiet().setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour, intMinute)));
+                    Diet.getSelectedDiet().addMapToDietMealsProductsMap(productFoodMap);
+                    Diet.getSelectedDiet().countKcalForDiet();
+                    Diet.getSelectedDiet().countProteinForDiet();
+                    Diet.getSelectedDiet().countFatForDiet();
+                    Diet.getSelectedDiet().countCarbsForDiet();
+                    Diet.getSelectedDiet().countFiberForDiet();
+
+                    DietData.getInstance().updateDiet(Diet.getSelectedDiet());
+                } else {
+                    newDiet.setIdOsoba(Profil.getSelectedProfil().getIdPerson());
+                    newDiet.setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour, intMinute)));
+                    newDiet.addMapToDietMealsProductsMap(productFoodMap);
+
+                    DietData.getInstance().insertDiet(newDiet);
+                }
+                Stage stage = (Stage) textFieldDietAddSearch.getScene().getWindow();
+                stage.close();
+            } else {
+                ClassOfStaticMethodForControllers.createAlertTypeWarning("Invalid Hour ", "Hour should be between 0-23\nMinute should be between 0-59");
+            }
+        } else {
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("No products/meals to add ", "add meal and products to diet or click cancel");
+        }
+    }
+
+    @FXML
+    public void setButtonCancelDietAdd() {
+        Stage stage = (Stage) textFieldDietAddSearch.getScene().getWindow();
+        stage.close();
+    }
+
+    public static void putNewMealProductAmount(Food newEditProduct, Integer amount) {
+        productFoodMap.put(newEditProduct, amount);
+    }
+
+    private void initializeTableForDiet() {
         tableViewDietAdd.setEditable(true);
         tableViewDietAdd.getSelectionModel().setCellSelectionEnabled(true);
         tableColumnAmountDietAdd.setEditable(true);
@@ -85,41 +182,9 @@ public class DietAddEditController {
                 return new SimpleIntegerProperty(p.getValue().getValue()).asObject();
             }
         });
+    }
 
-        textFieldDietAddSearch.setOnKeyTyped((change) -> {
-            if (productMealMap != null) {
-                Map<Food, Integer> sortedProductMap = productMealMap.entrySet().stream().filter((productMealEntrySet) ->
-                        productMealEntrySet.getKey().getName().toLowerCase().matches(".*(" + textFieldDietAddSearch.getText().toLowerCase() + ").*"))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-                tableViewDietAdd.setItems(FXCollections.observableArrayList(sortedProductMap.entrySet()));
-            }
-        });
-
-        if (MainWindowDietController.getLoadedMealFxml().equals("Edit")) {
-            productMealMap = FXCollections.observableMap(Diet.getSelectedDiet().getDietMealsProductsMap());
-            datePickerDietDate.setValue(Diet.getSelectedDiet().getDate().toLocalDate());
-            textFieldTimeHourDietAdd.setText(Diet.getSelectedDiet().getDate().getHour() + "");
-            textFieldTimeMinuteDietAdd.setText(Diet.getSelectedDiet().getDate().getMinute() + "");
-            buttonDoDiet.setText("Edit");
-        } else {
-            newDiet = new Diet();
-            datePickerDietDate.setValue(MainWindowDietController.getChoosenDate());
-            textFieldTimeHourDietAdd.setText(LocalDateTime.now().getHour() + "");
-            textFieldTimeMinuteDietAdd.setText(LocalDateTime.now().getMinute() + "");
-        }
-
-        productMealMap.addListener(new MapChangeListener<Food, Integer>() {
-            @Override
-            public void onChanged(Change<? extends Food, ? extends Integer> change) {
-                tableViewDietAdd.setItems(FXCollections.observableArrayList(productMealMap.entrySet()));
-                tableViewDietAdd.getSortOrder().add(tableColumnDietProductMealAdd);
-            }
-        });
-
-        ClassOfStaticMethod.checkCorrectOfTextField(textFieldTimeHourDietAdd, labelInvalidTime, "\\d{1,2}", "invalid", "hh:MM");
-        ClassOfStaticMethod.checkCorrectOfTextField(textFieldTimeMinuteDietAdd, labelInvalidTime, "\\d{1,2}", "invalid", "hh:MM");
-        tableViewDietAdd.setItems(FXCollections.observableArrayList(productMealMap.entrySet()));
-
+    private void initializeAddContextMenuToTableDiet() {
         tableViewDietAdd.setRowFactory(new Callback<TableView<Map.Entry<Food, Integer>>, TableRow<Map.Entry<Food, Integer>>>() {
             @Override
             public TableRow<Map.Entry<Food, Integer>> call(TableView<Map.Entry<Food, Integer>> foodTableView) {
@@ -130,13 +195,11 @@ public class DietAddEditController {
                 delete.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
-                        alertNoChoosen.setContentText("Do you really want to delete product " + tableViewDietAdd.getSelectionModel().getSelectedItem().getKey().getName() + "?");
-                        alertNoChoosen.setTitle("Delete confirmation");
-
+                        Alert alertNoChoosen = ClassOfStaticMethodForControllers.createAlertTypeConfirmation("Delete confirmation",
+                                "Do you really want to delete product " + tableViewDietAdd.getSelectionModel().getSelectedItem().getKey().getName() + "?");
                         Optional<ButtonType> result = alertNoChoosen.showAndWait();
                         if (result.get() == ButtonType.OK) {
-                            productMealMap.remove(tableViewDietAdd.getSelectionModel().getSelectedItem().getKey());
+                            productFoodMap.remove(tableViewDietAdd.getSelectionModel().getSelectedItem().getKey());
                         } else {
                             alertNoChoosen.close();
                         }
@@ -146,92 +209,27 @@ public class DietAddEditController {
                 returnTableRow.contextMenuProperty().bind(Bindings.when(returnTableRow.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
                 return returnTableRow;
             }
-    });
+        });
     }
 
-    @FXML
-    public void setButtonAddProductMealToDiet() {
-        Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\DietAddMealProduct.fxml");
-        ClassOfStaticMethod.loadUrl(pathNewProduct, "Add product");
-    }
-
-    @FXML
-    public void setButtonDeleteProductMealFromDiet() {
-        if (tableViewDietAdd.getSelectionModel().getSelectedItem() != null) {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
-            alertNoChoosen.setContentText("Do you really want to delete product " + tableViewDietAdd.getSelectionModel().getSelectedItem().getKey().getName() + "?");
-            alertNoChoosen.setTitle("Delete confirmation");
-
-            Optional<ButtonType> result = alertNoChoosen.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                productMealMap.remove(tableViewDietAdd.getSelectionModel().getSelectedItem().getKey());
-            } else {
-                alertNoChoosen.close();
+    private void initializeTextFieldSearchForDiet() {
+        textFieldDietAddSearch.setOnKeyTyped((change) -> {
+            if (productFoodMap != null) {
+                Map<Food, Integer> sortedProductMap = productFoodMap.entrySet().stream().filter((productMealEntrySet) ->
+                        productMealEntrySet.getKey().getName().toLowerCase().matches(".*(" + textFieldDietAddSearch.getText().toLowerCase() + ").*"))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                tableViewDietAdd.setItems(FXCollections.observableArrayList(sortedProductMap.entrySet()));
             }
-        } else {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
-            alertNoChoosen.setTitle("No product selected");
-            alertNoChoosen.setContentText("choose product by clicking it in table");
-            alertNoChoosen.show();
-        }
+        });
     }
 
-    @FXML
-    public void setButtonDoDiet() {
-
-        String hour = textFieldTimeHourDietAdd.getText();
-        String minute = textFieldTimeMinuteDietAdd.getText();
-        if (productMealMap != null &&
-                productMealMap.size() > 0 &&
-                hour.matches("\\d{1,2}") &&
-                minute.matches("\\d{1,2}")
-        ) {
-            int intHour = Integer.parseInt(hour);
-            int intMinute = Integer.parseInt(minute);
-
-            if(intHour <24 && intMinute < 60) {
-                if (buttonDoDiet.getText().equals("Edit")) {
-                    DietData.getDietsList().remove(Diet.getSelectedDiet());
-
-                    Diet.getSelectedDiet().setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour, intMinute)));
-                    Diet.getSelectedDiet().addMapToDietMealsProductsMap(productMealMap);
-                    Diet.getSelectedDiet().countKcalForDiet();
-                    Diet.getSelectedDiet().countProteinForDiet();
-                    Diet.getSelectedDiet().countFatForDiet();
-                    Diet.getSelectedDiet().countCarbsForDiet();
-                    Diet.getSelectedDiet().countFiberForDiet();
-
-                    DietData.getInstance().updateDiet(Diet.getSelectedDiet());
-                } else {
-                    newDiet.setIdOsoba(Profil.getSelectedProfil().getIdPerson());
-                    newDiet.setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour, intMinute)));
-                    newDiet.addMapToDietMealsProductsMap(productMealMap);
-
-                    DietData.getInstance().insertDiet(newDiet);
-                }
-                Stage stage = (Stage) textFieldDietAddSearch.getScene().getWindow();
-                stage.close();
-            }else {
-                Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
-                alertNoChoosen.setTitle("Invalid Hour ");
-                alertNoChoosen.setContentText("Hour should be between 0-23\nMinute should be between 0-59");
-                alertNoChoosen.show();
+    private void initializeAddListenerToFoodMap() {
+        productFoodMap.addListener(new MapChangeListener<Food, Integer>() {
+            @Override
+            public void onChanged(Change<? extends Food, ? extends Integer> change) {
+                tableViewDietAdd.setItems(FXCollections.observableArrayList(productFoodMap.entrySet()));
+                tableViewDietAdd.getSortOrder().add(tableColumnDietProductMealAdd);
             }
-        } else {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
-            alertNoChoosen.setTitle("No products/meals to add ");
-            alertNoChoosen.setContentText("add meal and products to diet or click cancel");
-            alertNoChoosen.show();
-        }
-    }
-
-    @FXML
-    public void setButtonCancelDietAdd() {
-        Stage stage = (Stage) textFieldDietAddSearch.getScene().getWindow();
-        stage.close();
-    }
-
-    public static void putNewMealProductAmount(Food newEditProduct, Integer amount) {
-        productMealMap.put(newEditProduct, amount);
+        });
     }
 }

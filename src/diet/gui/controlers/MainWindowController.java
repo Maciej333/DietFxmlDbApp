@@ -78,21 +78,21 @@ public class MainWindowController {
     }
 
     @FXML
-    public void setMenuItemChangeProfil(){
+    public void setMenuItemChangeProfil() {
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProfilChoice.fxml");
-        ClassOfStaticMethod.loadUrl(path,"Change profil");
-        Stage mainStage = (Stage)borderPaneMainWindow.getScene().getWindow();
+        ClassOfStaticMethod.loadUrl(path, "Change profil");
+        Stage mainStage = (Stage) borderPaneMainWindow.getScene().getWindow();
         mainStage.close();
     }
 
     @FXML
-    public void setMenuItemClose(){
-        Stage mainStage = (Stage)borderPaneMainWindow.getScene().getWindow();
+    public void setMenuItemClose() {
+        Stage mainStage = (Stage) borderPaneMainWindow.getScene().getWindow();
         mainStage.close();
     }
 
     @FXML
-    public void setMenuItemAutor(){
+    public void setMenuItemAutor() {
 
     }
 

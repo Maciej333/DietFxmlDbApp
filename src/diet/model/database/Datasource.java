@@ -8,13 +8,13 @@ public class Datasource {
 
     private Connection connect;
 
-    private static Datasource singletonDs = new Datasource();
+    private static Datasource singletonDatasource = new Datasource();
 
     private Datasource() {
     }
 
     public static Datasource getInstance() {
-        return singletonDs;
+        return singletonDatasource;
     }
 
     public boolean openConnection() {

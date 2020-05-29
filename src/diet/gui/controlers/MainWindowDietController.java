@@ -72,17 +72,39 @@ public class MainWindowDietController {
     public void initialize() {
         DietData.getInstance().readDietForProfil();
         dietsList = DietData.getDietsList();
-
         dietDate.setCellValueFactory(new PropertyValueFactory<>("formatDate"));
         dietKcal.setCellValueFactory(new PropertyValueFactory<>("kcal"));
         dietProtein.setCellValueFactory(new PropertyValueFactory<>("protein"));
         dietFat.setCellValueFactory(new PropertyValueFactory<>("carbs"));
         dietCarbs.setCellValueFactory(new PropertyValueFactory<>("fat"));
         dietFiber.setCellValueFactory(new PropertyValueFactory<>("fiber"));
-
         datePickerDiet.setValue(LocalDate.now());
         ObservableList<Diet> currentDiets = Diet.getDietsByDate(dietsList, datePickerDiet.getValue());
+        initializeDatePickerAddDietListener();
+        tableViewDiet.setItems(currentDiets);
+        initializeProfilCount();
+        initializeStatsOfDiets(currentDiets);
+        initializeAddContextMenuToTableDiet();
+        initializeAddListenerToDietList();
+    }
 
+    @FXML
+    public void setButtonAddProductMeal() {
+        choosenDate = datePickerDiet.getValue();
+        loadedDietFxml = "Add";
+        Path pathNewDiet = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\DietAdd.fxml");
+        ClassOfStaticMethod.loadUrl(pathNewDiet, "Diet");
+    }
+
+    public static String getLoadedMealFxml() {
+        return loadedDietFxml;
+    }
+
+    public static LocalDate getChoosenDate() {
+        return choosenDate;
+    }
+
+    private void initializeDatePickerAddDietListener() {
         datePickerDiet.valueProperty().addListener((observable, oldDate, newDate) -> {
             ObservableList<Diet> newCurrentDiets = Diet.getDietsByDate(dietsList, newDate);
             tableViewDiet.setItems(newCurrentDiets);
@@ -94,20 +116,23 @@ public class MainWindowDietController {
             labelEatenFiber.setText(newStatsOfDiets[4].toString());
             kcalBilans.setText(newStatsOfDiets[5].toString());
         });
+    }
 
-        tableViewDiet.setItems(currentDiets);
-
+    private void initializeProfilCount() {
         Profil.getSelectedProfil().countKcal();
         Profil.getSelectedProfil().countProtein();
         Profil.getSelectedProfil().countFat();
         Profil.getSelectedProfil().countCarbs();
         Profil.getSelectedProfil().countFiber();
+
         labelMaxKcal.setText(Profil.getSelectedProfil().getKcal() + "");
         labelMaxProtein.setText(Profil.getSelectedProfil().getProtein() + "");
         labelMaxFat.setText(Profil.getSelectedProfil().getFat() + "");
         labelMaxCarbs.setText(Profil.getSelectedProfil().getCarbs() + "");
         labelMaxFiber.setText(Profil.getSelectedProfil().getFiber() + "");
+    }
 
+    private void initializeStatsOfDiets(ObservableList<Diet> currentDiets) {
         Double[] statsOfDiets = Diet.countStatsForDiets(currentDiets);
         labelEatenKcal.setText(statsOfDiets[0].toString());
         labelEatenProtein.setText(statsOfDiets[1].toString());
@@ -115,7 +140,9 @@ public class MainWindowDietController {
         labelEatenCarbs.setText(statsOfDiets[3].toString());
         labelEatenFiber.setText(statsOfDiets[4].toString());
         kcalBilans.setText(statsOfDiets[5].toString());
+    }
 
+    private void initializeAddContextMenuToTableDiet() {
         tableViewDiet.setRowFactory(new Callback<TableView<Diet>, TableRow<Diet>>() {
             @Override
             public TableRow<Diet> call(TableView<Diet> dietTableView) {
@@ -157,7 +184,9 @@ public class MainWindowDietController {
                 return returnTableRow;
             }
         });
+    }
 
+    private void initializeAddListenerToDietList() {
         dietsList.addListener(new ListChangeListener<Diet>() {
             @Override
             public void onChanged(Change<? extends Diet> change) {
@@ -169,19 +198,4 @@ public class MainWindowDietController {
         });
     }
 
-    @FXML
-    public void setButtonAddProductMeal() {
-        choosenDate = datePickerDiet.getValue();
-        loadedDietFxml = "Add";
-        Path pathNewDiet = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\DietAdd.fxml");
-        ClassOfStaticMethod.loadUrl(pathNewDiet, "Diet");
-    }
-
-    public static String getLoadedMealFxml() {
-        return loadedDietFxml;
-    }
-
-    public static LocalDate getChoosenDate() {
-        return choosenDate;
-    }
 }

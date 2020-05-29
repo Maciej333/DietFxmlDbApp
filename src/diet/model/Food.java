@@ -9,7 +9,7 @@ public abstract class Food {
     private double carbs;
     private double fiber;
 
-    public Food(){
+    public Food() {
 
     }
 

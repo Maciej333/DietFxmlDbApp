@@ -25,12 +25,12 @@ public class Diet extends Food {
     public Diet() {
     }
 
-    public static void setSelectedDiet(Diet diet) {
-        selectedDiet = diet;
-    }
-
     public static Diet getSelectedDiet() {
         return selectedDiet;
+    }
+
+    public static void setSelectedDiet(Diet diet) {
+        selectedDiet = diet;
     }
 
     public int getIdDiet() {
@@ -41,16 +41,17 @@ public class Diet extends Food {
         this.idDiet = idDiet;
     }
 
-    public int getIdOsoba() {
-        return idOsoba;
-    }
-
     public void setIdOsoba(int idOsoba) {
         this.idOsoba = idOsoba;
     }
 
     public LocalDateTime getDate() {
         return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        setFormatDate(date);
+        this.date = date;
     }
 
     private void setFormatDate(LocalDateTime dateToFormat) {
@@ -63,10 +64,6 @@ public class Diet extends Food {
         return formatDate;
     }
 
-    public void setDate(LocalDateTime date) {
-        setFormatDate(date);
-        this.date = date;
-    }
 
     public Map<Food, Integer> getDietMealsProductsMap() {
         return dietMealsProductsMap;
@@ -86,48 +83,27 @@ public class Diet extends Food {
     }
 
     public void countKcalForDiet() {
-        double kcalForDiet = 0;
-        for (Map.Entry<Food, Integer> mealProductAmount : dietMealsProductsMap.entrySet()) {
-            kcalForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getKcal() / 100;
-        }
-        setKcal(Double.parseDouble(ClassOfStaticMethod.roundDouble(kcalForDiet)));
+        setKcal(Double.parseDouble(ClassOfStaticMethod.roundDouble(countMacro("kcal"))));
     }
 
     public void countProteinForDiet() {
-        double proteinForDiet = 0;
-        for (Map.Entry<Food, Integer> mealProductAmount : dietMealsProductsMap.entrySet()) {
-            proteinForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getProtein() / 100;
-        }
-        setProtein(Double.parseDouble(ClassOfStaticMethod.roundDouble(proteinForDiet)));
+        setProtein(Double.parseDouble(ClassOfStaticMethod.roundDouble(countMacro("protein"))));
     }
 
     public void countFatForDiet() {
-        double fatForDiet = 0;
-        for (Map.Entry<Food, Integer> mealProductAmount : dietMealsProductsMap.entrySet()) {
-            fatForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getFat() / 100;
-        }
-        setFat(Double.parseDouble(ClassOfStaticMethod.roundDouble(fatForDiet)));
+        setFat(Double.parseDouble(ClassOfStaticMethod.roundDouble(countMacro("fat"))));
     }
 
     public void countCarbsForDiet() {
-        double carbsForDiet = 0;
-        for (Map.Entry<Food, Integer> mealProductAmount : dietMealsProductsMap.entrySet()) {
-            carbsForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getCarbs() / 100;
-        }
-        setCarbs(Double.parseDouble(ClassOfStaticMethod.roundDouble(carbsForDiet)));
+        setCarbs(Double.parseDouble(ClassOfStaticMethod.roundDouble(countMacro("carbs"))));
     }
 
     public void countFiberForDiet() {
-        double fiberForDiet = 0;
-        for (Map.Entry<Food, Integer> mealProductAmount : dietMealsProductsMap.entrySet()) {
-            fiberForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getFiber() / 100;
-        }
-        setFiber(Double.parseDouble(ClassOfStaticMethod.roundDouble(fiberForDiet)));
+        setFiber(Double.parseDouble(ClassOfStaticMethod.roundDouble(countMacro("fiber"))));
     }
 
     public static ObservableList<Diet> getDietsByDate(ObservableList<Diet> dietsListAll, LocalDate localDate) {
         List<Diet> dietsForDate = new ArrayList<>();
-
         for (Diet oneDiet : dietsListAll) {
             if (oneDiet.getDate().getYear() == localDate.getYear() &&
                     oneDiet.getDate().getMonth() == localDate.getMonth() &&
@@ -135,7 +111,6 @@ public class Diet extends Food {
                 dietsForDate.add(oneDiet);
             }
         }
-
         return FXCollections.observableList(dietsForDate);
     }
 
@@ -155,5 +130,30 @@ public class Diet extends Food {
         statsOfDiets[4] = Double.parseDouble(ClassOfStaticMethod.roundDouble(statsOfDiets[4]));
         statsOfDiets[5] = Double.parseDouble(ClassOfStaticMethod.roundDouble((statsOfDiets[0] - Profil.getSelectedProfil().getKcal())));
         return statsOfDiets;
+    }
+
+    public static void countMacrosForDiet(Diet diet){
+        diet.countKcalForDiet();
+        diet.countProteinForDiet();
+        diet.countFatForDiet();
+        diet.countCarbsForDiet();
+        diet.countFiberForDiet();
+    }
+
+    private double countMacro(String macro) {
+        double macroForDiet = 0;
+        for (Map.Entry<Food, Integer> mealProductAmount : dietMealsProductsMap.entrySet()) {
+            if (macro.equals("kcal"))
+                macroForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getKcal() / 100;
+            if (macro.equals("protein"))
+                macroForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getProtein() / 100;
+            if (macro.equals("fat"))
+                macroForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getFat() / 100;
+            if (macro.equals("carbs"))
+                macroForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getCarbs() / 100;
+            if (macro.equals("fiber"))
+                macroForDiet += mealProductAmount.getValue() * mealProductAmount.getKey().getFiber() / 100;
+        }
+        return macroForDiet;
     }
 }

@@ -3,6 +3,7 @@ package diet.gui.controlers;
 import diet.model.Meal;
 import diet.model.Product;
 import diet.model.additionalClasses.ClassOfStaticMethod;
+import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.MealData;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -53,6 +54,94 @@ public class MealAddEditController {
     private Button buttonCancelMealAdd;
 
     public void initialize() {
+        initializeTableForMeal();
+        initializeTextFieldSearchForMeal();
+        ClassOfStaticMethod.checkCorrectOfTextField(textFieldMealAddName, labelMealNameInvalid, "(\\S)+(\\s.+)*", "Invalid", "");
+        if (MainWindowMealController.getLoadedMealFxml().equals("Edit")) {
+            productMap = FXCollections.observableMap(Meal.getSelectedMeal().getProductsForMeal());
+            textFieldMealAddName.setText(Meal.getSelectedMeal().getName());
+            buttonDoMeal.setText("Edit");
+        } else {
+            productMap = FXCollections.observableMap(new HashMap<>());
+            newMeal = new Meal();
+        }
+        initializeAddListenerToProductMap();
+        tableViewMealAdd.setItems(FXCollections.observableArrayList(productMap.entrySet()));
+        initializeAddContextMenuToTableMeal();
+    }
+
+    @FXML
+    public void setButtonAddProductToMeal() {
+        Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MealAddProduct.fxml");
+        ClassOfStaticMethod.loadUrl(pathNewProduct, "Add product");
+    }
+
+    @FXML
+    public void setButtonDeleteProductFromMeal() {
+        if (tableViewMealAdd.getSelectionModel().getSelectedItem() != null) {
+            Alert alertNoChoosen = ClassOfStaticMethodForControllers.createAlertTypeConfirmation("Delete confirmation",
+                    "Do you really want to delete product " + tableViewMealAdd.getSelectionModel().getSelectedItem().getKey().getName() + "?");
+            Optional<ButtonType> result = alertNoChoosen.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                productMap.remove(tableViewMealAdd.getSelectionModel().getSelectedItem().getKey());
+            } else {
+                alertNoChoosen.close();
+            }
+        } else {
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("No product selected", "choose product by clicking it in table");
+        }
+    }
+
+    @FXML
+    public void setButtonDoMeal() {
+        String mealName = null;
+        if (ClassOfStaticMethod.checkTextFieldValid(textFieldMealAddName.getText(), "(\\S)+(\\s.+)*")) {
+            mealName = textFieldMealAddName.getText();
+        }
+        if (productMap != null &&
+                productMap.size() > 0 &&
+                mealName != null) {
+
+            if (buttonDoMeal.getText().equals("Edit")) {
+                MealData.getMealsList().remove(Meal.getSelectedMeal());
+                Meal.getSelectedMeal().setName(mealName);
+                Meal.getSelectedMeal().setProductsForMeal(new HashMap<>(productMap));
+                Meal.getSelectedMeal().countKcalForMeal();
+                Meal.getSelectedMeal().countProteinForMeal();
+                Meal.getSelectedMeal().countFatForMeal();
+                Meal.getSelectedMeal().countCarbsForMeal();
+                Meal.getSelectedMeal().countFiberForMeal();
+                MealData.getMealsList().add(Meal.getSelectedMeal());
+                MealData.getInstance().updateMeal(mealName, Meal.getSelectedMeal().getIdMeal(), productMap);
+            } else {
+                newMeal.setIdMeal(MealData.getInstance().readMaxMealId() + 1);
+                newMeal.setName(mealName);
+                newMeal.setProductsForMeal(new HashMap<>(productMap));
+                newMeal.countKcalForMeal();
+                newMeal.countProteinForMeal();
+                newMeal.countFatForMeal();
+                newMeal.countCarbsForMeal();
+                newMeal.countFiberForMeal();
+                MealData.getInstance().insertNewMeal(mealName, productMap);
+            }
+            Stage stage = (Stage) textFieldMealAddSearch.getScene().getWindow();
+            stage.close();
+        } else {
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("No products to add ", "add meal name and products to meal or click cancel");
+        }
+    }
+
+    @FXML
+    public void setButtonCancelMealAdd() {
+        Stage stage = (Stage) textFieldMealAddSearch.getScene().getWindow();
+        stage.close();
+    }
+
+    public static void putNewProductAmount(Product newEditProduct, Integer amount) {
+        productMap.put(newEditProduct, amount);
+    }
+
+    private void initializeTableForMeal() {
         tableViewMealAdd.setEditable(true);
         tableViewMealAdd.getSelectionModel().setCellSelectionEnabled(true);
         tableColumnAmountMealAdd.setEditable(true);
@@ -76,51 +165,20 @@ public class MealAddEditController {
                 return new SimpleIntegerProperty(p.getValue().getValue()).asObject();
             }
         });
+    }
 
-        textFieldMealAddSearch.setOnKeyTyped((change) -> {
-            if (productMap != null) {
-                Map<Product, Integer> sortedProductMap = productMap.entrySet().stream().filter((productEntrySet) ->
-                        productEntrySet.getKey().getName().toLowerCase().matches(".*(" + textFieldMealAddSearch.getText().toLowerCase() + ").*"))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-                tableViewMealAdd.setItems(FXCollections.observableArrayList(sortedProductMap.entrySet()));
-            }
-        });
-
-        ClassOfStaticMethod.checkCorrectOfTextField(textFieldMealAddName, labelMealNameInvalid, "(\\S)+(\\s.+)*", "Invalid", "");
-
-        if (MainWindowMealController.getLoadedMealFxml().equals("Edit")) {
-            productMap = FXCollections.observableMap(Meal.getSelectedMeal().getProductsForMeal());
-            textFieldMealAddName.setText(Meal.getSelectedMeal().getName());
-            buttonDoMeal.setText("Edit");
-        } else {
-            productMap = FXCollections.observableMap(new HashMap<>());
-            newMeal = new Meal();
-        }
-
-        productMap.addListener(new MapChangeListener<Product, Integer>() {
-            @Override
-            public void onChanged(Change<? extends Product, ? extends Integer> change) {
-                tableViewMealAdd.setItems(FXCollections.observableArrayList(productMap.entrySet()));
-                tableViewMealAdd.getSortOrder().add(tableColumnProductMealAdd);
-            }
-        });
-
-        tableViewMealAdd.setItems(FXCollections.observableArrayList(productMap.entrySet()));
-
+    private void initializeAddContextMenuToTableMeal() {
         tableViewMealAdd.setRowFactory(new Callback<TableView<Map.Entry<Product, Integer>>, TableRow<Map.Entry<Product, Integer>>>() {
             @Override
             public TableRow<Map.Entry<Product, Integer>> call(TableView<Map.Entry<Product, Integer>> productTableView) {
                 TableRow<Map.Entry<Product, Integer>> returnTableRow = new TableRow<>();
-
                 ContextMenu contextMenu = new ContextMenu();
                 MenuItem delete = new MenuItem("Delete");
                 delete.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent actionEvent) {
-                        Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
-                        alertNoChoosen.setContentText("Do you really want to delete product " + tableViewMealAdd.getSelectionModel().getSelectedItem().getKey().getName() + "?");
-                        alertNoChoosen.setTitle("Delete confirmation");
-
+                        Alert alertNoChoosen = ClassOfStaticMethodForControllers.createAlertTypeConfirmation("Delete confirmation",
+                                "Do you really want to delete product " + tableViewMealAdd.getSelectionModel().getSelectedItem().getKey().getName() + "?");
                         Optional<ButtonType> result = alertNoChoosen.showAndWait();
                         if (result.get() == ButtonType.OK) {
                             productMap.remove(tableViewMealAdd.getSelectionModel().getSelectedItem().getKey());
@@ -136,85 +194,24 @@ public class MealAddEditController {
         });
     }
 
-    @FXML
-    public void setButtonAddProductToMeal() {
-        Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MealAddProduct.fxml");
-        ClassOfStaticMethod.loadUrl(pathNewProduct, "Add product");
-    }
-
-    @FXML
-    public void setButtonDeleteProductFromMeal() {
-        if (tableViewMealAdd.getSelectionModel().getSelectedItem() != null) {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
-            alertNoChoosen.setContentText("Do you really want to delete product " + tableViewMealAdd.getSelectionModel().getSelectedItem().getKey().getName() + "?");
-            alertNoChoosen.setTitle("Delete confirmation");
-
-            Optional<ButtonType> result = alertNoChoosen.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                productMap.remove(tableViewMealAdd.getSelectionModel().getSelectedItem().getKey());
-            } else {
-                alertNoChoosen.close();
+    private void initializeTextFieldSearchForMeal() {
+        textFieldMealAddSearch.setOnKeyTyped((change) -> {
+            if (productMap != null) {
+                Map<Product, Integer> sortedProductMap = productMap.entrySet().stream().filter((productEntrySet) ->
+                        productEntrySet.getKey().getName().toLowerCase().matches(".*(" + textFieldMealAddSearch.getText().toLowerCase() + ").*"))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                tableViewMealAdd.setItems(FXCollections.observableArrayList(sortedProductMap.entrySet()));
             }
-        } else {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
-            alertNoChoosen.setTitle("No product selected");
-            alertNoChoosen.setContentText("choose product by clicking it in table");
-            alertNoChoosen.show();
-        }
+        });
     }
 
-    @FXML
-    public void setButtonDoMeal() {
-        String mealName = null;
-
-        if (ClassOfStaticMethod.checkTextFieldValid(textFieldMealAddName.getText(), "(\\S)+(\\s.+)*")) {
-            mealName = textFieldMealAddName.getText();
-        }
-        if (productMap != null &&
-                productMap.size() > 0 &&
-                mealName != null) {
-
-            if (buttonDoMeal.getText().equals("Edit")) {
-                MealData.getMealsList().remove(Meal.getSelectedMeal());
-                Meal.getSelectedMeal().setName(mealName);
-                Meal.getSelectedMeal().setProductsForMeal(new HashMap<>(productMap));
-                Meal.getSelectedMeal().countKcalForMeal();
-                Meal.getSelectedMeal().countProteinForMeal();
-                Meal.getSelectedMeal().countFatForMeal();
-                Meal.getSelectedMeal().countCarbsForMeal();
-                Meal.getSelectedMeal().countFiberForMeal();
-
-                MealData.getMealsList().add(Meal.getSelectedMeal());
-                MealData.getInstance().updateMeal(mealName, Meal.getSelectedMeal().getIdMeal(), productMap);
-            } else {
-                newMeal.setIdMeal(MealData.getInstance().readMaxMealId() + 1);
-                newMeal.setName(mealName);
-                newMeal.setProductsForMeal(new HashMap<>(productMap));
-                newMeal.countKcalForMeal();
-                newMeal.countProteinForMeal();
-                newMeal.countFatForMeal();
-                newMeal.countCarbsForMeal();
-                newMeal.countFiberForMeal();
-
-                MealData.getInstance().insertNewMeal(mealName, productMap);
+    private void initializeAddListenerToProductMap() {
+        productMap.addListener(new MapChangeListener<Product, Integer>() {
+            @Override
+            public void onChanged(Change<? extends Product, ? extends Integer> change) {
+                tableViewMealAdd.setItems(FXCollections.observableArrayList(productMap.entrySet()));
+                tableViewMealAdd.getSortOrder().add(tableColumnProductMealAdd);
             }
-            Stage stage = (Stage) textFieldMealAddSearch.getScene().getWindow();
-            stage.close();
-        } else {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
-            alertNoChoosen.setTitle("No products to add ");
-            alertNoChoosen.setContentText("add meal name and products to meal or click cancel");
-            alertNoChoosen.show();
-        }
-    }
-
-    @FXML
-    public void setButtonCancelMealAdd() {
-        Stage stage = (Stage) textFieldMealAddSearch.getScene().getWindow();
-        stage.close();
-    }
-
-    public static void putNewProductAmount(Product newEditProduct, Integer amount) {
-        productMap.put(newEditProduct, amount);
+        });
     }
 }

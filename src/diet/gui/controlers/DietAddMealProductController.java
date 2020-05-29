@@ -2,6 +2,7 @@ package diet.gui.controlers;
 
 import diet.model.Food;
 import diet.model.additionalClasses.ClassOfStaticMethod;
+import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.MealData;
 import diet.model.database.ProductData;
 import javafx.collections.FXCollections;
@@ -40,7 +41,6 @@ public class DietAddMealProductController {
         productMealColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         if (mealsProductsList != null) {
             TableViewMealProductDietAdd.setItems(FXCollections.observableList(mealsProductsList));
-
             textFieldSearchMealProductDietAdd.setOnKeyTyped((change) -> {
                 List<Food> sortedProductList = mealsProductsList.stream().filter((productMeal) ->
                         productMeal.getName().toLowerCase().matches(".*(" + textFieldSearchMealProductDietAdd.getText().toLowerCase() + ").*"))
@@ -58,22 +58,14 @@ public class DietAddMealProductController {
         if (productMealToAdd != null) {
             if (amount.matches("\\d+")) {
                 int intAmount = Integer.parseInt(amount);
-
                 DietAddEditController.putNewMealProductAmount(productMealToAdd, intAmount);
-
                 Stage stage = (Stage) TableViewMealProductDietAdd.getScene().getWindow();
                 stage.close();
             } else {
-                Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
-                alertNoChoosen.setTitle("Invalid amount ");
-                alertNoChoosen.setContentText("Invalid amount, enter integer number >0");
-                alertNoChoosen.show();
+                ClassOfStaticMethodForControllers.createAlertTypeWarning("Invalid amount ", "Invalid amount, enter integer number >0");
             }
         } else {
-            Alert alertNoChoosen = new Alert(Alert.AlertType.INFORMATION);
-            alertNoChoosen.setTitle("No product/meal to add ");
-            alertNoChoosen.setContentText("add product/meal to diet or click cancel");
-            alertNoChoosen.show();
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("No product/meal to add ", "add product/meal to diet or click cancel");
         }
     }
 

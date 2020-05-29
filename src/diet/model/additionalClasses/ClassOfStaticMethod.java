@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 
 public class ClassOfStaticMethod {
 
@@ -57,5 +58,11 @@ public class ClassOfStaticMethod {
         } catch (MalformedURLException m) {
             System.out.println("Incorect URL " + m.getMessage());
         }
+    }
+
+    public static LocalDateTime parseStringToDate(String stringDate) {
+        String dateToSet = stringDate.replace(" ", "T");
+        LocalDateTime localDateTime = LocalDateTime.parse(dateToSet);
+        return localDateTime;
     }
 }

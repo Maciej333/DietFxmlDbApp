@@ -58,44 +58,12 @@ public class ProfilData {
                 profils.add(profil);
             }
         } catch (SQLException e) {
-            System.out.println("Query failed " + e.getMessage());
+            System.out.println("Query read all profils failed " + e.getMessage());
         }
         profilsList = FXCollections.observableList(profils);
     }
 
-    public void insetNewProfil(String name, int age, int growth, int weight, String sex, String goal) {
-        try (PreparedStatement statement = conn.prepareStatement(INSERT_NEW_PROFIL)) {
-            conn.setAutoCommit(false);
-
-            int profilId = getMaxProfilId() + 1;
-            statement.setInt(1, profilId);
-            statement.setString(2, name);
-            statement.setInt(3, age);
-            statement.setInt(4, growth);
-            statement.setInt(5, weight);
-            statement.setString(6, sex);
-            statement.setString(7, goal);
-
-            int affectedRows = statement.executeUpdate();
-            if (affectedRows == 1) {
-                conn.commit();
-                profilsList.add(new Profil(profilId, name, age, growth, weight, sex, goal));
-            } else {
-                conn.rollback();
-                throw new SQLException("Insert profil error");
-            }
-        } catch (SQLException e) {
-            System.out.println("Insert failed " + e.getMessage());
-        } finally {
-            try {
-                conn.setAutoCommit(true);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public int getMaxProfilId() {
+    public int readMaxProfilId() {
         int maxProfilId = 0;
         try (PreparedStatement statement = conn.prepareStatement(READ_MAX_ID_PROFIL);
              ResultSet resultSet = statement.executeQuery()) {
@@ -104,9 +72,26 @@ public class ProfilData {
                 maxProfilId = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            System.out.println("Query failed " + e.getMessage());
+            System.out.println("Query read max profil id failed " + e.getMessage());
         }
         return maxProfilId;
+    }
+
+    public void insetNewProfil(String name, int age, int growth, int weight, String sex, String goal) {
+        try (PreparedStatement statement = conn.prepareStatement(INSERT_NEW_PROFIL)) {
+            int profilId = readMaxProfilId() + 1;
+            statement.setInt(1, profilId);
+            statement.setString(2, name);
+            statement.setInt(3, age);
+            statement.setInt(4, growth);
+            statement.setInt(5, weight);
+            statement.setString(6, sex);
+            statement.setString(7, goal);
+            statement.executeUpdate();
+            profilsList.add(new Profil(profilId, name, age, growth, weight, sex, goal));
+        } catch (SQLException e) {
+            System.out.println("Insert new profil failed " + e.getMessage());
+        }
     }
 
     public void updateProfil(String name, int age, int weight, int growth, String sex, String goal, int profilId) {
@@ -118,8 +103,8 @@ public class ProfilData {
             statement.setString(5, sex);
             statement.setString(6, goal);
             statement.setInt(7, profilId);
-
             statement.executeUpdate();
+
             Profil.getSelectedProfil().setName(name);
             Profil.getSelectedProfil().setAge(age);
             Profil.getSelectedProfil().setWeight(weight);
@@ -127,7 +112,7 @@ public class ProfilData {
             Profil.getSelectedProfil().setSex(sex);
             Profil.getSelectedProfil().setGoal(goal);
         } catch (SQLException e) {
-            System.out.println("Update failed " + e.getMessage());
+            System.out.println("Update profil failed " + e.getMessage());
         }
     }
 
@@ -150,7 +135,7 @@ public class ProfilData {
             statement.executeUpdate();
             profilsList.remove(Profil.getSelectedProfil());
         } catch (SQLException e) {
-            System.out.println("Delete failed " + e.getMessage());
+            System.out.println("Delete profil failed " + e.getMessage());
         }
     }
 

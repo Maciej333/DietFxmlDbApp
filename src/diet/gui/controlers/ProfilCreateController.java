@@ -1,6 +1,7 @@
 package diet.gui.controlers;
 
 import diet.model.additionalClasses.ClassOfStaticMethod;
+import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.ProfilData;
 import diet.model.profilEnums.ProfilGoal;
 import diet.model.profilEnums.ProfilSex;
@@ -91,10 +92,7 @@ public class ProfilCreateController {
             Stage stage = (Stage) buttonCancelAddProfil.getScene().getWindow();
             stage.close();
         } else {
-            Alert alertIncorrectValues = new Alert(Alert.AlertType.WARNING);
-            alertIncorrectValues.setTitle("Incorect values");
-            alertIncorrectValues.setContentText("enter complete valid data");
-            alertIncorrectValues.show();
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("Incorect values", "enter complete valid data");
         }
     }
 

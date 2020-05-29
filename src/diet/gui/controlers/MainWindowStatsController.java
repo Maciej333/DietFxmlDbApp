@@ -129,13 +129,11 @@ public class MainWindowStatsController {
         double eatenFat = 0.0;
         double eatenCarbs = 0.0;
         double eatenFiber = 0.0;
-
         double maxKcal = Profil.getSelectedProfil().getKcal() * table.length;
         double maxProtein = Profil.getSelectedProfil().getProtein() * table.length;
         double maxFat = Profil.getSelectedProfil().getFat() * table.length;
         double maxCarbs = Profil.getSelectedProfil().getCarbs() * table.length;
         double maxFiber = Profil.getSelectedProfil().getFiber() * table.length;
-
         for (int i = 0; i < selectedDietKcal.length; i++) {
             selectedDietKcal[i] = 0.0;
         }
@@ -156,17 +154,14 @@ public class MainWindowStatsController {
         labelEatenFat.setText(ClassOfStaticMethod.roundDouble(eatenFat) + "");
         labelEatenCarbs.setText(ClassOfStaticMethod.roundDouble(eatenCarbs) + "");
         labelEatenFiber.setText(ClassOfStaticMethod.roundDouble(eatenFiber) + "");
-
         labelMaxKcal.setText(ClassOfStaticMethod.roundDouble(maxKcal) + "");
         labelMaxProtein.setText(ClassOfStaticMethod.roundDouble(maxProtein) + "");
         labelMaxFat.setText(ClassOfStaticMethod.roundDouble(maxFat) + "");
         labelMaxCarbs.setText(ClassOfStaticMethod.roundDouble(maxCarbs) + "");
         labelMaxFiber.setText(ClassOfStaticMethod.roundDouble(maxFiber) + "");
-
         labelKcalBilans.setText((ClassOfStaticMethod.roundDouble(eatenKcal - maxKcal)) + "");
-
-        datePickerTo.setValue(LocalDate.now());
-        datePickerFrom.setValue(LocalDate.now().minusDays(table.length));
+        datePickerTo.setValue(to);
+        datePickerFrom.setValue(to.minusDays(table.length));
 
         return selectedDietKcal;
     }
@@ -181,8 +176,10 @@ public class MainWindowStatsController {
             } else if (tableKcal[i] > Profil.getSelectedProfil().getKcal()) {
                 dataSeries1.getData().add(new XYChart.Data<>(date, Profil.getSelectedProfil().getKcal()));
                 dataSeries2.getData().add(new XYChart.Data<>(date, tableKcal[i] - Profil.getSelectedProfil().getKcal()));
+                dataSeries3.getData().add(new XYChart.Data<>(date, 0));
             } else if (tableKcal[i] < Profil.getSelectedProfil().getKcal()) {
                 dataSeries1.getData().add(new XYChart.Data<>(date, tableKcal[i]));
+                dataSeries2.getData().add(new XYChart.Data<>(date, 0));
                 dataSeries3.getData().add(new XYChart.Data<>(date, Profil.getSelectedProfil().getKcal() - tableKcal[i]));
             }
         }

@@ -17,15 +17,6 @@ public class ProductData {
     private static ProductData singletonProductData = new ProductData();
     private static ObservableList<Product> productsList;
 
-    private static final String TABLE_PROFIL_PRODUCT = "PROFIL_PRODUCT";
-    private static final String TABLE_PROFIL_PRODUCT_PROFIL_ID = "ID_PROFIL";
-    private static final String TABLE_PROFIL_PRODUCT_PRODUCT_ID = "ID_PRODUCT";
-
-    private static final String TABLE_MEAL_PRODUCT = "MEAL_PRODUCT";
-    private static final String TABLE_MEAL_PRODUCT_ID_MEAL = "ID_MEAL";
-    private static final String TABLE_MEAL_PRODUCT_ID_PRODUCT = "ID_PRODUCT";
-    private static final String TABLE_MEAL_PRODUCT_AMOUNT = "AMOUNT";
-
     private static final String TABLE = "PRODUCT";
     private static final String PRODUCT_ID = "ID_PRODUCT";
     private static final String NAME = "NAME";
@@ -34,6 +25,15 @@ public class ProductData {
     private static final String FAT = "FAT";
     private static final String CARBS = "CARBS";
     private static final String FIBER = "FIBER";
+
+    private static final String TABLE_PROFIL_PRODUCT = "PROFIL_PRODUCT";
+    private static final String TABLE_PROFIL_PRODUCT_PROFIL_ID = "ID_PROFIL";
+    private static final String TABLE_PROFIL_PRODUCT_PRODUCT_ID = "ID_PRODUCT";
+
+    private static final String TABLE_MEAL_PRODUCT = "MEAL_PRODUCT";
+    private static final String TABLE_MEAL_PRODUCT_ID_MEAL = "ID_MEAL";
+    private static final String TABLE_MEAL_PRODUCT_ID_PRODUCT = "ID_PRODUCT";
+    private static final String TABLE_MEAL_PRODUCT_AMOUNT = "AMOUNT";
 
     private static final String READ_MAX_ID_PRODUCT = "SELECT MAX(" + PRODUCT_ID + ") FROM " + TABLE;
     private static final String INSERT_PRODUCT = "INSERT INTO " + TABLE + " VALUES (?,?,?,?,?,?,?)";
@@ -82,11 +82,10 @@ public class ProductData {
                 product.setFat(resultSet.getDouble(FAT));
                 product.setCarbs(resultSet.getDouble(CARBS));
                 product.setFiber(resultSet.getDouble(FIBER));
-
                 products.add(product);
             }
         } catch (SQLException e) {
-            System.out.println("Query failed " + e.getMessage());
+            System.out.println("Query read all products for profil failed " + e.getMessage());
         }
         productsList = FXCollections.observableList(products);
     }
@@ -98,9 +97,7 @@ public class ProductData {
 
     private void insetNewProduct(String name, double kcal, double protein, double fat, double carbs, double fiber) {
         try (PreparedStatement statement = conn.prepareStatement(INSERT_PRODUCT)) {
-            conn.setAutoCommit(false);
-
-            int productId = getMaxProductId() + 1;
+            int productId = readMaxProductId() + 1;
             statement.setInt(1, productId);
             statement.setString(2, name);
             statement.setDouble(3, kcal);
@@ -108,63 +105,36 @@ public class ProductData {
             statement.setDouble(5, fat);
             statement.setDouble(6, carbs);
             statement.setDouble(7, fiber);
+            statement.executeUpdate();
 
-            int affectedRows = statement.executeUpdate();
-            if (affectedRows == 1) {
-                conn.commit();
-                Product insertedProduct = new Product(productId, name, kcal, protein, fat, carbs, fiber);
-                productsList.add(insertedProduct);
-                Product.setSelectedProduct(insertedProduct);
-            } else {
-                conn.rollback();
-                throw new SQLException("Insert product error");
-            }
+            Product insertedProduct = new Product(productId, name, kcal, protein, fat, carbs, fiber);
+            productsList.add(insertedProduct);
+            Product.setSelectedProduct(insertedProduct);
         } catch (SQLException e) {
-            System.out.println("Insert failed " + e.getMessage());
-        } finally {
-            try {
-                conn.setAutoCommit(true);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            System.out.println("Insert new product failed " + e.getMessage());
         }
     }
 
-    private int getMaxProductId() {
+    private int readMaxProductId() {
         int maxProductId = 0;
         try (PreparedStatement statement = conn.prepareStatement(READ_MAX_ID_PRODUCT);
              ResultSet resultSet = statement.executeQuery()) {
-
             while (resultSet.next()) {
                 maxProductId = resultSet.getInt(1);
             }
         } catch (SQLException e) {
-            System.out.println("Query failed " + e.getMessage());
+            System.out.println("Query read max product id failed " + e.getMessage());
         }
         return maxProductId;
     }
 
     private void insertProductToProfil() {
         try (PreparedStatement statement = conn.prepareStatement(INSERT_PRODUCT_PROFIL)) {
-            conn.setAutoCommit(false);
-
             statement.setInt(1, Profil.getSelectedProfil().getIdPerson());
             statement.setInt(2, Product.getSelectedProduct().getIdProduct());
-            int affectedRows = statement.executeUpdate();
-            if (affectedRows == 1) {
-                conn.commit();
-            } else {
-                conn.rollback();
-                throw new SQLException("Insert product error");
-            }
+            statement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Insert failed " + e.getMessage());
-        } finally {
-            try {
-                conn.setAutoCommit(true);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            System.out.println("Insert product to profil failed " + e.getMessage());
         }
     }
 
@@ -177,7 +147,6 @@ public class ProductData {
             statement.setDouble(5, carbs);
             statement.setDouble(6, fiber);
             statement.setInt(7, Product.getSelectedProduct().getIdProduct());
-
             statement.executeUpdate();
 
             productsList.remove(Product.getSelectedProduct());
@@ -188,18 +157,8 @@ public class ProductData {
             Product.getSelectedProduct().setCarbs(carbs);
             Product.getSelectedProduct().setFiber(fiber);
             productsList.add(Product.getSelectedProduct());
-
         } catch (SQLException e) {
-            System.out.println("Update failed " + e.getMessage());
-        }
-    }
-
-    private void deleteProduct(Product product) {
-        try (PreparedStatement statement = conn.prepareStatement(DELETE_PRODUCT)) {
-            statement.setInt(1, product.getIdProduct());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Delete failed " + e.getMessage());
+            System.out.println("Update product failed " + e.getMessage());
         }
     }
 
@@ -215,8 +174,31 @@ public class ProductData {
                 deleteProduct(product);
             }
         } catch (SQLException e) {
-            System.out.println("Delete failed " + e.getMessage());
+            System.out.println("Delete product for profil failed " + e.getMessage());
         }
+    }
+
+    private void deleteProduct(Product product) {
+        try (PreparedStatement statement = conn.prepareStatement(DELETE_PRODUCT)) {
+            statement.setInt(1, product.getIdProduct());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Delete product failed " + e.getMessage());
+        }
+    }
+
+    private int checkExistOfProductInMealProduct() {
+        int countExist = 0;
+        try (PreparedStatement statement = conn.prepareStatement(CHECK_EXIST_OF_PRODUCT_IN_MEAL_PRODUCT)) {
+            statement.setInt(1, Product.getSelectedProduct().getIdProduct());
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                countExist++;
+            }
+        } catch (SQLException e) {
+            System.out.println("Check exist of product in meal failed " + e.getMessage());
+        }
+        return countExist;
     }
 
     public Map<Product, Integer> readAllProductForMeal(int mealId) {
@@ -234,79 +216,33 @@ public class ProductData {
                 product.setFat(resultSet.getDouble(FAT));
                 product.setCarbs(resultSet.getDouble(CARBS));
                 product.setFiber(resultSet.getDouble(FIBER));
-
                 productForMealMap.put(product, resultSet.getInt(TABLE_MEAL_PRODUCT_AMOUNT));
             }
             resultSet.close();
         } catch (SQLException e) {
-            System.out.println("Query failed " + e.getMessage());
+            System.out.println("Query read all product for meal failed " + e.getMessage());
         }
         return productForMealMap;
     }
 
-    private int checkExistOfProductInMealProduct() {
-        int countExist = 0;
-        try (PreparedStatement statement = conn.prepareStatement(CHECK_EXIST_OF_PRODUCT_IN_MEAL_PRODUCT)) {
-            statement.setInt(1, Product.getSelectedProduct().getIdProduct());
-
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                countExist++;
-            }
-        } catch (SQLException e) {
-            System.out.println("Check exist failed " + e.getMessage());
-        } finally {
-
-        }
-        return countExist;
-    }
-
     public void insertAllProductForMeal(int mealId, int productId, int amount) {
         try (PreparedStatement preparedStatement = conn.prepareStatement(INSERT_PRODUCTS_FOR_MEAL)) {
-            conn.setAutoCommit(false);
-
             preparedStatement.setInt(1, mealId);
             preparedStatement.setInt(2, productId);
             preparedStatement.setInt(3, amount);
-            int affectedRows = preparedStatement.executeUpdate();
-            if (affectedRows == 1) {
-                conn.commit();
-            } else {
-                conn.rollback();
-                throw new SQLException("Insert product error");
-            }
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Insert failed " + e.getMessage());
-        } finally {
-            try {
-                conn.setAutoCommit(true);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            System.out.println("Insert product for meal failed " + e.getMessage());
         }
     }
 
     public void deleteProductForMeal(int mealId, int productId) {
         try (PreparedStatement preparedStatement = conn.prepareStatement(DELETE_PRODUCTS_FOR_MEAL)) {
-            conn.setAutoCommit(false);
-
             preparedStatement.setInt(1, mealId);
             preparedStatement.setInt(2, productId);
-            int affectedRows = preparedStatement.executeUpdate();
-            if (affectedRows == 1) {
-                conn.commit();
-            } else {
-                conn.rollback();
-                throw new SQLException("Delete product error");
-            }
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Delete failed " + e.getMessage());
-        } finally {
-            try {
-                conn.setAutoCommit(true);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            System.out.println("Delete product for meal failed " + e.getMessage());
         }
     }
 
