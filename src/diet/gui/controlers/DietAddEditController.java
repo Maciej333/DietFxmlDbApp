@@ -27,7 +27,6 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class DietAddEditController {
 
@@ -63,7 +62,6 @@ public class DietAddEditController {
     public void initialize() {
         productFoodMap = FXCollections.observableMap(new HashMap<>());
         initializeTableForDiet();
-        initializeTextFieldSearchForDiet();
         if (MainWindowDietController.getLoadedMealFxml().equals("Edit")) {
             productFoodMap = FXCollections.observableMap(Diet.getSelectedDiet().getDietMealsProductsMap());
             datePickerDietDate.setValue(Diet.getSelectedDiet().getDate().toLocalDate());
@@ -76,6 +74,7 @@ public class DietAddEditController {
             textFieldTimeHourDietAdd.setText(LocalDateTime.now().getHour() + "");
             textFieldTimeMinuteDietAdd.setText(LocalDateTime.now().getMinute() + "");
         }
+        ClassOfStaticMethodForControllers.initializeTextFieldSearchForMap(textFieldDietAddSearch, tableViewDietAdd, productFoodMap);
         initializeAddListenerToFoodMap();
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldTimeHourDietAdd, labelInvalidTime, "\\d{1,2}", "invalid", "hh:MM");
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldTimeMinuteDietAdd, labelInvalidTime, "\\d{1,2}", "invalid", "hh:MM");
@@ -208,17 +207,6 @@ public class DietAddEditController {
                 contextMenu.getItems().addAll(delete);
                 returnTableRow.contextMenuProperty().bind(Bindings.when(returnTableRow.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
                 return returnTableRow;
-            }
-        });
-    }
-
-    private void initializeTextFieldSearchForDiet() {
-        textFieldDietAddSearch.setOnKeyTyped((change) -> {
-            if (productFoodMap != null) {
-                Map<Food, Integer> sortedProductMap = productFoodMap.entrySet().stream().filter((productMealEntrySet) ->
-                        productMealEntrySet.getKey().getName().toLowerCase().matches(".*(" + textFieldDietAddSearch.getText().toLowerCase() + ").*"))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-                tableViewDietAdd.setItems(FXCollections.observableArrayList(sortedProductMap.entrySet()));
             }
         });
     }

@@ -2,9 +2,11 @@ package diet.model.additionalClasses;
 
 import diet.model.Food;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ClassOfStaticMethodForControllers {
@@ -30,4 +32,16 @@ public class ClassOfStaticMethodForControllers {
             tableView.setItems(FXCollections.observableList(sortedList));
         });
     }
+
+    public static <S extends Food> void initializeTextFieldSearchForMap(TextField textField, TableView tableView, ObservableMap<S, Integer> map) {
+        textField.setOnKeyTyped((change) -> {
+            if (map != null) {
+                Map<Food, Integer> sortedMap = map.entrySet().stream().filter((productMealEntrySet) ->
+                        productMealEntrySet.getKey().getName().toLowerCase().matches(".*(" + textField.getText().toLowerCase() + ").*"))
+                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                tableView.setItems(FXCollections.observableArrayList(sortedMap.entrySet()));
+            }
+        });
+    }
+
 }

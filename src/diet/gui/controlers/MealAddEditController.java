@@ -24,7 +24,6 @@ import javafx.util.converter.IntegerStringConverter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MealAddEditController {
 
@@ -55,7 +54,6 @@ public class MealAddEditController {
 
     public void initialize() {
         initializeTableForMeal();
-        initializeTextFieldSearchForMeal();
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldMealAddName, labelMealNameInvalid, "(\\S)+(\\s.+)*", "Invalid", "");
         if (MainWindowMealController.getLoadedMealFxml().equals("Edit")) {
             productMap = FXCollections.observableMap(Meal.getSelectedMeal().getProductsForMeal());
@@ -65,6 +63,7 @@ public class MealAddEditController {
             productMap = FXCollections.observableMap(new HashMap<>());
             newMeal = new Meal();
         }
+        ClassOfStaticMethodForControllers.initializeTextFieldSearchForMap(textFieldMealAddSearch, tableViewMealAdd, productMap);
         initializeAddListenerToProductMap();
         tableViewMealAdd.setItems(FXCollections.observableArrayList(productMap.entrySet()));
         initializeAddContextMenuToTableMeal();
@@ -189,17 +188,6 @@ public class MealAddEditController {
                 contextMenu.getItems().addAll(delete);
                 returnTableRow.contextMenuProperty().bind(Bindings.when(returnTableRow.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
                 return returnTableRow;
-            }
-        });
-    }
-
-    private void initializeTextFieldSearchForMeal() {
-        textFieldMealAddSearch.setOnKeyTyped((change) -> {
-            if (productMap != null) {
-                Map<Product, Integer> sortedProductMap = productMap.entrySet().stream().filter((productEntrySet) ->
-                        productEntrySet.getKey().getName().toLowerCase().matches(".*(" + textFieldMealAddSearch.getText().toLowerCase() + ").*"))
-                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-                tableViewMealAdd.setItems(FXCollections.observableArrayList(sortedProductMap.entrySet()));
             }
         });
     }
