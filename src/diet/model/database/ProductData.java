@@ -30,6 +30,9 @@ public class ProductData {
     private static final String TABLE_PROFIL_PRODUCT_PROFIL_ID = "ID_PROFIL";
     private static final String TABLE_PROFIL_PRODUCT_PRODUCT_ID = "ID_PRODUCT";
 
+    private static final String TABLE_DIET_PRODUCT = "DIET_PRODUCT";
+    private static final String TABLE_DIET_PRODUCT_PRODUCT_ID = "ID_PRODUCT";
+
     private static final String TABLE_MEAL_PRODUCT = "MEAL_PRODUCT";
     private static final String TABLE_MEAL_PRODUCT_ID_MEAL = "ID_MEAL";
     private static final String TABLE_MEAL_PRODUCT_ID_PRODUCT = "ID_PRODUCT";
@@ -60,6 +63,9 @@ public class ProductData {
     private static final String CHECK_EXIST_OF_PRODUCT_IN_MEAL_PRODUCT = "SELECT (1) FROM " + TABLE_MEAL_PRODUCT + " WHERE " + TABLE_MEAL_PRODUCT_ID_PRODUCT + " = ?";
     private static final String INSERT_PRODUCTS_FOR_MEAL = "INSERT INTO " + TABLE_MEAL_PRODUCT + " VALUES (?,?,?)";
     private static final String DELETE_PRODUCTS_FOR_MEAL = "DELETE FROM " + TABLE_MEAL_PRODUCT + " WHERE " + TABLE_MEAL_PRODUCT_ID_MEAL + " =? AND " + TABLE_MEAL_PRODUCT_ID_PRODUCT + " =? ";
+
+    private static final String READ_UNUSE_PRODUCTS = "SELECT " + PRODUCT_ID + " FROM " + TABLE + " WHERE " + PRODUCT_ID + " NOT IN (SELECT " + TABLE_MEAL_PRODUCT_ID_PRODUCT + " FROM " + TABLE_MEAL_PRODUCT +
+            " UNION SELECT " + TABLE_DIET_PRODUCT_PRODUCT_ID + " FROM " + TABLE_DIET_PRODUCT + " UNION SELECT " + TABLE_PROFIL_PRODUCT_PRODUCT_ID + " FROM " + TABLE_PROFIL_PRODUCT + ")";
 
     private ProductData() {
     }
@@ -190,19 +196,19 @@ public class ProductData {
             statement.executeUpdate();
             if (checkDietMealData) {
                 if (checkExistOfProductInMealProduct() == 0 && DietData.getInstance().checkExistOfProductInDietProduct() == 0) {
-                    deleteProduct(product);
+                    deleteProduct(product.getIdProduct());
                 }
             } else {
-                deleteProduct(product);
+                deleteProduct(product.getIdProduct());
             }
         } catch (SQLException e) {
             System.out.println("Delete product for profil failed " + e.getMessage());
         }
     }
 
-    private void deleteProduct(Product product) {
+    private void deleteProduct(int productId) {
         try (PreparedStatement statement = conn.prepareStatement(DELETE_PRODUCT)) {
-            statement.setInt(1, product.getIdProduct());
+            statement.setInt(1, productId);
             statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Delete product failed " + e.getMessage());
@@ -266,6 +272,25 @@ public class ProductData {
         } catch (SQLException e) {
             System.out.println("Delete product for meal failed " + e.getMessage());
         }
+    }
+
+    private List<Integer> readUnuseProducts() {
+        List<Integer> products = new ArrayList<>();
+        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_UNUSE_PRODUCTS)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                products.add(resultSet.getInt(PRODUCT_ID));
+            }
+        } catch (SQLException e) {
+            System.out.println("Query read unuse products failed " + e.getMessage());
+        }
+        return products;
+    }
+
+    public void deleteUnuseProducts() {
+        List<Integer> listToDelete = readUnuseProducts();
+        for (int i : listToDelete)
+            deleteProduct(i);
     }
 
     public static ObservableList<Product> getProductsList() {

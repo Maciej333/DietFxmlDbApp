@@ -24,6 +24,9 @@ public class MealData {
     private static final String TABLE_PROFIL_MEAL_PROFIL_ID = "ID_PROFIL";
     private static final String TABLE_PROFIL_MEAL_MEAL_ID = "ID_MEAL";
 
+    private static final String TABLE_DIET_MEAL = "DIET_MEAL";
+    private static final String TABLE_DIET_MEAL_MEAL_ID = "ID_MEAL";
+
     private static final String READ_All_MEALS = "SELECT " + MEAL_ID + ", " + NAME + " FROM " + TABLE;
     private static final String READ_MEAL_MAX_ID = "SELECT MAX(" + MEAL_ID + ") FROM " + TABLE;
     private static final String INSERT_NEW_MEAL = "INSERT INTO " + TABLE + " VALUES (?,?)";
@@ -36,6 +39,9 @@ public class MealData {
     private static final String INSERT_NEW_MEAL_FOR_PROFIL = "INSERT INTO " + TABLE_PROFIL_MEAL + " VALUES (?,?)";
     private static final String DELETE_MEAL_FOR_PROFIL = "DELETE FROM " + TABLE_PROFIL_MEAL + " WHERE " +
             TABLE_PROFIL_MEAL_PROFIL_ID + " = ? AND " + TABLE_PROFIL_MEAL_MEAL_ID + " = ?";
+
+    private static final String READ_UNUSE_MEALS = "SELECT " + MEAL_ID + " FROM " + TABLE + " WHERE " + MEAL_ID + " NOT IN (SELECT " + TABLE_DIET_MEAL_MEAL_ID +
+            " FROM " + TABLE_DIET_MEAL + " UNION SELECT " + TABLE_PROFIL_MEAL_MEAL_ID + " FROM " + TABLE_PROFIL_MEAL + ");";
 
     private MealData() {
     }
@@ -179,6 +185,28 @@ public class MealData {
         } catch (SQLException e) {
             System.out.println("Delete meal failed " + e.getMessage());
         }
+    }
+
+    private List<Meal> readUnuseMeals() {
+        List<Meal> meals = new ArrayList<>();
+        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_UNUSE_MEALS)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Meal meal = new Meal();
+                meal.setIdMeal(resultSet.getInt(MEAL_ID));
+                meal.setProductsForMeal(ProductData.getInstance().readAllProductForMeal(meal.getIdMeal()));
+                meals.add(meal);
+            }
+        } catch (SQLException e) {
+            System.out.println("Query read unuse meals failed " + e.getMessage());
+        }
+        return meals;
+    }
+
+    public void deleteUnuseProducts() {
+        List<Meal> listToDelete = readUnuseMeals();
+        for (Meal meal : listToDelete)
+            deleteMeal(meal);
     }
 
     public static ObservableList<Meal> getMealsList() {

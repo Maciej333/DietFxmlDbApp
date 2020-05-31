@@ -2,6 +2,8 @@ package diet.gui.controlers;
 
 import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
+import diet.model.database.MealData;
+import diet.model.database.ProductData;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,11 +19,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 public class MainWindowController {
 
     @FXML
     private MenuItem menuItemChangeProfil;
+    @FXML
+    private MenuItem menuItemDeleteUnuseProducts;
+    @FXML
+    private MenuItem menuItemDeleteUnuseMeals;
     @FXML
     private MenuItem menuItemClose;
     @FXML
@@ -86,6 +93,30 @@ public class MainWindowController {
         ClassOfStaticMethod.loadUrl(path, "Change profil", "");
         Stage mainStage = (Stage) borderPaneMainWindow.getScene().getWindow();
         mainStage.close();
+    }
+
+    @FXML
+    public void setMenuItemDeleteUnuseProducts() {
+        Alert deleteProducts = ClassOfStaticMethodForControllers.createAlertTypeConfirmation("Products",
+                "Do Tou really want to delete unuse products?");
+        Optional<ButtonType> result = deleteProducts.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            ProductData.getInstance().deleteUnuseProducts();
+        } else {
+            deleteProducts.close();
+        }
+    }
+
+    @FXML
+    public void setMenuItemDeleteUnuseMeals() {
+        Alert deleteMeals = ClassOfStaticMethodForControllers.createAlertTypeConfirmation("Meals",
+                "Do Tou really want to delete unuse meals?");
+        Optional<ButtonType> result = deleteMeals.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            MealData.getInstance().deleteUnuseProducts();
+        } else {
+            deleteMeals.close();
+        }
     }
 
     @FXML
