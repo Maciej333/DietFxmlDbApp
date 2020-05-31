@@ -94,7 +94,7 @@ public class MainWindowDietController {
         choosenDate = datePickerDiet.getValue();
         loadedDietFxml = "Add";
         Path pathNewDiet = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\DietAdd.fxml");
-        ClassOfStaticMethod.loadUrl(pathNewDiet, "Diet");
+        ClassOfStaticMethod.loadUrl(pathNewDiet, "Diet","");
     }
 
     public static String getLoadedMealFxml() {
@@ -137,7 +137,7 @@ public class MainWindowDietController {
                         Diet.setSelectedDiet(tableViewDiet.getSelectionModel().getSelectedItem());
                         loadedDietFxml = "Edit";
                         Path pathNewDiet = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\DietAdd.fxml");
-                        ClassOfStaticMethod.loadUrl(pathNewDiet, "Diet");
+                        ClassOfStaticMethod.loadUrl(pathNewDiet, "Diet","");
                     }
                 });
                 MenuItem delete = new MenuItem("Delete");

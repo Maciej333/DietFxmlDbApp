@@ -80,7 +80,7 @@ public class MainWindowController {
     @FXML
     public void setMenuItemChangeProfil() {
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProfilChoice.fxml");
-        ClassOfStaticMethod.loadUrl(path, "Change profil");
+        ClassOfStaticMethod.loadUrl(path, "Change profil","");
         Stage mainStage = (Stage) borderPaneMainWindow.getScene().getWindow();
         mainStage.close();
     }

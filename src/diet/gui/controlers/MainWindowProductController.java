@@ -66,7 +66,7 @@ public class MainWindowProductController {
     public void setButtonAddNewProduct() {
         loadedProductFxml = "Add";
         Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductAdd.fxml");
-        ClassOfStaticMethod.loadUrl(pathNewProduct, "Product");
+        ClassOfStaticMethod.loadUrl(pathNewProduct, "Product","");
     }
 
     @FXML
@@ -75,7 +75,7 @@ public class MainWindowProductController {
         Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
         if (Product.getSelectedProduct() != null) {
             Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductAdd.fxml");
-            ClassOfStaticMethod.loadUrl(pathNewProduct, "Product");
+            ClassOfStaticMethod.loadUrl(pathNewProduct, "Product","");
         } else {
             ClassOfStaticMethodForControllers.createAlertTypeWarning("No product selected", "choose product by clicking it in table");
         }
@@ -134,7 +134,7 @@ public class MainWindowProductController {
                         Product.setSelectedProduct(tableViewProduct.getSelectionModel().getSelectedItem());
                         loadedProductFxml = "Edit";
                         Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProductAdd.fxml");
-                        ClassOfStaticMethod.loadUrl(pathNewProduct, "Product");
+                        ClassOfStaticMethod.loadUrl(pathNewProduct, "Product","");
                     }
                 });
                 MenuItem delete = new MenuItem("Delete");

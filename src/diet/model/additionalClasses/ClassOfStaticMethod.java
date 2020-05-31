@@ -1,5 +1,6 @@
 package diet.model.additionalClasses;
 
+import diet.Main;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -41,7 +42,7 @@ public class ClassOfStaticMethod {
         return valid;
     }
 
-    public static void loadUrl(Path path, String name) {
+    public static void loadUrl(Path path, String name, String typeOfLoad) {
         try {
             URL url = path.toUri().toURL();
             FXMLLoader loader = new FXMLLoader(url);
@@ -50,7 +51,12 @@ public class ClassOfStaticMethod {
                 Stage stage = new Stage();
                 stage.setTitle(name);
                 stage.setScene(new Scene(root));
-                stage.initModality(Modality.APPLICATION_MODAL);
+                if (typeOfLoad.equals("loadProfil")) {
+                    Stage primaryStage = Main.getPrimaryStage();
+                    primaryStage.close();
+                }else {
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                }
                 stage.show();
             } catch (IOException e) {
                 System.out.println("Cannot load fxml file " + e.getMessage());

@@ -67,7 +67,7 @@ public class MealAddEditController {
     @FXML
     public void setButtonAddProductToMeal() {
         Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MealAddProduct.fxml");
-        ClassOfStaticMethod.loadUrl(pathNewProduct, "Add product");
+        ClassOfStaticMethod.loadUrl(pathNewProduct, "Add product","");
     }
 
     @FXML
