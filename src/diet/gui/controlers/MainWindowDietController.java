@@ -106,15 +106,7 @@ public class MainWindowDietController {
 
     private void initializeDatePickerAddDietListener() {
         datePickerDiet.valueProperty().addListener((observable, oldDate, newDate) -> {
-            ObservableList<Diet> newCurrentDiets = Diet.getDietsByDate(dietsList, newDate);
-            tableViewDiet.setItems(newCurrentDiets);
-            Double[] newStatsOfDiets = Diet.countStatsForDiets(newCurrentDiets);
-            labelEatenKcal.setText(newStatsOfDiets[0].toString());
-            labelEatenProtein.setText(newStatsOfDiets[1].toString());
-            labelEatenFat.setText(newStatsOfDiets[2].toString());
-            labelEatenCarbs.setText(newStatsOfDiets[3].toString());
-            labelEatenFiber.setText(newStatsOfDiets[4].toString());
-            kcalBilans.setText(newStatsOfDiets[5].toString());
+            countStatsForDiets(newDate);
         });
     }
 
@@ -124,7 +116,6 @@ public class MainWindowDietController {
         Profil.getSelectedProfil().countFat();
         Profil.getSelectedProfil().countCarbs();
         Profil.getSelectedProfil().countFiber();
-
         labelMaxKcal.setText(Profil.getSelectedProfil().getKcal() + "");
         labelMaxProtein.setText(Profil.getSelectedProfil().getProtein() + "");
         labelMaxFat.setText(Profil.getSelectedProfil().getFat() + "");
@@ -190,12 +181,21 @@ public class MainWindowDietController {
         dietsList.addListener(new ListChangeListener<Diet>() {
             @Override
             public void onChanged(Change<? extends Diet> change) {
-                tableViewDiet.refresh();
-                ObservableList<Diet> newDietList = Diet.getDietsByDate(dietsList, datePickerDiet.getValue());
-                tableViewDiet.setItems(newDietList);
-                tableViewDiet.getSortOrder().add(dietDate);
+                countStatsForDiets(datePickerDiet.getValue());
             }
         });
     }
 
+    private void countStatsForDiets(LocalDate date){
+        tableViewDiet.refresh();
+        ObservableList<Diet> newCurrentDiets = Diet.getDietsByDate(dietsList, date);
+        tableViewDiet.setItems(newCurrentDiets);
+        Double[] newStatsOfDiets = Diet.countStatsForDiets(newCurrentDiets);
+        labelEatenKcal.setText(newStatsOfDiets[0].toString());
+        labelEatenProtein.setText(newStatsOfDiets[1].toString());
+        labelEatenFat.setText(newStatsOfDiets[2].toString());
+        labelEatenCarbs.setText(newStatsOfDiets[3].toString());
+        labelEatenFiber.setText(newStatsOfDiets[4].toString());
+        kcalBilans.setText(newStatsOfDiets[5].toString());
+    }
 }
