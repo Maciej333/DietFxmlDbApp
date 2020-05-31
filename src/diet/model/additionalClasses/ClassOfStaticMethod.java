@@ -54,7 +54,7 @@ public class ClassOfStaticMethod {
                 if (typeOfLoad.equals("loadProfil")) {
                     Stage primaryStage = Main.getPrimaryStage();
                     primaryStage.close();
-                }else {
+                } else {
                     stage.initModality(Modality.APPLICATION_MODAL);
                 }
                 stage.show();

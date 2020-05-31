@@ -47,13 +47,13 @@ public class MainWindowProfilInfoController {
         choiceBoxProfilSex.getSelectionModel().select(selectedProfil.getSex());
         choiceBoxProfilGoal.setItems(FXCollections.observableList(Arrays.asList(ProfilGoal.values())));
         choiceBoxProfilGoal.getSelectionModel().select(selectedProfil.getGoal());
-
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldName, invalidProfilName, "\\S+", "invalid name", "e.q. Ania");
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldAge, invalidProfilAge, "\\d{1,3}", "invalid age", "years e.g. 24");
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldWeight, invalidProfilWeight, "\\d{2,3}", "invalid weight", "kg e.g. 75");
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldGrowth, invalidProfilGrowth, "\\d{2,3}", "invalid growth", "cm e.g. 181");
     }
 
+    @FXML
     public void setButtonEditProfil() {
         String name = null;
         int age = -1;
@@ -74,13 +74,13 @@ public class MainWindowProfilInfoController {
         String sex = choiceBoxProfilSex.getSelectionModel().getSelectedItem().toString();
         String goal = choiceBoxProfilGoal.getSelectionModel().getSelectedItem().toString();
         if (name != null &&
-            age != -1 &&
-            weight != -1 &&
-            growth != -1
+                age != -1 &&
+                weight != -1 &&
+                growth != -1
         ) {
             ProfilData.getInstance().updateProfil(name, age, weight, growth, sex, goal, Profil.getSelectedProfil().getIdPerson());
         } else {
-            ClassOfStaticMethodForControllers.createAlertTypeWarning("Incorect values","enter complete valid data");
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("Incorect values", "enter complete valid data");
         }
     }
 }

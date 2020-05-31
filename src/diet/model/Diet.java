@@ -132,7 +132,7 @@ public class Diet extends Food {
         return statsOfDiets;
     }
 
-    public static void countMacrosForDiet(Diet diet){
+    public static void countMacrosForDiet(Diet diet) {
         diet.countKcalForDiet();
         diet.countProteinForDiet();
         diet.countFatForDiet();

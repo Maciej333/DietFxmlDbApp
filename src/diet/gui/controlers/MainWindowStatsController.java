@@ -3,6 +3,7 @@ package diet.gui.controlers;
 import diet.model.Diet;
 import diet.model.Profil;
 import diet.model.additionalClasses.ClassOfStaticMethod;
+import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.DietData;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -86,10 +87,7 @@ public class MainWindowStatsController {
             ((CategoryAxis) stackedBarChartStats.getXAxis()).setCategories(FXCollections.<String>observableList(Arrays.asList(generateTable(limit))));
             createStackedarChartStats(createSelectedDietList(generateTable(limit), to));
         } else {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("invalid period of time");
-            alert.setContentText("Date to must be higher to date from");
-            alert.show();
+            ClassOfStaticMethodForControllers.createAlertTypeWarning("invalid period of time", "Date to must be higher to date from");
         }
     }
 

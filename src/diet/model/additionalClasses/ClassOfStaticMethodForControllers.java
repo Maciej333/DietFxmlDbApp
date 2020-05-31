@@ -50,7 +50,7 @@ public class ClassOfStaticMethodForControllers {
         });
     }
 
-    public static <S extends Food> void initializeTableForEdit(TableView<Map.Entry<S, Integer>>  tableView, TableColumn<Map.Entry<S, Integer>, String>  tableColumnString, TableColumn<Map.Entry<S, Integer>, Integer>  tableColumnInteger) {
+    public static <S extends Food> void initializeTableForEdit(TableView<Map.Entry<S, Integer>> tableView, TableColumn<Map.Entry<S, Integer>, String> tableColumnString, TableColumn<Map.Entry<S, Integer>, Integer> tableColumnInteger) {
         tableView.setEditable(true);
         tableView.getSelectionModel().setCellSelectionEnabled(true);
         tableColumnInteger.setEditable(true);

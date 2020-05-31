@@ -32,13 +32,13 @@
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem fx:id="menuItemChangeProfil" mnemonicParsing="false" text="Change profil" onAction="#setMenuItemChangeProfil"/>
-                        <MenuItem fx:id="menuItemClose" mnemonicParsing="false" text="Close" onAction="#setMenuItemClose"/>
+                        <MenuItem fx:id="menuItemChangeProfil" mnemonicParsing="false" onAction="#setMenuItemChangeProfil" text="Change profil" />
+                        <MenuItem fx:id="menuItemClose" mnemonicParsing="false" onAction="#setMenuItemClose" text="Close" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Help">
+                <Menu mnemonicParsing="false" text="About">
                     <items>
-                        <MenuItem fx:id="menuItemAutor" mnemonicParsing="false" text="Autor" onAction="#setMenuItemAutor"/>
+                        <MenuItem fx:id="menuItemAutor" mnemonicParsing="false" onAction="#setMenuItemAutor" text="Autor" />
                     </items>
                 </Menu>
             </menus>

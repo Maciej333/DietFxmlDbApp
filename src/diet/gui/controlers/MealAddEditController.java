@@ -48,7 +48,7 @@ public class MealAddEditController {
     private Button buttonCancelMealAdd;
 
     public void initialize() {
-        ClassOfStaticMethodForControllers.initializeTableForEdit(tableViewMealAdd,tableColumnProductMealAdd,tableColumnAmountMealAdd);
+        ClassOfStaticMethodForControllers.initializeTableForEdit(tableViewMealAdd, tableColumnProductMealAdd, tableColumnAmountMealAdd);
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldMealAddName, labelMealNameInvalid, "(\\S)+(\\s.+)*", "Invalid", "");
         if (MainWindowMealController.getLoadedMealFxml().equals("Edit")) {
             productMap = FXCollections.observableMap(Meal.getSelectedMeal().getProductsForMeal());
@@ -67,7 +67,7 @@ public class MealAddEditController {
     @FXML
     public void setButtonAddProductToMeal() {
         Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MealAddProduct.fxml");
-        ClassOfStaticMethod.loadUrl(pathNewProduct, "Add product","");
+        ClassOfStaticMethod.loadUrl(pathNewProduct, "Add product", "");
     }
 
     @FXML

@@ -44,7 +44,7 @@ public class ProfilChoiceController {
     @FXML
     public void setButtonAddProfil() {
         Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\ProfilCreate.fxml");
-        ClassOfStaticMethod.loadUrl(path,"Add Profil","");
+        ClassOfStaticMethod.loadUrl(path, "Add Profil", "");
     }
 
     @FXML
@@ -54,7 +54,7 @@ public class ProfilChoiceController {
             MealData.getInstance().readAllMealForProfil();
             ProductData.getInstance().readAllProductForProfil();
             Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindow.fxml");
-            ClassOfStaticMethod.loadUrl(path,"Add Profil","loadProfil");
+            ClassOfStaticMethod.loadUrl(path, "Add Profil", "loadProfil");
             ((Stage) buttonLoadProfil.getScene().getWindow()).close();
         } else {
             ClassOfStaticMethodForControllers.createAlertTypeWarning("choose profil", "befor moving on, choose profil You would like to load");

@@ -182,8 +182,3 @@ public class Profil {
         return this.name;
     }
 }
-
-
-
-
-

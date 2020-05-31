@@ -56,7 +56,7 @@ public class DietAddEditController {
 
     public void initialize() {
         productFoodMap = FXCollections.observableMap(new HashMap<>());
-        ClassOfStaticMethodForControllers.initializeTableForEdit(tableViewDietAdd,tableColumnDietProductMealAdd,tableColumnAmountDietAdd);
+        ClassOfStaticMethodForControllers.initializeTableForEdit(tableViewDietAdd, tableColumnDietProductMealAdd, tableColumnAmountDietAdd);
         if (MainWindowDietController.getLoadedMealFxml().equals("Edit")) {
             productFoodMap = FXCollections.observableMap(Diet.getSelectedDiet().getDietMealsProductsMap());
             datePickerDietDate.setValue(Diet.getSelectedDiet().getDate().toLocalDate());
@@ -80,7 +80,7 @@ public class DietAddEditController {
     @FXML
     public void setButtonAddProductMealToDiet() {
         Path pathNewProduct = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\DietAddMealProduct.fxml");
-        ClassOfStaticMethod.loadUrl(pathNewProduct, "Add product","");
+        ClassOfStaticMethod.loadUrl(pathNewProduct, "Add product", "");
     }
 
     @FXML
@@ -101,7 +101,6 @@ public class DietAddEditController {
 
     @FXML
     public void setButtonDoDiet() {
-
         String hour = textFieldTimeHourDietAdd.getText();
         String minute = textFieldTimeMinuteDietAdd.getText();
         if (productFoodMap != null &&
