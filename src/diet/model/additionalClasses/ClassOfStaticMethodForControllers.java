@@ -1,9 +1,15 @@
 package diet.model.additionalClasses;
 
 import diet.model.Food;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.Callback;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.util.List;
 import java.util.Map;
@@ -44,4 +50,29 @@ public class ClassOfStaticMethodForControllers {
         });
     }
 
+    public static <S extends Food> void initializeTableForEdit(TableView<Map.Entry<S, Integer>>  tableView, TableColumn<Map.Entry<S, Integer>, String>  tableColumnString, TableColumn<Map.Entry<S, Integer>, Integer>  tableColumnInteger) {
+        tableView.setEditable(true);
+        tableView.getSelectionModel().setCellSelectionEnabled(true);
+        tableColumnInteger.setEditable(true);
+        tableColumnInteger.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        tableColumnInteger.setOnEditCommit(event -> {
+            int editAmount = event.getNewValue() > 0 ? event.getNewValue() : event.getOldValue();
+            event.getTableView().getItems().get(event.getTablePosition().getRow()).setValue(editAmount);
+            tableView.refresh();
+        });
+        tableColumnString.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<S, Integer>, String>, ObservableValue<String>>() {
+            @Override
+            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<S, Integer>, String> p) {
+                return new SimpleStringProperty(p.getValue().getKey().getName());
+            }
+        });
+        tableColumnInteger.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<S, Integer>, Integer>, ObservableValue<Integer>>() {
+            @Override
+            public ObservableValue<Integer> call(TableColumn.CellDataFeatures<Map.Entry<S, Integer>, Integer> p) {
+                SimpleIntegerProperty sip = new SimpleIntegerProperty();
+                sip.set(p.getValue().getValue());
+                return new SimpleIntegerProperty(p.getValue().getValue()).asObject();
+            }
+        });
+    }
 }

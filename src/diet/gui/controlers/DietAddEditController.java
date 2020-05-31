@@ -5,9 +5,6 @@ import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.DietData;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
@@ -15,10 +12,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.converter.IntegerStringConverter;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -61,7 +56,7 @@ public class DietAddEditController {
 
     public void initialize() {
         productFoodMap = FXCollections.observableMap(new HashMap<>());
-        initializeTableForDiet();
+        ClassOfStaticMethodForControllers.initializeTableForEdit(tableViewDietAdd,tableColumnDietProductMealAdd,tableColumnAmountDietAdd);
         if (MainWindowDietController.getLoadedMealFxml().equals("Edit")) {
             productFoodMap = FXCollections.observableMap(Diet.getSelectedDiet().getDietMealsProductsMap());
             datePickerDietDate.setValue(Diet.getSelectedDiet().getDate().toLocalDate());
@@ -116,11 +111,9 @@ public class DietAddEditController {
         ) {
             int intHour = Integer.parseInt(hour);
             int intMinute = Integer.parseInt(minute);
-
             if (intHour < 24 && intMinute < 60) {
                 if (buttonDoDiet.getText().equals("Edit")) {
                     DietData.getDietsList().remove(Diet.getSelectedDiet());
-
                     Diet.getSelectedDiet().setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour, intMinute)));
                     Diet.getSelectedDiet().addMapToDietMealsProductsMap(productFoodMap);
                     Diet.getSelectedDiet().countKcalForDiet();
@@ -128,13 +121,11 @@ public class DietAddEditController {
                     Diet.getSelectedDiet().countFatForDiet();
                     Diet.getSelectedDiet().countCarbsForDiet();
                     Diet.getSelectedDiet().countFiberForDiet();
-
                     DietData.getInstance().updateDiet(Diet.getSelectedDiet());
                 } else {
                     newDiet.setIdOsoba(Profil.getSelectedProfil().getIdPerson());
                     newDiet.setDate(LocalDateTime.of(datePickerDietDate.getValue(), LocalTime.of(intHour, intMinute)));
                     newDiet.addMapToDietMealsProductsMap(productFoodMap);
-
                     DietData.getInstance().insertDiet(newDiet);
                 }
                 Stage stage = (Stage) textFieldDietAddSearch.getScene().getWindow();
@@ -157,38 +148,11 @@ public class DietAddEditController {
         productFoodMap.put(newEditProduct, amount);
     }
 
-    private void initializeTableForDiet() {
-        tableViewDietAdd.setEditable(true);
-        tableViewDietAdd.getSelectionModel().setCellSelectionEnabled(true);
-        tableColumnAmountDietAdd.setEditable(true);
-        tableColumnAmountDietAdd.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        tableColumnAmountDietAdd.setOnEditCommit(event -> {
-            int editAmount = event.getNewValue() > 0 ? event.getNewValue() : event.getOldValue();
-            event.getTableView().getItems().get(event.getTablePosition().getRow()).setValue(editAmount);
-            tableViewDietAdd.refresh();
-        });
-        tableColumnDietProductMealAdd.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<Food, Integer>, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<Food, Integer>, String> p) {
-                return new SimpleStringProperty(p.getValue().getKey().getName());
-            }
-        });
-        tableColumnAmountDietAdd.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<Food, Integer>, Integer>, ObservableValue<Integer>>() {
-            @Override
-            public ObservableValue<Integer> call(TableColumn.CellDataFeatures<Map.Entry<Food, Integer>, Integer> p) {
-                SimpleIntegerProperty sip = new SimpleIntegerProperty();
-                sip.set(p.getValue().getValue());
-                return new SimpleIntegerProperty(p.getValue().getValue()).asObject();
-            }
-        });
-    }
-
     private void initializeAddContextMenuToTableDiet() {
         tableViewDietAdd.setRowFactory(new Callback<TableView<Map.Entry<Food, Integer>>, TableRow<Map.Entry<Food, Integer>>>() {
             @Override
             public TableRow<Map.Entry<Food, Integer>> call(TableView<Map.Entry<Food, Integer>> foodTableView) {
                 TableRow<Map.Entry<Food, Integer>> returnTableRow = new TableRow<>();
-
                 ContextMenu contextMenu = new ContextMenu();
                 MenuItem delete = new MenuItem("Delete");
                 delete.setOnAction(new EventHandler<ActionEvent>() {

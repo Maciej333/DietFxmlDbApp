@@ -6,9 +6,6 @@ import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.MealData;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
@@ -16,10 +13,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.util.converter.IntegerStringConverter;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -53,7 +48,7 @@ public class MealAddEditController {
     private Button buttonCancelMealAdd;
 
     public void initialize() {
-        initializeTableForMeal();
+        ClassOfStaticMethodForControllers.initializeTableForEdit(tableViewMealAdd,tableColumnProductMealAdd,tableColumnAmountMealAdd);
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldMealAddName, labelMealNameInvalid, "(\\S)+(\\s.+)*", "Invalid", "");
         if (MainWindowMealController.getLoadedMealFxml().equals("Edit")) {
             productMap = FXCollections.observableMap(Meal.getSelectedMeal().getProductsForMeal());
@@ -137,32 +132,6 @@ public class MealAddEditController {
 
     public static void putNewProductAmount(Product newEditProduct, Integer amount) {
         productMap.put(newEditProduct, amount);
-    }
-
-    private void initializeTableForMeal() {
-        tableViewMealAdd.setEditable(true);
-        tableViewMealAdd.getSelectionModel().setCellSelectionEnabled(true);
-        tableColumnAmountMealAdd.setEditable(true);
-        tableColumnAmountMealAdd.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        tableColumnAmountMealAdd.setOnEditCommit(event -> {
-            int editAmount = event.getNewValue() > 0 ? event.getNewValue() : event.getOldValue();
-            event.getTableView().getItems().get(event.getTablePosition().getRow()).setValue(editAmount);
-            tableViewMealAdd.refresh();
-        });
-        tableColumnProductMealAdd.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<Product, Integer>, String>, ObservableValue<String>>() {
-            @Override
-            public ObservableValue<String> call(TableColumn.CellDataFeatures<Map.Entry<Product, Integer>, String> p) {
-                return new SimpleStringProperty(p.getValue().getKey().getName());
-            }
-        });
-        tableColumnAmountMealAdd.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<Map.Entry<Product, Integer>, Integer>, ObservableValue<Integer>>() {
-            @Override
-            public ObservableValue<Integer> call(TableColumn.CellDataFeatures<Map.Entry<Product, Integer>, Integer> p) {
-                SimpleIntegerProperty sip = new SimpleIntegerProperty();
-                sip.set(p.getValue().getValue());
-                return new SimpleIntegerProperty(p.getValue().getValue()).asObject();
-            }
-        });
     }
 
     private void initializeAddContextMenuToTableMeal() {
