@@ -5,7 +5,6 @@ import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.ProductData;
 import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,9 +16,7 @@ import javafx.util.Callback;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class MainWindowProductController {
 
@@ -60,7 +57,7 @@ public class MainWindowProductController {
         productFiber.setCellValueFactory(new PropertyValueFactory<>("fiber"));
         tableViewProduct.setItems(productsList);
         tableViewProduct.getSortOrder().add(productName);
-        initializeTextFieldSearchForProduct();
+        ClassOfStaticMethodForControllers.initializeTextFieldSearchForList(textFieldProductSearch, tableViewProduct, productsList);
         initializeAddListenerToProductList();
         initializeAddContextMenuToTableProduct();
     }
@@ -106,15 +103,6 @@ public class MainWindowProductController {
         return loadedProductFxml;
     }
 
-    private void initializeTextFieldSearchForProduct() {
-    textFieldProductSearch.setOnKeyTyped((change) -> {
-        List<Product> sortedProductList = productsList.stream().filter((product) ->
-                product.getName().toLowerCase().matches(".*(" + textFieldProductSearch.getText().toLowerCase() + ").*"))
-                .collect(Collectors.toList());
-        tableViewProduct.setItems(FXCollections.observableList(sortedProductList));
-    });
-}
-
     private void initializeAddListenerToProductList() {
         ProductData.getProductsList().addListener(new ListChangeListener<Product>() {
             @Override
@@ -138,7 +126,6 @@ public class MainWindowProductController {
             @Override
             public TableRow<Product> call(TableView<Product> productTableView) {
                 TableRow<Product> returnTableRow = new TableRow<>();
-
                 ContextMenu contextMenu = new ContextMenu();
                 MenuItem edit = new MenuItem("Edit");
                 edit.setOnAction(new EventHandler<ActionEvent>() {
@@ -168,7 +155,6 @@ public class MainWindowProductController {
                 });
                 contextMenu.getItems().addAll(edit, delete);
                 returnTableRow.contextMenuProperty().bind(Bindings.when(returnTableRow.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
-
                 return returnTableRow;
             }
         });

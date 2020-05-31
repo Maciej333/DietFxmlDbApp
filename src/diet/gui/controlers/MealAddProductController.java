@@ -11,7 +11,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MealAddProductController {
 
@@ -20,7 +19,7 @@ public class MealAddProductController {
     @FXML
     private TextField textFieldSearchMealProductAdd;
     @FXML
-    private TableView<Product> TableViewMealProductAdd;
+    private TableView<Product> tableViewMealProductAdd;
     @FXML
     private TableColumn<Product, String> productColumn;
     @FXML
@@ -34,29 +33,23 @@ public class MealAddProductController {
 
     public void initialize() {
         productsList = ProductData.getProductsList();
-
         productColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         if (productsList != null) {
-            TableViewMealProductAdd.setItems(FXCollections.observableList(productsList));
-            textFieldSearchMealProductAdd.setOnKeyTyped((change) -> {
-                List<Product> sortedProductList = productsList.stream().filter((product) ->
-                        product.getName().toLowerCase().matches(".*(" + textFieldSearchMealProductAdd.getText().toLowerCase() + ").*"))
-                        .collect(Collectors.toList());
-                TableViewMealProductAdd.setItems(FXCollections.observableList(sortedProductList));
-            });
+            tableViewMealProductAdd.setItems(FXCollections.observableList(productsList));
+            ClassOfStaticMethodForControllers.initializeTextFieldSearchForList(textFieldSearchMealProductAdd, tableViewMealProductAdd, productsList);
         }
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldAmountMealProductAdd, labelInvalidAmountMealProductAdd, "\\d+", "Invalid", "");
     }
 
     @FXML
     public void setButtonAddMealProductAdd() {
-        Product productToAdd = TableViewMealProductAdd.getSelectionModel().getSelectedItem();
+        Product productToAdd = tableViewMealProductAdd.getSelectionModel().getSelectedItem();
         String amount = textFieldAmountMealProductAdd.getText();
         if (productToAdd != null) {
             if (amount.matches("\\d+")) {
                 int intAmount = Integer.parseInt(amount);
                 MealAddEditController.putNewProductAmount(productToAdd, intAmount);
-                Stage stage = (Stage) TableViewMealProductAdd.getScene().getWindow();
+                Stage stage = (Stage) tableViewMealProductAdd.getScene().getWindow();
                 stage.close();
             } else {
                 ClassOfStaticMethodForControllers.createAlertTypeWarning("Invalid amount ", "Invalid amount, enter integer number >0");
@@ -68,7 +61,7 @@ public class MealAddProductController {
 
     @FXML
     public void setButtonCancelMealProductAdd() {
-        Stage stage = (Stage) TableViewMealProductAdd.getScene().getWindow();
+        Stage stage = (Stage) tableViewMealProductAdd.getScene().getWindow();
         stage.close();
     }
 }

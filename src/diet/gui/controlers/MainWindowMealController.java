@@ -6,7 +6,6 @@ import diet.model.additionalClasses.ClassOfStaticMethod;
 import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.MealData;
 import javafx.beans.binding.Bindings;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,9 +17,7 @@ import javafx.util.Callback;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class MainWindowMealController {
 
@@ -60,7 +57,7 @@ public class MainWindowMealController {
         mealCarbs.setCellValueFactory(new PropertyValueFactory<>("fat"));
         mealFiber.setCellValueFactory(new PropertyValueFactory<>("fiber"));
         tableViewMeal.setItems(mealsList);
-        initializeTextFieldSearchForMeal();
+        ClassOfStaticMethodForControllers.initializeTextFieldSearchForList(textFieldMealSearch, tableViewMeal, mealsList);
         initializeAddListenerToMealList();
         initializeAddContextMenuToTableMeal();
     }
@@ -106,15 +103,6 @@ public class MainWindowMealController {
         return loadedMealFxml;
     }
 
-    private void initializeTextFieldSearchForMeal() {
-        textFieldMealSearch.setOnKeyTyped((change) -> {
-            List<Meal> sortedMealList = mealsList.stream().filter((meal) ->
-                    meal.getName().toLowerCase().matches(".*(" + textFieldMealSearch.getText().toLowerCase() + ").*"))
-                    .collect(Collectors.toList());
-            tableViewMeal.setItems(FXCollections.observableList(sortedMealList));
-        });
-    }
-
     private void initializeAddListenerToMealList() {
         mealsList.addListener(new ListChangeListener<Meal>() {
             @Override
@@ -138,7 +126,6 @@ public class MainWindowMealController {
             @Override
             public TableRow<Meal> call(TableView<Meal> mealTableView) {
                 TableRow<Meal> returnTableRow = new TableRow<>();
-
                 ContextMenu contextMenu = new ContextMenu();
                 MenuItem edit = new MenuItem("Edit");
                 edit.setOnAction(new EventHandler<ActionEvent>() {
@@ -169,7 +156,6 @@ public class MainWindowMealController {
                 });
                 contextMenu.getItems().addAll(edit, delete);
                 returnTableRow.contextMenuProperty().bind(Bindings.when(returnTableRow.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
-
                 return returnTableRow;
             }
         });

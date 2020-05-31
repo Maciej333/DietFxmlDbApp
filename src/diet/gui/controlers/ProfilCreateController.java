@@ -51,7 +51,6 @@ public class ProfilCreateController {
         choiceBoxProfilSex.getSelectionModel().select(0);
         choiceBoxProfilGoal.setItems(FXCollections.observableList(Arrays.asList(ProfilGoal.values())));
         choiceBoxProfilGoal.getSelectionModel().select(1);
-
         invalidProfilName.setText("e.q. Ania");
         invalidProfilAge.setText("years e.g. 24");
         invalidProfilWeight.setText("kg e.g. 75");

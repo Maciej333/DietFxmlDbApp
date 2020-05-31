@@ -101,7 +101,6 @@ public class MealAddEditController {
         if (productMap != null &&
                 productMap.size() > 0 &&
                 mealName != null) {
-
             if (buttonDoMeal.getText().equals("Edit")) {
                 MealData.getMealsList().remove(Meal.getSelectedMeal());
                 Meal.getSelectedMeal().setName(mealName);

@@ -3,6 +3,7 @@ package diet.gui.controlers;
 import diet.model.Diet;
 import diet.model.Profil;
 import diet.model.additionalClasses.ClassOfStaticMethod;
+import diet.model.additionalClasses.ClassOfStaticMethodForControllers;
 import diet.model.database.DietData;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ListChangeListener;
@@ -123,22 +124,11 @@ public class MainWindowDietController {
         labelMaxFiber.setText(Profil.getSelectedProfil().getFiber() + "");
     }
 
-    private void initializeStatsOfDiets(ObservableList<Diet> currentDiets) {
-        Double[] statsOfDiets = Diet.countStatsForDiets(currentDiets);
-        labelEatenKcal.setText(statsOfDiets[0].toString());
-        labelEatenProtein.setText(statsOfDiets[1].toString());
-        labelEatenFat.setText(statsOfDiets[2].toString());
-        labelEatenCarbs.setText(statsOfDiets[3].toString());
-        labelEatenFiber.setText(statsOfDiets[4].toString());
-        kcalBilans.setText(statsOfDiets[5].toString());
-    }
-
     private void initializeAddContextMenuToTableDiet() {
         tableViewDiet.setRowFactory(new Callback<TableView<Diet>, TableRow<Diet>>() {
             @Override
             public TableRow<Diet> call(TableView<Diet> dietTableView) {
                 TableRow<Diet> returnTableRow = new TableRow<>();
-
                 ContextMenu contextMenu = new ContextMenu();
                 MenuItem edit = new MenuItem("Edit");
                 edit.setOnAction(new EventHandler<ActionEvent>() {
@@ -155,10 +145,8 @@ public class MainWindowDietController {
                     @Override
                     public void handle(ActionEvent actionEvent) {
                         Diet.setSelectedDiet(tableViewDiet.getSelectionModel().getSelectedItem());
-                        Alert alertNoChoosen = new Alert(Alert.AlertType.CONFIRMATION);
-                        alertNoChoosen.setContentText("Do you really want to delete diet " + "?");
-                        alertNoChoosen.setTitle("Delete confirmation");
-
+                        Alert alertNoChoosen = ClassOfStaticMethodForControllers.createAlertTypeConfirmation("Delete confirmation",
+                                "Do you really want to delete diet " + "?");
                         Optional<ButtonType> result = alertNoChoosen.showAndWait();
                         if (result.get() == ButtonType.OK) {
                             DietData.getInstance().deleteDiet(Diet.getSelectedDiet());
@@ -169,9 +157,7 @@ public class MainWindowDietController {
                     }
                 });
                 contextMenu.getItems().addAll(edit, delete);
-
                 returnTableRow.contextMenuProperty().bind(Bindings.when(returnTableRow.emptyProperty()).then((ContextMenu) null).otherwise(contextMenu));
-
                 return returnTableRow;
             }
         });
@@ -186,16 +172,20 @@ public class MainWindowDietController {
         });
     }
 
-    private void countStatsForDiets(LocalDate date){
+    private void countStatsForDiets(LocalDate date) {
         tableViewDiet.refresh();
         ObservableList<Diet> newCurrentDiets = Diet.getDietsByDate(dietsList, date);
         tableViewDiet.setItems(newCurrentDiets);
-        Double[] newStatsOfDiets = Diet.countStatsForDiets(newCurrentDiets);
-        labelEatenKcal.setText(newStatsOfDiets[0].toString());
-        labelEatenProtein.setText(newStatsOfDiets[1].toString());
-        labelEatenFat.setText(newStatsOfDiets[2].toString());
-        labelEatenCarbs.setText(newStatsOfDiets[3].toString());
-        labelEatenFiber.setText(newStatsOfDiets[4].toString());
-        kcalBilans.setText(newStatsOfDiets[5].toString());
+        initializeStatsOfDiets(newCurrentDiets);
+    }
+
+    private void initializeStatsOfDiets(ObservableList<Diet> currentDiets) {
+        Double[] statsOfDiets = Diet.countStatsForDiets(currentDiets);
+        labelEatenKcal.setText(statsOfDiets[0].toString());
+        labelEatenProtein.setText(statsOfDiets[1].toString());
+        labelEatenFat.setText(statsOfDiets[2].toString());
+        labelEatenCarbs.setText(statsOfDiets[3].toString());
+        labelEatenFiber.setText(statsOfDiets[4].toString());
+        kcalBilans.setText(statsOfDiets[5].toString());
     }
 }

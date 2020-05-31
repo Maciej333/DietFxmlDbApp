@@ -73,7 +73,6 @@ public class MainWindowStatsController {
         setButtonWeekStats();
         datePickerTo.setValue(LocalDate.now());
         datePickerFrom.setValue(LocalDate.now().minusDays(7));
-
     }
 
     @FXML
@@ -123,7 +122,6 @@ public class MainWindowStatsController {
 
     private Double[] createSelectedDietList(String[] table, LocalDate to) {
         Double[] selectedDietKcal = new Double[table.length];
-
         double eatenKcal = 0.0;
         double eatenProtein = 0.0;
         double eatenFat = 0.0;
@@ -162,7 +160,6 @@ public class MainWindowStatsController {
         labelKcalBilans.setText((ClassOfStaticMethod.roundDouble(eatenKcal - maxKcal)) + "");
         datePickerTo.setValue(to);
         datePickerFrom.setValue(to.minusDays(table.length));
-
         return selectedDietKcal;
     }
 

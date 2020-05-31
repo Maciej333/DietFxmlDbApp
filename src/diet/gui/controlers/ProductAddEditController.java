@@ -53,7 +53,6 @@ public class ProductAddEditController {
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldProductFat, invalidProductFat, "\\d{1,4}([\\.,]\\d{1,2})?", "invalid fat", "e.g. 10.1");
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldProductCarbs, invalidProductCarbs, "\\d{1,4}([\\.,]\\d{1,2})?", "invalid carbs", "e.g. 50.4");
         ClassOfStaticMethod.checkCorrectOfTextField(textFieldProductFiber, invalidProductFiber, "\\d{1,4}([\\.,]\\d{1,2})?", "invalid fiber", "e.g. 5.1");
-
         if (MainWindowProductController.getLoadedProductFxml().equals("Edit")) {
             labelProductActionInfo.setText("Edit product");
             textFieldProductName.setText(Product.getSelectedProduct().getName());
@@ -74,7 +73,6 @@ public class ProductAddEditController {
         double fat = -1;
         double carbs = -1;
         double fiber = -1;
-
         if (ClassOfStaticMethod.checkTextFieldValid(textFieldProductName.getText(), "(\\S)+(\\s.+)*")) {
             name = textFieldProductName.getText();
         }

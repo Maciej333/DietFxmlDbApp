@@ -63,7 +63,6 @@ public class ProfilChoiceController {
             Path path = Paths.get("..\\DietFxmlDbApp\\src\\diet\\gui\\fxml\\MainWindow.fxml");
             loadProfilUrl(path, buttonLoadProfil.getText());
             ((Stage) buttonLoadProfil.getScene().getWindow()).close();
-
         } else {
             ClassOfStaticMethodForControllers.createAlertTypeWarning("choose profil", "befor moving on, choose profil You would like to load");
         }
