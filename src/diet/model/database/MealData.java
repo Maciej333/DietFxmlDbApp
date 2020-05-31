@@ -24,6 +24,7 @@ public class MealData {
     private static final String TABLE_PROFIL_MEAL_PROFIL_ID = "ID_PROFIL";
     private static final String TABLE_PROFIL_MEAL_MEAL_ID = "ID_MEAL";
 
+    private static final String READ_All_MEALS = "SELECT " + MEAL_ID + ", " + NAME + " FROM " + TABLE;
     private static final String READ_MEAL_MAX_ID = "SELECT MAX(" + MEAL_ID + ") FROM " + TABLE;
     private static final String INSERT_NEW_MEAL = "INSERT INTO " + TABLE + " VALUES (?,?)";
     private static final String UPDATE_MEAL = "UPDATE " + TABLE + " SET " + NAME + " =? WHERE " + MEAL_ID + " =?";
@@ -41,6 +42,28 @@ public class MealData {
 
     public static MealData getInstance() {
         return singletonMealData;
+    }
+
+    public List<Meal> readAllMeal() {
+        List<Meal> meals = new ArrayList<>();
+        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_All_MEALS)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Meal meal = new Meal();
+                meal.setIdMeal(resultSet.getInt(MEAL_ID));
+                meal.setName(resultSet.getString(NAME));
+                meal.setProductsForMeal(ProductData.getInstance().readAllProductForMeal(meal.getIdMeal()));
+                meal.countKcalForMeal();
+                meal.countProteinForMeal();
+                meal.countFatForMeal();
+                meal.countCarbsForMeal();
+                meal.countFiberForMeal();
+                meals.add(meal);
+            }
+        } catch (SQLException e) {
+            System.out.println("Query read all meals failed " + e.getMessage());
+        }
+        return meals;
     }
 
     public void readAllMealForProfil() {

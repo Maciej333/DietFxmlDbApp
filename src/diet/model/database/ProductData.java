@@ -35,6 +35,7 @@ public class ProductData {
     private static final String TABLE_MEAL_PRODUCT_ID_PRODUCT = "ID_PRODUCT";
     private static final String TABLE_MEAL_PRODUCT_AMOUNT = "AMOUNT";
 
+    private static final String READ_ALL_PRODUCTS = "SELECT * FROM " + TABLE;
     private static final String READ_MAX_ID_PRODUCT = "SELECT MAX(" + PRODUCT_ID + ") FROM " + TABLE;
     private static final String INSERT_PRODUCT = "INSERT INTO " + TABLE + " VALUES (?,?,?,?,?,?,?)";
     private static final String UPDATE_PRODUCT = "UPDATE " + TABLE + " SET " + NAME + " =?, "
@@ -65,6 +66,27 @@ public class ProductData {
 
     public static ProductData getInstance() {
         return singletonProductData;
+    }
+
+    public List<Product> readAllProducts() {
+        List<Product> products = new ArrayList<>();
+        try (PreparedStatement preparedStatement = conn.prepareStatement(READ_ALL_PRODUCTS);) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Product product = new Product();
+                product.setIdProduct(resultSet.getInt(PRODUCT_ID));
+                product.setName(resultSet.getString(NAME));
+                product.setKcal(resultSet.getDouble(KCAL));
+                product.setProtein(resultSet.getDouble(PROTEIN));
+                product.setFat(resultSet.getDouble(FAT));
+                product.setCarbs(resultSet.getDouble(CARBS));
+                product.setFiber(resultSet.getDouble(FIBER));
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            System.out.println("Query read all products for profil failed " + e.getMessage());
+        }
+        return products;
     }
 
     public void readAllProductForProfil() {

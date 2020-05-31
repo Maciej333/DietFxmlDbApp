@@ -88,8 +88,7 @@ public class DietData {
 
             while (resultSet.next()) {
                 int meal_id = resultSet.getInt(TABLE_DIET_MEAL_ID_MEAL);
-                MealData.getInstance().readAllMealForProfil();
-                ObservableList<Meal> mealsList = MealData.getMealsList();
+                ObservableList<Meal> mealsList = FXCollections.observableList(MealData.getInstance().readAllMeal());
                 for (int i = 0; i < mealsList.size(); i++) {
                     if (meal_id == mealsList.get(i).getIdMeal()) {
                         meals.put(mealsList.get(i), resultSet.getInt(TABLE_DIET_MEAL_AMOUNT));
@@ -113,8 +112,7 @@ public class DietData {
 
             while (resultSet.next()) {
                 int product_id = resultSet.getInt(TABLE_DIET_PRODUCT_ID_PRODUCT);
-                ProductData.getInstance().readAllProductForProfil();
-                ObservableList<Product> productsList = ProductData.getProductsList();
+                ObservableList<Product> productsList = FXCollections.observableList(ProductData.getInstance().readAllProducts());
                 for (int i = 0; i < productsList.size(); i++) {
                     if (product_id == productsList.get(i).getIdProduct()) {
                         products.put(productsList.get(i), resultSet.getInt(TABLE_DIET_PRODUCT_AMOUNT));
