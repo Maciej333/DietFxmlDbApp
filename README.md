@@ -13,5 +13,5 @@ Create/edit/delete meals that You usualy use.
 Create diet of choosen day by adding products or/and meals.
 See stats of Your diet.
 
-App start with Profil Choice screen
+App start with Profil Choice screen \n
 ![alt text](https://github.com/Maciej333/DietFxmlDbApp/blob/master/1_profil_choice.png?raw=true)
