@@ -3,6 +3,8 @@ module DietFxmlDbApp {
     requires javafx.fxml;
     requires javafx.controls;
 
+    requires org.junit.jupiter.api;
+
     opens diet;
     opens diet.gui.controlers;
     opens diet.gui.fxml;
